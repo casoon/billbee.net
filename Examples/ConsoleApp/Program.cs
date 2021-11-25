@@ -33,9 +33,9 @@ namespace ConsoleApp
             using var serviceScope = services.CreateScope();
             var provider = serviceScope.ServiceProvider;
 
-            var orders = provider.GetRequiredService<IOrdersEndpoint>();
+            var orders = provider.GetRequiredService<IOrderEndpoint>();
 
-            //var test = orders.GetAsync("").GetAwaiter().GetResult();
+            var test = orders.GetSingleAsync("").GetAwaiter().GetResult();
 
         }
     }

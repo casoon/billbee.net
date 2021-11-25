@@ -7,20 +7,17 @@ using Billbee.Net.Models;
 
 namespace Billbee.Net.Endpoints
 {
-
-    public interface IOrdersEndpoint : IEndpoint<Order>
+    public interface IOrderEndpoint : IEndpoint<Order>
     {
 
     }
 
-
-    public class OrdersEndpoint : BaseEndpoint<Order>, IOrdersEndpoint
+    public class OrderEndpoint : BaseEndpoint<Order>, IOrderEndpoint
     {
-        public OrdersEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
+        public OrderEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
         {
             this.EndPoint = "orders";
         }
-
 
     }
 }

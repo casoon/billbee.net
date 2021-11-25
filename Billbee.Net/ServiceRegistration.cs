@@ -37,8 +37,18 @@ namespace Billbee.Net
 
 
             serviceCollection.AddScoped<IBillbeeClient, BillbeeClient>();
-            serviceCollection.AddScoped<IOrdersEndpoint, OrdersEndpoint>();
-
+            serviceCollection.AddScoped<IAutomaticProvisionEndpoint, AutomaticProvisionEndpoint>();
+            serviceCollection.AddScoped<ICloudStorageEndpoint, CloudStorageEndpoint>();
+            serviceCollection.AddScoped<ICustomerAddressEndpoint, CustomerAddressEndpoint>();
+            serviceCollection.AddScoped<ICustomerEndpoint, CustomerEndpoint>();
+            serviceCollection.AddScoped<IDeliveryNoteEndpoint, DeliveryNoteEndpoint>();
+            serviceCollection.AddScoped<IEnumApiEndpoint, EnumApiEndpoint>();
+            serviceCollection.AddScoped<IEventEndpoint, EventEndpoint>();
+            serviceCollection.AddScoped<IInvoiceEndpoint, InvoiceEndpoint>();
+            serviceCollection.AddScoped<IOrderEndpoint, OrderEndpoint>();
+            serviceCollection.AddScoped<IProductEndpoint, ProductEndpoint>();
+            serviceCollection.AddScoped<IShipmentEndpoint, ShipmentEndpoint>();
+            serviceCollection.AddScoped<IWebhookEndpoint, WebhookEndpoint>();
 
             return serviceCollection;
         }

@@ -18,7 +18,7 @@ namespace Billbee.Net.Endpoints
 
         protected string EndPoint { get; set; }
 
-        public async Task<T> GetAsync(string id)
+        public async Task<T> GetSingleAsync(string id)
         {
 
             var queryParams = new Dictionary<string, string>();
@@ -36,6 +36,11 @@ namespace Billbee.Net.Endpoints
                 Console.WriteLine(exception.Message);
                 throw;
             }
+        }
+
+        public Task<T> GetAllAsync()
+        {
+            throw new NotImplementedException();
         }
 
         public Task<T> DeleteAsync()

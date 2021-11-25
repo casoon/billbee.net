@@ -6,7 +6,9 @@ namespace Billbee.Net.Endpoints
     public interface IEndpoint<T>
     {
 
-        Task<T> GetAsync(string id);
+        Task<T> GetSingleAsync(string id);
+
+        Task<T> GetAllAsync();
 
         Task<T> PostAsync(string query);
 
