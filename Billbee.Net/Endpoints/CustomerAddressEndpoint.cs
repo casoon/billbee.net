@@ -7,17 +7,16 @@ using Billbee.Net.Models;
 
 namespace Billbee.Net.Endpoints
 {
-    public interface ICustomerAddressEndpoint
+    public interface ICustomerAddressEndpoint : IBaseEndpoint
     {
 
     }
 
-
-    public class CustomerAddressEndpoint : ICustomerAddressEndpoint
+    public class CustomerAddressEndpoint : ExtendedEndpoint<Address>, ICustomerAddressEndpoint
     {
-        public CustomerAddressEndpoint(IBillbeeClient billbeeClient)
+        public CustomerAddressEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
         {
-
+            this.EndPoint = "customer-addresses";
         }
 
 

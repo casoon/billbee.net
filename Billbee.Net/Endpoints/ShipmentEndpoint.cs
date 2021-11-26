@@ -8,17 +8,17 @@ using Billbee.Net.Models;
 namespace Billbee.Net.Endpoints
 {
 
-    public interface IShipmentEndpoint
+    public interface IShipmentEndpoint : IBaseEndpoint
     {
 
     }
 
 
-    public class ShipmentEndpoint : IShipmentEndpoint
+    public class ShipmentEndpoint : BaseEndpoint, IShipmentEndpoint
     {
-        public ShipmentEndpoint(IBillbeeClient billbeeClient)
+        public ShipmentEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
         {
-
+            this.EndPoint = "";
         }
     }
 }

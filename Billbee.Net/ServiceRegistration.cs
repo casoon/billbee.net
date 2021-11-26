@@ -28,7 +28,8 @@ namespace Billbee.Net
             FlurlHttp.ConfigureClient(baseUrl, cli => cli
                 .Configure(settings =>
                 {
-
+                    //settings.BeforeCall = call => logger.LogWarning($"Calling {call.Request.Url}");
+                    //settings.OnError = call => logger.LogError($"Call to SimpleCast failed: {call.Exception}");
                 })
                 .WithHeaders(new
                 {

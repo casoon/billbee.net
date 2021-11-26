@@ -8,17 +8,17 @@ using Billbee.Net.Models;
 namespace Billbee.Net.Endpoints
 {
 
-    public interface IWebhookEndpoint
+    public interface IWebhookEndpoint : IBaseEndpoint
     {
 
     }
 
 
-    public class WebhookEndpoint : IWebhookEndpoint
+    public class WebhookEndpoint : BaseEndpoint, IWebhookEndpoint
     {
-        public WebhookEndpoint(IBillbeeClient billbeeClient)
+        public WebhookEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
         {
-
+            this.EndPoint = "";
         }
     }
 }

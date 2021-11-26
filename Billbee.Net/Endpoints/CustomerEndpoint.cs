@@ -7,12 +7,13 @@ using Billbee.Net.Models;
 
 namespace Billbee.Net.Endpoints
 {
-    public interface ICustomerEndpoint : IEndpoint<Customer>
+    public interface ICustomerEndpoint : IExtendedEndpoint<Customer>
     {
-        Task<List<Order>> GetOrdersForCustomer(long id, int page, int pageSize);
+        Task<List<Order>> GetOrdersForCustomerAsync(long id, int page, int pageSize);
+        Task<List<Order>> GetAddressesForCustomerAsync(long id, int page, int pageSize);
     }
 
-    public class CustomerEndpoint : BaseEndpoint<Customer>, ICustomerEndpoint
+    public class CustomerEndpoint : ExtendedEndpoint<Customer>, ICustomerEndpoint
     {
         public CustomerEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
         {
@@ -20,7 +21,7 @@ namespace Billbee.Net.Endpoints
         }
 
 
-        public async Task<List<Order>> GetOrdersForCustomer(long id, int page, int pageSize)
+        public async Task<List<Order>> GetOrdersForCustomerAsync(long id, int page, int pageSize)
         {
             var queryParams = new Dictionary<string, string>();
             queryParams.Add("page", page.ToString());
@@ -28,7 +29,7 @@ namespace Billbee.Net.Endpoints
 
             try
             {
-                var result = await billbeeClient.GetAll<Order>(this.EndPoint + "/" + id.ToString() + "/" + "orders", queryParams);
+                var result = await billbeeClient.GetAllAsync<Order>(this.EndPoint + "/" + id.ToString() + "/" + "orders", queryParams);
                 return result;
             }
             catch (NotFoundException)
@@ -40,6 +41,28 @@ namespace Billbee.Net.Endpoints
                 throw;
             }
         }
+
+        public async Task<List<Order>> GetAddressesForCustomerAsync(long id, int page, int pageSize)
+        {
+            var queryParams = new Dictionary<string, string>();
+            queryParams.Add("page", page.ToString());
+            queryParams.Add("pageSize", pageSize.ToString());
+
+            try
+            {
+                var result = await billbeeClient.GetAllAsync<Order>(this.EndPoint + "/" + id.ToString() + "/" + "addresses", queryParams);
+                return result;
+            }
+            catch (NotFoundException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+ 
     }
 }
 

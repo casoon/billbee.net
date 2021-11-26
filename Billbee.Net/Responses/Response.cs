@@ -2,7 +2,7 @@
 namespace Billbee.Net.Responses
 {
 
-    public class SingleResponse<T>
+    public class Response<T>
     {
         public int ErrorCode { get; set; }
 

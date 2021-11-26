@@ -8,19 +8,89 @@ using Billbee.Net.Models;
 namespace Billbee.Net.Endpoints
 {
 
-    public interface IEnumApiEndpoint
+    public interface IEnumApiEndpoint : IBaseEndpoint
     {
+        Task<String> GetPaymentTypesAsync();
+        Task<String> GetShippingCarriersAsync();
+        Task<String> GetShipmentTypesAsync();
+        Task<String> GetOrderStatesAsync();
 
     }
 
-
-    public class EnumApiEndpoint : IEnumApiEndpoint
+    public class EnumApiEndpoint : BaseEndpoint, IEnumApiEndpoint
     {
-        public EnumApiEndpoint(IBillbeeClient billbeeClient)
+        public EnumApiEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
         {
-
+            this.EndPoint = "enums";
         }
 
+        public async Task<String> GetPaymentTypesAsync()
+        {
+            try
+            {
+                var result = await billbeeClient.GetAsync<String>(this.EndPoint + "/paymenttypes");
+                return result;
+            }
+            catch (NotFoundException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<String> GetShippingCarriersAsync()
+        {
+            try
+            {
+                var result = await billbeeClient.GetAsync<String>(this.EndPoint + "/shippingcarriers");
+                return result;
+            }
+            catch (NotFoundException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<String> GetShipmentTypesAsync()
+        {
+            try
+            {
+                var result = await billbeeClient.GetAsync<String>(this.EndPoint + "/shipmenttypes");
+                return result;
+            }
+            catch (NotFoundException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<String> GetOrderStatesAsync()
+        {
+            try
+            {
+                var result = await billbeeClient.GetAsync<String>(this.EndPoint + "/orderstates");
+                return result;
+            }
+            catch (NotFoundException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
     }
 }
