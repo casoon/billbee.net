@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Billbee.Net.Exceptions;
 using Billbee.Net.Responses;
@@ -44,6 +45,61 @@ namespace Billbee.Net.Extensions
                 try
                 {
                     return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
+                }
+                catch (Exception e)
+                {
+                    throw new Exception(e.Message, e);
+                }
+
+            }
+            else
+            {
+                var errorMessage = $"{result.ErrorCode} - {result.ErrorMessage}";
+
+                switch (result.ErrorCode)
+                {
+                    default:
+                        throw new Exception($"{errorMessage}");
+
+                }
+
+            }
+        }
+
+        public static Task<List<T>> GetPagedResponse<T>(this Url url, string apiKey, string clientId, string clientSecret) => new FlurlRequest(url).GetPagedResponse<T>(apiKey, clientId, clientSecret);
+        public static Task<List<T>> GetPagedResponse<T>(this Uri uri, string apiKey, string clientId, string clientSecret) => new FlurlRequest(uri).GetPagedResponse<T>(apiKey, clientId, clientSecret);
+        public static Task<List<T>> GetPagedResponse<T>(this string url, string apiKey, string clientId, string clientSecret) => new FlurlRequest(url).GetPagedResponse<T>(apiKey, clientId, clientSecret);
+
+
+        public async static Task<List<T>> GetPagedResponse<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret)
+        {
+            PagedResponse<T> result = null;
+
+            string userAgent = $"Billbee.Net/{typeof(BillbeeClient).Assembly.GetName().Version}";
+
+            try
+            {
+                req
+                    .WithHeader("X-Billbee-Api-Key", apiKey)
+                    .WithHeader("User-Agent", userAgent)
+                    .WithBasicAuth(clientId, clientSecret);
+                result = await req.GetJsonAsync<PagedResponse<T>>();
+            }
+            catch (FlurlHttpException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error attempting to query Billbee", e);
+            }
+
+
+            if (result.ErrorCode == 0 && result.Data != null)
+            {
+                try
+                {
+                    return JsonConvert.DeserializeObject<List<T>>(JsonConvert.SerializeObject(result.Data));
                 }
                 catch (Exception e)
                 {

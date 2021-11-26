@@ -6,7 +6,8 @@ namespace Billbee.Net
 {
     public interface IBillbeeClient
     {
-        Task<T> Request<T>(string endPoint, Dictionary<string, string> param);
+        Task<T> Get<T>(string endPoint, Dictionary<string, string> param);
+        Task<List<T>> GetAll<T>(string endPoint, Dictionary<string, string> param);
     }
 }
 

@@ -34,9 +34,15 @@ namespace ConsoleApp
             var provider = serviceScope.ServiceProvider;
 
             var orders = provider.GetRequiredService<IOrderEndpoint>();
+            var customers = provider.GetRequiredService<ICustomerEndpoint>();
 
-            var test = orders.GetSingleAsync("").GetAwaiter().GetResult();
+            //var test = orders.GetSingleAsync("").GetAwaiter().GetResult();
 
+            //var test = customers.GetAllAsync(0,20).GetAwaiter().GetResult();
+
+            var test = customers.GetOrdersForCustomer(134620045, 0, 10).GetAwaiter().GetResult();
+
+            int i = 0;
         }
     }
 }

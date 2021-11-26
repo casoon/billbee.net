@@ -18,29 +18,44 @@ namespace Billbee.Net.Endpoints
 
         protected string EndPoint { get; set; }
 
-        public async Task<T> GetSingleAsync(string id)
+        public async Task<T> GetSingleAsync(long id)
         {
 
             var queryParams = new Dictionary<string, string>();
             try
             {
-                var result = await billbeeClient.Request<T>(this.EndPoint + "/" + id, queryParams);
+                var result = await billbeeClient.Get<T>(this.EndPoint + "/" + id, queryParams);
                 return result;
             }
             catch (NotFoundException)
             {
                 throw;
             }
-            catch (Exception exception)
+            catch (Exception)
             {
-                Console.WriteLine(exception.Message);
                 throw;
             }
         }
 
-        public Task<T> GetAllAsync()
+        public async Task<List<T>> GetAllAsync(int page, int pageSize)
         {
-            throw new NotImplementedException();
+            var queryParams = new Dictionary<string, string>();
+            queryParams.Add("page", page.ToString());
+            queryParams.Add("pageSize", pageSize.ToString());
+
+            try
+            {
+                var result = await billbeeClient.GetAll<T>(this.EndPoint, queryParams);
+                return result;
+            }
+            catch (NotFoundException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public Task<T> DeleteAsync()

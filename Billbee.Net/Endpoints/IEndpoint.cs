@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Billbee.Net.Endpoints
@@ -6,9 +7,9 @@ namespace Billbee.Net.Endpoints
     public interface IEndpoint<T>
     {
 
-        Task<T> GetSingleAsync(string id);
+        Task<T> GetSingleAsync(long id);
 
-        Task<T> GetAllAsync();
+        Task<List<T>> GetAllAsync(int page, int pageSize);
 
         Task<T> PostAsync(string query);
 

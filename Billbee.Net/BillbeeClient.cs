@@ -44,12 +44,22 @@ namespace Billbee.Net
             }
         }
 
-        public async Task<T> Request<T>(string endPoint, Dictionary<string, string> param)
+        public async Task<T> Get<T>(string endPoint, Dictionary<string, string> param)
         {
             var result = await baseUrl
                     .AppendPathSegments(endPoint)
                     .SetQueryParams(param)
                     .GetSingleResponse<T>(apiKey, username, password);
+
+            return result;
+        }
+
+        public async Task<List<T>> GetAll<T>(string endPoint, Dictionary<string, string> param)
+        {
+            var result = await baseUrl
+                    .AppendPathSegments(endPoint)
+                    .SetQueryParams(param)
+                    .GetPagedResponse<T>(apiKey, username, password);
 
             return result;
         }
