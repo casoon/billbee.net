@@ -1,4 +1,4 @@
-﻿namespace Billbee.Net.Models.Enums
+﻿namespace Billbee.Net.Enums
 {
     /// <summary>
     /// Defines how server side errors should be handled on client.

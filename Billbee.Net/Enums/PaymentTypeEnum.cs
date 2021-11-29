@@ -1,4 +1,4 @@
-﻿namespace Billbee.Net.Models.Enums
+﻿namespace Billbee.Net.Enums
 {
     public enum PaymentTypeEnum
     {

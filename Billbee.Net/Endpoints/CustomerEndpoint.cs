@@ -10,7 +10,7 @@ namespace Billbee.Net.Endpoints
     public interface ICustomerEndpoint : IExtendedEndpoint<Customer>
     {
         Task<List<Order>> GetOrdersForCustomerAsync(long id, int page, int pageSize);
-        Task<List<Order>> GetAddressesForCustomerAsync(long id, int page, int pageSize);
+        Task<List<Address>> GetAddressesForCustomerAsync(long id, int page, int pageSize);
     }
 
     public class CustomerEndpoint : ExtendedEndpoint<Customer>, ICustomerEndpoint

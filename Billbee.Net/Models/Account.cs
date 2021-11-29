@@ -1,4 +1,4 @@
-﻿using Billbee.Net.Models.Enums;
+﻿using Billbee.Net.Enums;
 
 namespace Billbee.Net.Models
 {

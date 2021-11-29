@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Billbee.Net.Exceptions;
 using Billbee.Net.Models;
-using Billbee.Net.Models.Enums;
+using Billbee.Net.Enums;
 using Newtonsoft.Json.Linq;
 
 namespace Billbee.Net.Endpoints
