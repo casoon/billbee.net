@@ -42,7 +42,7 @@ namespace Billbee.Net.Endpoints
             }
         }
 
-        public async Task<List<Order>> GetAddressesForCustomerAsync(long id, int page, int pageSize)
+        public async Task<List<Address>> GetAddressesForCustomerAsync(long id, int page, int pageSize)
         {
             var queryParams = new Dictionary<string, string>();
             queryParams.Add("page", page.ToString());
@@ -50,7 +50,7 @@ namespace Billbee.Net.Endpoints
 
             try
             {
-                var result = await billbeeClient.GetAllAsync<Order>(this.EndPoint + "/" + id.ToString() + "/" + "addresses", queryParams);
+                var result = await billbeeClient.GetAllAsync<Address>(this.EndPoint + "/" + id.ToString() + "/" + "addresses", queryParams);
                 return result;
             }
             catch (NotFoundException)
