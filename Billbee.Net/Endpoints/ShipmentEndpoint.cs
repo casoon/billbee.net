@@ -11,7 +11,10 @@ namespace Billbee.Net.Endpoints
 
     public interface IShipmentEndpoint : IBaseEndpoint
     {
-
+        Task<ShippingProvider> GetShippingProviderAsync();
+        Task<ShippingCarrier> GetShippingCarriersAsync();
+        Task<dynamic> AddShipmentAsync(PostShipment shipment);
+        Task<dynamic> ShipOrderWithLabel(ShipmentWithLabel shipment)
     }
 
 
@@ -89,11 +92,6 @@ namespace Billbee.Net.Endpoints
                 throw;
             }
         }
-
-
-
     }
-
-
 }
 
