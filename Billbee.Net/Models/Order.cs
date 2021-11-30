@@ -212,5 +212,7 @@ namespace Billbee.Net.Models
         public string CustomInvoiceNote { get; set; }
 
         public string CustomerNumber { get; set; }
+
+        public Customer Customer { get; set; }
     }
 }
