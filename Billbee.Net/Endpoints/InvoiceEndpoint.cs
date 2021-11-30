@@ -31,22 +31,50 @@ namespace Billbee.Net.Endpoints
     {
         public InvoiceEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
         {
-            this.EndPoint = "orders/invoices";
+            this.EndPoint = "orders";
         }
 
+
+        public async Task<Invoice> AddInvoiceAsync(long orderId, bool includePdf = false, long? templateId = null, long? sendToCloudId = null)
+        {
+            var queryParams = new Dictionary<string, string>();
+            queryParams.Add("includeInvoicePdf", includePdf.ToString());
+
+            if (sendToCloudId.HasValue)
+                queryParams.Add("sendToCloudId", sendToCloudId.ToString());
+
+            if (templateId.HasValue)
+                queryParams.Add("templateId", templateId.ToString());
+
+            try
+            {
+                var result = await billbeeClient.AddAsync<Invoice>(this.EndPoint + "/CreateInvoice/" + orderId, new Invoice(), queryParams);
+                return result;
+            }
+            catch (NotFoundException)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
         public async Task<List<Invoice>> GetAllAsync(
-    int page = 0,
-    int pageSize = 50,
-    DateTime? minInvoiceDate = null,
-    DateTime? maxInvoiceDate = null,
-    List<long> shopId = null,
-    List<OrderStateEnum> orderStateId = null,
-    List<string> tag = null,
-    DateTime? minPayDate = null,
-    DateTime? maxPayDate = null,
-    bool includePositions = false,
-    bool excludeTags = false
-)
+            int page = 0,
+            int pageSize = 50,
+            DateTime? minInvoiceDate = null,
+            DateTime? maxInvoiceDate = null,
+            List<long> shopId = null,
+            List<OrderStateEnum> orderStateId = null,
+            List<string> tag = null,
+            DateTime? minPayDate = null,
+            DateTime? maxPayDate = null,
+            bool includePositions = false,
+            bool excludeTags = false
+        )
         {
             var queryParams = new Dictionary<string, string>();
             queryParams.Add("page", page.ToString());
@@ -102,7 +130,7 @@ namespace Billbee.Net.Endpoints
 
             try
             {
-                var result = await billbeeClient.GetAllAsync<Invoice>(this.EndPoint, queryParams);
+                var result = await billbeeClient.GetAllAsync<Invoice>(this.EndPoint + "/invoices", queryParams);
                 return result;
             }
             catch (NotFoundException)

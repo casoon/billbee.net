@@ -403,7 +403,7 @@ namespace Billbee.Net.Endpoints
 
             try
             {
-                var result = await billbeeClient.AddAsync<Invoice>(this.EndPoint + "/CreateInvoice/" + orderId + "/shipment", new Invoice(), queryParams);
+                var result = await billbeeClient.AddAsync<Invoice>(this.EndPoint + "/CreateInvoice/" + orderId, new Invoice(), queryParams);
                 return result;
             }
             catch (NotFoundException)
