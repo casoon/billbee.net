@@ -11,8 +11,8 @@ namespace Billbee.Net
         Task<T> UpdateAsync<T>(string endPoint, T t, Dictionary<string, string> param = null);
         Task<List<T>> GetAllAsync<T>(string endPoint, Dictionary<string, string> param = null);
         Task<T> PatchAsync<T>(string endPoint, Dictionary<string, object> fields);
-        Task<T> DeleteAsync<T>(string endPoint);
-        Task<T> DeleteAsync<T>(string endPoint, T t);
+        Task DeleteAsync<T>(string endPoint);
+        Task DeleteAsync<T>(string endPoint, T t);
     }
 }
 

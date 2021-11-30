@@ -330,8 +330,9 @@ namespace Billbee.Net.Endpoints
             {
                 throw;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw;
             }
         }

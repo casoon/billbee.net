@@ -73,8 +73,11 @@ namespace Billbee.Net
             return result;
         }
 
-        public async Task<T> AddAsync<T>(string endPoint, T t, Dictionary<string, string> param)
+        public async Task<T> AddAsync<T>(string endPoint, T t, Dictionary<string, string> param = null)
         {
+            if (param == null)
+                param = new Dictionary<string, string>();
+
             var result = await baseUrl
                     .AppendPathSegments(endPoint)
                     .SetQueryParams(param)
@@ -102,20 +105,18 @@ namespace Billbee.Net
             return result;
         }
 
-        public async Task<T> DeleteAsync<T>(string endPoint)
+        public async Task DeleteAsync<T>(string endPoint)
         {
-            var result = await baseUrl
+            await baseUrl
                     .AppendPathSegments(endPoint)
                     .Delete<T>(apiKey, username, password);
-            return result;
         }
 
-        public async Task<T> DeleteAsync<T>(string endPoint, T t)
+        public async Task DeleteAsync<T>(string endPoint, T t)
         {
-            var result = await baseUrl
+            await baseUrl
                     .AppendPathSegments(endPoint)
                     .Post<T>(apiKey, username, password, t);
-            return result;
         }
 
     }

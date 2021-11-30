@@ -88,7 +88,7 @@ namespace Billbee.Net.Extensions
                     .WithHeader("User-Agent", userAgent)
                     .WithBasicAuth(clientId, clientSecret);
                 //result = await req.PostJsonAsync(json).ReceiveJson();
-                var test = await req.PostJsonAsync(t).ReceiveJson<Response<T>>();
+                result = await req.PostJsonAsync(t).ReceiveJson<Response<T>>();
             }
             catch (FlurlHttpException ex)
             {
@@ -147,7 +147,7 @@ namespace Billbee.Net.Extensions
                     .WithHeader("User-Agent", userAgent)
                     .WithBasicAuth(clientId, clientSecret);
                 //result = await req.PostJsonAsync(json).ReceiveJson();
-                var test = await req.PutJsonAsync(t).ReceiveJson<Response<T>>();
+                result = await req.PutJsonAsync(t).ReceiveJson<Response<T>>();
             }
             catch (FlurlHttpException ex)
             {
@@ -214,7 +214,7 @@ namespace Billbee.Net.Extensions
                     .WithHeader("User-Agent", userAgent)
                     .WithBasicAuth(clientId, clientSecret);
                 //result = await req.PostJsonAsync(json).ReceiveJson();
-                var test = await req.PatchJsonAsync(json).ReceiveJson<Response<T>>();
+                result = await req.PatchJsonAsync(json).ReceiveJson<Response<T>>();
             }
             catch (FlurlHttpException ex)
             {
@@ -309,16 +309,13 @@ namespace Billbee.Net.Extensions
             }
         }
 
+        public static Task Delete<T>(this Url url, string apiKey, string clientId, string clientSecret) => new FlurlRequest(url).Delete<T>(apiKey, clientId, clientSecret);
+        public static Task Delete<T>(this Uri uri, string apiKey, string clientId, string clientSecret) => new FlurlRequest(uri).Delete<T>(apiKey, clientId, clientSecret);
+        public static Task Delete<T>(this string url, string apiKey, string clientId, string clientSecret) => new FlurlRequest(url).Delete<T>(apiKey, clientId, clientSecret);
 
-        public static Task<T> Delete<T>(this Url url, string apiKey, string clientId, string clientSecret) => new FlurlRequest(url).Delete<T>(apiKey, clientId, clientSecret);
-        public static Task<T> Delete<T>(this Uri uri, string apiKey, string clientId, string clientSecret) => new FlurlRequest(uri).Delete<T>(apiKey, clientId, clientSecret);
-        public static Task<T> Delete<T>(this string url, string apiKey, string clientId, string clientSecret) => new FlurlRequest(url).Delete<T>(apiKey, clientId, clientSecret);
 
-
-        public async static Task<T> Delete<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret)
+        public async static Task Delete<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret)
         {
-            Response<T> result = null;
-
             string userAgent = $"Billbee.Net/{typeof(BillbeeClient).Assembly.GetName().Version}";
 
             try
@@ -327,8 +324,7 @@ namespace Billbee.Net.Extensions
                     .WithHeader("X-Billbee-Api-Key", apiKey)
                     .WithHeader("User-Agent", userAgent)
                     .WithBasicAuth(clientId, clientSecret);
-                //result = await req.PostJsonAsync(json).ReceiveJson();
-                var test = await req.DeleteAsync();
+                await req.DeleteAsync();
             }
             catch (FlurlHttpException ex)
             {
@@ -339,31 +335,6 @@ namespace Billbee.Net.Extensions
                 throw new Exception("Error attempting to query Billbee", e);
             }
 
-
-            if (result.ErrorCode == 0 && result.Data != null)
-            {
-                try
-                {
-                    return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(e.Message, e);
-                }
-
-            }
-            else
-            {
-                var errorMessage = $"{result.ErrorCode} - {result.ErrorMessage}";
-
-                switch (result.ErrorCode)
-                {
-                    default:
-                        throw new Exception($"{errorMessage}");
-
-                }
-
-            }
         }
 
 

@@ -11,10 +11,10 @@ namespace Billbee.Net.Endpoints
 
     public interface IShipmentEndpoint : IBaseEndpoint
     {
-        Task<ShippingProvider> GetShippingProviderAsync();
-        Task<ShippingCarrier> GetShippingCarriersAsync();
+        Task<List<ShippingProvider>> GetShippingProviderAsync();
+        Task<List<ShippingCarrier>> GetShippingCarriersAsync();
         Task<dynamic> AddShipmentAsync(PostShipment shipment);
-        Task<dynamic> ShipOrderWithLabel(ShipmentWithLabel shipment);
+        Task<dynamic> ShipOrderWithLabelAsync(ShipmentWithLabel shipment);
     }
 
 
@@ -25,11 +25,11 @@ namespace Billbee.Net.Endpoints
             this.EndPoint = "shipment";
         }
 
-        public async Task<ShippingProvider> GetShippingProviderAsync()
+        public async Task<List<ShippingProvider>> GetShippingProviderAsync()
         {
             try
             {
-                var result = await billbeeClient.GetAsync<ShippingProvider>(this.EndPoint + "/shippingproviders");
+                var result = await billbeeClient.GetAllAsync<ShippingProvider>(this.EndPoint + "/shippingproviders");
                 return result;
             }
             catch (NotFoundException)
@@ -42,11 +42,11 @@ namespace Billbee.Net.Endpoints
             }
         }
 
-        public async Task<ShippingCarrier> GetShippingCarriersAsync()
+        public async Task<List<ShippingCarrier>> GetShippingCarriersAsync()
         {
             try
             {
-                var result = await billbeeClient.GetAsync<ShippingCarrier>(this.EndPoint + "/shippingcarriers");
+                var result = await billbeeClient.GetAllAsync<ShippingCarrier>(this.EndPoint + "/shippingcarriers");
                 return result;
             }
             catch (NotFoundException)
@@ -76,7 +76,7 @@ namespace Billbee.Net.Endpoints
             }
         }
 
-        public async Task<dynamic> ShipOrderWithLabel(ShipmentWithLabel shipment)
+        public async Task<dynamic> ShipOrderWithLabelAsync(ShipmentWithLabel shipment)
         {
             try
             {

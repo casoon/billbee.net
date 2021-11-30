@@ -339,12 +339,11 @@ namespace Billbee.Net.Endpoints
         }
 
 
-        public async Task<dynamic> DeleteProductImageAsync(long productId, long imageId)
+        public async Task DeleteProductImageAsync(long productId, long imageId)
         {
             try
             {
-                var result = await billbeeClient.DeleteAsync<dynamic>(this.EndPoint + "/" + productId.ToString() + "/images/" + imageId.ToString());
-                return result;
+                await billbeeClient.DeleteAsync<dynamic>(this.EndPoint + "/" + productId.ToString() + "/images/" + imageId.ToString());
             }
             catch (NotFoundException)
             {
@@ -357,12 +356,11 @@ namespace Billbee.Net.Endpoints
         }
 
 
-        public async Task<dynamic> DeleteProductImageAsync(long imageId)
+        public async Task DeleteProductImageAsync(long imageId)
         {
             try
             {
-                var result = await billbeeClient.DeleteAsync<dynamic>(this.EndPoint + "/images/" + imageId.ToString());
-                return result;
+                await billbeeClient.DeleteAsync<dynamic>(this.EndPoint + "/images/" + imageId.ToString());
             }
             catch (NotFoundException)
             {
@@ -375,12 +373,11 @@ namespace Billbee.Net.Endpoints
         }
 
 
-        public async Task<dynamic> DeleteMultipleProductImageAsync(List<long> imageIds)
+        public async Task DeleteMultipleProductImageAsync(List<long> imageIds)
         {
             try
             {
-                var result = await billbeeClient.DeleteAsync<dynamic>(this.EndPoint + "/images/delete", imageIds);
-                return result;
+                await billbeeClient.DeleteAsync<dynamic>(this.EndPoint + "/images/delete", imageIds);
             }
             catch (NotFoundException)
             {
