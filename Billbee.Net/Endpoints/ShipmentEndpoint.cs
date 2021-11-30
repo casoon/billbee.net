@@ -14,7 +14,7 @@ namespace Billbee.Net.Endpoints
         Task<ShippingProvider> GetShippingProviderAsync();
         Task<ShippingCarrier> GetShippingCarriersAsync();
         Task<dynamic> AddShipmentAsync(PostShipment shipment);
-        Task<dynamic> ShipOrderWithLabel(ShipmentWithLabel shipment)
+        Task<dynamic> ShipOrderWithLabel(ShipmentWithLabel shipment);
     }
 
 
