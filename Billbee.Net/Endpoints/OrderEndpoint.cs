@@ -66,7 +66,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAsync<String>(this.EndPoint + "/" + "layouts");
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -83,7 +83,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAsync<String>(this.EndPoint + "/patchablefields");
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -101,7 +101,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.PatchAsync<String>(this.EndPoint + "/" + id.ToString(), fields);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -118,7 +118,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAsync<Order>(this.EndPoint + "/findbyextref/" + id);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -204,7 +204,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<Order>(this.EndPoint, queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -287,7 +287,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<Order>(this.EndPoint + "/invoices", queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -308,7 +308,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.AddAsync<Order>(this.EndPoint, order, queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -326,7 +326,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.AddAsync<dynamic>(this.EndPoint + "/" + orderId + "/tags", new { Tags = tags });
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -344,7 +344,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.UpdateAsync<dynamic>(this.EndPoint + "/" + orderId + "/tags", new { Tags = tags });
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -361,7 +361,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.AddAsync<OrderShipment>(this.EndPoint + "/" + shipment.OrderId + "/shipment", shipment);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -381,7 +381,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.AddAsync<DeliveryNote>(this.EndPoint + "/CreateDeliveryNote/" + orderId + "/shipment", new DeliveryNote(), queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -407,7 +407,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.AddAsync<Invoice>(this.EndPoint + "/CreateInvoice/" + orderId, new Invoice(), queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -425,7 +425,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.UpdateAsync<dynamic>(this.EndPoint + "/" + orderId + "/orderstate", new { NewStateId = (int)state });
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -443,7 +443,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.AddAsync<dynamic>(this.EndPoint + "/" + orderId + "/send-message", message);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -466,7 +466,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.AddAsync<dynamic>(this.EndPoint + "/" + orderId + "/trigger-event", model);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }

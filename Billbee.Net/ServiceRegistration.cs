@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Billbee.Net.Endpoints;
+using Billbee.Net.Logging;
 using Flurl.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Billbee.Net
 {
@@ -11,32 +14,12 @@ namespace Billbee.Net
 
         internal static IConfiguration Configuration;
 
-
         public static IServiceCollection RegisterBillbee(this IServiceCollection serviceCollection, IConfiguration configuration)
         {
 
             Configuration = configuration;
 
-            var baseUrl = configuration["BillbeeUrl"];
-
-            if (string.IsNullOrWhiteSpace(baseUrl))
-            {
-                throw new Exception("billbee url not provided");
-            }
-
-
-            FlurlHttp.ConfigureClient(baseUrl, cli => cli
-                .Configure(settings =>
-                {
-                    //settings.BeforeCall = call => logger.LogWarning($"Calling {call.Request.Url}");
-                    //settings.OnError = call => logger.LogError($"Call to SimpleCast failed: {call.Exception}");
-                })
-                .WithHeaders(new
-                {
-                    Accept = "application/json",
-                }));
-
-
+            serviceCollection.AddScoped<IFlurlTelemetryLogger, FlurlTelemetryLogger>();
             serviceCollection.AddScoped<IBillbeeClient, BillbeeClient>();
             serviceCollection.AddScoped<IAutomaticProvisionEndpoint, AutomaticProvisionEndpoint>();
             serviceCollection.AddScoped<ICloudStorageEndpoint, CloudStorageEndpoint>();
@@ -53,6 +36,7 @@ namespace Billbee.Net
 
             return serviceCollection;
         }
+
     }
 }
 

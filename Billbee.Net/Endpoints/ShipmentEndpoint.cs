@@ -32,7 +32,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<ShippingProvider>(this.EndPoint + "/shippingproviders");
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -49,7 +49,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<ShippingCarrier>(this.EndPoint + "/shippingcarriers");
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -66,7 +66,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.AddAsync<dynamic>(this.EndPoint + "/shipment", shipment);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -83,7 +83,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.AddAsync<dynamic>(this.EndPoint + "/shipment", shipment);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }

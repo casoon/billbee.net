@@ -58,7 +58,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<Event>(this.EndPoint, queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }

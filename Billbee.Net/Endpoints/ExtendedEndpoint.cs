@@ -35,7 +35,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.AddAsync<T>(this.EndPoint, t, param);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -47,19 +47,8 @@ namespace Billbee.Net.Endpoints
 
         public async Task<T> GetAsync(long id)
         {
-            try
-            {
-                var result = await billbeeClient.GetAsync<T>(this.EndPoint + "/" + id);
-                return result;
-            }
-            catch (NotFoundException)
-            {
-                throw;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAsync<T>(this.EndPoint + "/" + id);
+            return result;
         }
 
         public async Task<List<T>> GetAllAsync(int page = 0, int pageSize = 50)
@@ -73,7 +62,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<T>(this.EndPoint, queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -91,7 +80,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.UpdateAsync<T>(this.EndPoint, t);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }

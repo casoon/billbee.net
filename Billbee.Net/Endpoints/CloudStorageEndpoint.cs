@@ -29,7 +29,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<CloudStorage>(this.EndPoint);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }

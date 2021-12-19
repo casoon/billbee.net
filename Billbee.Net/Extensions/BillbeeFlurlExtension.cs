@@ -12,35 +12,23 @@ namespace Billbee.Net.Extensions
 {
     public static class BillbeeFlurlExtension
     {
+
+        private static readonly string userAgent = $"Billbee.Net/{typeof(BillbeeClient).Assembly.GetName().Version}";
+
         public static Task<T> Get<T>(this Url url, string apiKey, string clientId, string clientSecret) => new FlurlRequest(url).Get<T>(apiKey, clientId, clientSecret);
         public static Task<T> Get<T>(this Uri uri, string apiKey, string clientId, string clientSecret) => new FlurlRequest(uri).Get<T>(apiKey, clientId, clientSecret);
         public static Task<T> Get<T>(this string url, string apiKey, string clientId, string clientSecret) => new FlurlRequest(url).Get<T>(apiKey, clientId, clientSecret);
-
 
         public async static Task<T> Get<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret)
         {
             Response<T> result = null;
 
-            string userAgent = $"Billbee.Net/{typeof(BillbeeClient).Assembly.GetName().Version}";
-
-            try
-            {
-                req
-                    .WithHeader("X-Billbee-Api-Key", apiKey)
-                    .WithHeader("User-Agent", userAgent)
-                    .WithBasicAuth(clientId, clientSecret);
-                result = await req.GetJsonAsync<Response<T>>();
-            }
-            catch (FlurlHttpException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Error attempting to query Billbee", e);
-            }
-
-         
+            req
+                .WithHeader("X-Billbee-Api-Key", apiKey)
+                .WithHeader("User-Agent", userAgent)
+                .WithBasicAuth(clientId, clientSecret);
+            result = await req.GetJsonAsync<Response<T>>();
+    
             if (result.ErrorCode == 0 && result.Data != null)
             {
                 try
@@ -49,21 +37,13 @@ namespace Billbee.Net.Extensions
                 }
                 catch (Exception e)
                 {
-                    throw new Exception(e.Message, e);
+                    throw e;
                 }
 
             }
             else
             {
-                var errorMessage = $"{result.ErrorCode} - {result.ErrorMessage}";
-
-                switch (result.ErrorCode)
-                {
-                    default:
-                        throw new Exception($"{errorMessage}");
-
-                }
-
+                throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
             }
         }
 
@@ -79,25 +59,12 @@ namespace Billbee.Net.Extensions
 
             Response<T> result = null;
 
-            string userAgent = $"Billbee.Net/{typeof(BillbeeClient).Assembly.GetName().Version}";
+            req
+                .WithHeader("X-Billbee-Api-Key", apiKey)
+                .WithHeader("User-Agent", userAgent)
+                .WithBasicAuth(clientId, clientSecret);
 
-            try
-            {
-                req
-                    .WithHeader("X-Billbee-Api-Key", apiKey)
-                    .WithHeader("User-Agent", userAgent)
-                    .WithBasicAuth(clientId, clientSecret);
-                //result = await req.PostJsonAsync(json).ReceiveJson();
-                result = await req.PostJsonAsync(t).ReceiveJson<Response<T>>();
-            }
-            catch (FlurlHttpException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Error attempting to query Billbee", e);
-            }
+            result = await req.PostJsonAsync(t).ReceiveJson<Response<T>>();
 
 
             if (result.ErrorCode == 0 && result.Data != null)
@@ -108,21 +75,13 @@ namespace Billbee.Net.Extensions
                 }
                 catch (Exception e)
                 {
-                    throw new Exception(e.Message, e);
+                    throw e;
                 }
 
             }
             else
             {
-                var errorMessage = $"{result.ErrorCode} - {result.ErrorMessage}";
-
-                switch (result.ErrorCode)
-                {
-                    default:
-                        throw new Exception($"{errorMessage}");
-
-                }
-
+                throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
             }
         }
 
@@ -138,25 +97,11 @@ namespace Billbee.Net.Extensions
 
             Response<T> result = null;
 
-            string userAgent = $"Billbee.Net/{typeof(BillbeeClient).Assembly.GetName().Version}";
-
-            try
-            {
-                req
-                    .WithHeader("X-Billbee-Api-Key", apiKey)
-                    .WithHeader("User-Agent", userAgent)
-                    .WithBasicAuth(clientId, clientSecret);
-                //result = await req.PostJsonAsync(json).ReceiveJson();
-                result = await req.PutJsonAsync(t).ReceiveJson<Response<T>>();
-            }
-            catch (FlurlHttpException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Error attempting to query Billbee", e);
-            }
+            req
+                .WithHeader("X-Billbee-Api-Key", apiKey)
+                .WithHeader("User-Agent", userAgent)
+                .WithBasicAuth(clientId, clientSecret);
+            result = await req.PutJsonAsync(t).ReceiveJson<Response<T>>();
 
 
             if (result.ErrorCode == 0 && result.Data != null)
@@ -167,21 +112,13 @@ namespace Billbee.Net.Extensions
                 }
                 catch (Exception e)
                 {
-                    throw new Exception(e.Message, e);
+                    throw e;
                 }
 
             }
             else
             {
-                var errorMessage = $"{result.ErrorCode} - {result.ErrorMessage}";
-
-                switch (result.ErrorCode)
-                {
-                    default:
-                        throw new Exception($"{errorMessage}");
-
-                }
-
+                throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
             }
         }
 
@@ -205,25 +142,11 @@ namespace Billbee.Net.Extensions
 
             Response<T> result = null;
 
-            string userAgent = $"Billbee.Net/{typeof(BillbeeClient).Assembly.GetName().Version}";
-
-            try
-            {
-                req
-                    .WithHeader("X-Billbee-Api-Key", apiKey)
-                    .WithHeader("User-Agent", userAgent)
-                    .WithBasicAuth(clientId, clientSecret);
-                //result = await req.PostJsonAsync(json).ReceiveJson();
-                result = await req.PatchJsonAsync(json).ReceiveJson<Response<T>>();
-            }
-            catch (FlurlHttpException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Error attempting to query Billbee", e);
-            }
+            req
+                .WithHeader("X-Billbee-Api-Key", apiKey)
+                .WithHeader("User-Agent", userAgent)
+                .WithBasicAuth(clientId, clientSecret);
+            result = await req.PatchJsonAsync(json).ReceiveJson<Response<T>>();
 
 
             if (result.ErrorCode == 0 && result.Data != null)
@@ -234,21 +157,13 @@ namespace Billbee.Net.Extensions
                 }
                 catch (Exception e)
                 {
-                    throw new Exception(e.Message, e);
+                    throw e;
                 }
 
             }
             else
             {
-                var errorMessage = $"{result.ErrorCode} - {result.ErrorMessage}";
-
-                switch (result.ErrorCode)
-                {
-                    default:
-                        throw new Exception($"{errorMessage}");
-
-                }
-
+                throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
             }
         }
 
@@ -263,25 +178,11 @@ namespace Billbee.Net.Extensions
         {
             PagedResponse<T> result = null;
 
-            string userAgent = $"Billbee.Net/{typeof(BillbeeClient).Assembly.GetName().Version}";
-
-            try
-            {
-                req
-                    .WithHeader("X-Billbee-Api-Key", apiKey)
-                    .WithHeader("User-Agent", userAgent)
-                    .WithBasicAuth(clientId, clientSecret);
-                result = await req.GetJsonAsync<PagedResponse<T>>();
-            }
-            catch (FlurlHttpException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Error attempting to query Billbee", e);
-            }
-
+            req
+                .WithHeader("X-Billbee-Api-Key", apiKey)
+                .WithHeader("User-Agent", userAgent)
+                .WithBasicAuth(clientId, clientSecret);
+            result = await req.GetJsonAsync<PagedResponse<T>>();
 
             if (result.ErrorCode == 0 && result.Data != null)
             {
@@ -291,21 +192,13 @@ namespace Billbee.Net.Extensions
                 }
                 catch (Exception e)
                 {
-                    throw new Exception(e.Message, e);
+                    throw e;
                 }
 
             }
             else
             {
-                var errorMessage = $"{result.ErrorCode} - {result.ErrorMessage}";
-
-                switch (result.ErrorCode)
-                {
-                    default:
-                        throw new Exception($"{errorMessage}");
-
-                }
-
+                throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
             }
         }
 
@@ -316,28 +209,12 @@ namespace Billbee.Net.Extensions
 
         public async static Task Delete<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret)
         {
-            string userAgent = $"Billbee.Net/{typeof(BillbeeClient).Assembly.GetName().Version}";
-
-            try
-            {
-                req
-                    .WithHeader("X-Billbee-Api-Key", apiKey)
-                    .WithHeader("User-Agent", userAgent)
-                    .WithBasicAuth(clientId, clientSecret);
-                await req.DeleteAsync();
-            }
-            catch (FlurlHttpException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Error attempting to query Billbee", e);
-            }
-
+            req
+                .WithHeader("X-Billbee-Api-Key", apiKey)
+                .WithHeader("User-Agent", userAgent)
+                .WithBasicAuth(clientId, clientSecret);
+            await req.DeleteAsync();
         }
-
-
     }
 }
 

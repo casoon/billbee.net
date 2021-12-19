@@ -28,7 +28,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.UpdateAsync<dynamic>(this.EndPoint + "/updatestockmultiple", updateStockList);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -45,7 +45,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.UpdateAsync<dynamic>(this.EndPoint + "/updatestock", updateStockModel);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -71,7 +71,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAsync<GetReservedAmountResult>(this.EndPoint + "/reservedamount", queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -89,7 +89,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.UpdateAsync<object>(this.EndPoint + "/updatestockcode", updateStockCodeModel);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -116,7 +116,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<Product>(this.EndPoint, queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -137,7 +137,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAsync<Product>(this.EndPoint + "/" + id, queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -159,7 +159,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<ArticleCustomFieldDefinition>(this.EndPoint + "/custom-fields", queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -176,7 +176,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAsync<ArticleCustomFieldDefinition>(this.EndPoint + "/custom-fields/" + id);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -193,7 +193,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<string>(this.EndPoint + "/PatchableFields");
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -211,7 +211,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.PatchAsync<Product>(this.EndPoint + "/" + id.ToString(), fields);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -229,7 +229,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<ArticleImage>(this.EndPoint + "/" + id.ToString() + "/images");
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -246,7 +246,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAsync<ArticleImage>(this.EndPoint + "/" + productId.ToString() + "/images/" + imageId.ToString());
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -263,7 +263,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAsync<ArticleImage>(this.EndPoint + "/images/" + imageId.ToString());
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -285,7 +285,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.UpdateAsync<ArticleImage>(this.EndPoint + "/" + image.ArticleId.ToString() + "/images/" + image.Id.ToString(), image);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -307,7 +307,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.UpdateAsync<ArticleImage>(this.EndPoint + "/" + image.ArticleId.ToString() + "/images/" + image.Id.ToString(), image);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -328,7 +328,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.UpdateAsync<List<ArticleImage>>(this.EndPoint + "/" + productId.ToString() + "/images", images, queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -345,7 +345,7 @@ namespace Billbee.Net.Endpoints
             {
                 await billbeeClient.DeleteAsync<dynamic>(this.EndPoint + "/" + productId.ToString() + "/images/" + imageId.ToString());
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -362,7 +362,7 @@ namespace Billbee.Net.Endpoints
             {
                 await billbeeClient.DeleteAsync<dynamic>(this.EndPoint + "/images/" + imageId.ToString());
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -379,7 +379,7 @@ namespace Billbee.Net.Endpoints
             {
                 await billbeeClient.DeleteAsync<dynamic>(this.EndPoint + "/images/delete", imageIds);
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }

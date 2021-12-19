@@ -32,7 +32,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.AddAsync<CustomerAddress>(this.EndPoint, address, queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -49,7 +49,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAsync<CustomerAddress>(this.EndPoint + "/" + id.ToString());
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -66,7 +66,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.UpdateAsync<CustomerAddress>(this.EndPoint + "/" + address.Id.ToString(), address);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -88,7 +88,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<CustomerAddress>(this.EndPoint, queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }

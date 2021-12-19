@@ -7,44 +7,108 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
+using Flurl.Http;
+using Billbee.Net.Responses;
+using Polly.CircuitBreaker;
+using Polly;
+using System.Net;
+using Polly.Retry;
+using Polly.Wrap;
+using Polly.Timeout;
+using Polly.Bulkhead;
+using Billbee.Net.Exceptions;
+using Billbee.Net.Logging;
 
 namespace Billbee.Net
 {
 
     public class BillbeeClient : IBillbeeClient
     {
-        protected IConfiguration config;
-        //protected ILogger<T> logger;
-        protected internal readonly string baseUrl;
-        protected internal readonly string username;
-        protected internal readonly string password;
-        protected internal readonly string apiKey;
+        protected IConfiguration _config;
+        protected internal readonly string _baseUrl;
+        protected internal readonly string _username;
+        protected internal readonly string _password;
+        protected internal readonly string _apiKey;
+        protected internal readonly string _pollyCircuitBreakDurationInSeconds;
+        protected internal readonly string _pollyCircuitBreakExceptionCount;
+        protected internal readonly double _pollyCircuitBreakDurationInSecondsValue = 100;
+        protected internal readonly int _pollyCircuitBreakExceptionCountValue = 10;
+        private readonly ILogger<BillbeeClient> _logger;
+        private AsyncPolicyWrap _policyWrap;
 
-        public BillbeeClient(ILogger<BillbeeClient> logger)
+        public BillbeeClient(ILogger<BillbeeClient> logger, IFlurlTelemetryLogger flurlTelemetryLogger)
         {
-            this.config = ServiceRegistration.Configuration;
+            this._config = ServiceRegistration.Configuration;
 
+            _baseUrl = this._config["BillbeeUrl"];
+            _username = this._config["Username"];
+            _password = this._config["Password"];
+            _apiKey = this._config["ApiKey"];
+            _pollyCircuitBreakDurationInSeconds = this._config["PollyCircuitBreakDurationInSeconds"];
+            _pollyCircuitBreakExceptionCount = this._config["PollyCircuitBreakExceptionCount"];
+            _logger = logger;
 
-            //this.logger = loggerFactory.CreateLogger<T>();
-            baseUrl = this.config["BillbeeUrl"];
-            username = this.config["Username"];
-            password = this.config["Password"];
-            apiKey = this.config["ApiKey"];
-
-            if (string.IsNullOrWhiteSpace(baseUrl))
+            if (string.IsNullOrWhiteSpace(_baseUrl))
             {
                 throw new Exception("Base Url not configured. Please add BillbeeUrl to configuration");
             }
 
-            if (string.IsNullOrWhiteSpace(apiKey))
+            if (string.IsNullOrWhiteSpace(_apiKey))
             {
                 throw new Exception("ApiKey not configured. Please add ApiKey to configuration");
             }
 
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(_username) || string.IsNullOrWhiteSpace(_password))
             {
                 throw new Exception("Username and or Password are not configured. Please add Username and Password to configuration file");
             }
+
+            if (string.IsNullOrWhiteSpace(_baseUrl))
+            {
+                throw new Exception("billbee url not provided");
+            }
+
+
+            AsyncRetryPolicy retryPolicy = Policy
+                .Handle<FlurlHttpException>()
+                .WaitAndRetryAsync(
+                    53,
+                    retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                    (exception, timeSpan, retryCount, context) => {
+                        // logging
+                    }
+                );
+
+            AsyncCircuitBreakerPolicy circuitBreaker = Policy
+                .Handle<FlurlHttpException>()
+                .Or<FlurlHttpTimeoutException>()
+                .CircuitBreakerAsync(
+                    exceptionsAllowedBeforeBreaking: _pollyCircuitBreakExceptionCountValue,
+                    durationOfBreak: TimeSpan.FromSeconds(_pollyCircuitBreakDurationInSecondsValue)
+                );
+
+            AsyncTimeoutPolicy timeoutPolicy = Policy.TimeoutAsync(TimeSpan.FromMilliseconds(2500));
+
+            AsyncBulkheadPolicy bulkheadPolicy =  Policy.BulkheadAsync(10, 2);
+
+
+            _policyWrap = Policy.WrapAsync(/*retryPolicy, circuitBreaker, */timeoutPolicy, bulkheadPolicy);
+
+
+            FlurlHttp.ConfigureClient(_baseUrl, cli => cli
+            .Configure(settings =>
+            {
+                //settings.BeforeCall = call => _logger.LogInformation($"Calling {call.Request.Url}");
+                //settings.OnError = call => logger.LogError($"Call to Billbee API failed: {call.Exception}");
+                settings.AfterCallAsync = flurlCall => flurlTelemetryLogger.Log(flurlCall);
+
+            })
+            .AllowAnyHttpStatus()
+            .WithHeaders(new
+            {
+                Accept = "application/json",
+            }));
+
         }
 
         public async Task<T> GetAsync<T>(string endPoint, Dictionary<string, string> param = null)
@@ -52,12 +116,20 @@ namespace Billbee.Net
             if (param == null)
                 param = new Dictionary<string, string>();
 
-            var result = await baseUrl
-                    .AppendPathSegments(endPoint)
-                    .SetQueryParams(param)
-                    .Get<T>(apiKey, username, password);
+            try {
+                return await _policyWrap.ExecuteAsync(() =>
+                {
+                    return _baseUrl
+                            .AppendPathSegments(endPoint)
+                            .SetQueryParams(param)
+                            .Get<T>(_apiKey, _username, _password);
+                });
 
-            return result;
+            } catch (ApiException ex)
+            {
+                throw ex;
+            }
+
         }
 
         public async Task<List<T>> GetAllAsync<T>(string endPoint, Dictionary<string, string> param = null)
@@ -65,12 +137,18 @@ namespace Billbee.Net
             if (param == null)
                 param = new Dictionary<string, string>();
 
-            var result = await baseUrl
+            try
+            {
+                return await _baseUrl
                     .AppendPathSegments(endPoint)
                     .SetQueryParams(param)
-                    .GetAll<T>(apiKey, username, password);
+                    .GetAll<T>(_apiKey, _username, _password);
+            }
+            catch (ApiException ex)
+            {
+                throw ex;
+            }
 
-            return result;
         }
 
         public async Task<T> AddAsync<T>(string endPoint, T t, Dictionary<string, string> param = null)
@@ -78,11 +156,17 @@ namespace Billbee.Net
             if (param == null)
                 param = new Dictionary<string, string>();
 
-            var result = await baseUrl
+            try
+            {
+                return await _baseUrl
                     .AppendPathSegments(endPoint)
                     .SetQueryParams(param)
-                    .Post<T>(apiKey, username, password, t);
-            return result;
+                    .Post<T>(_apiKey, _username, _password, t);
+            }
+            catch (ApiException ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<T> UpdateAsync<T>(string endPoint, T t, Dictionary<string, string> param = null)
@@ -90,33 +174,59 @@ namespace Billbee.Net
             if (param == null)
                 param = new Dictionary<string, string>();
 
-            var result = await baseUrl
+            try
+            {
+                return await _baseUrl
                     .AppendPathSegments(endPoint)
                     .SetQueryParams(param)
-                    .Put<T>(apiKey, username, password, t);
-            return result;
+                    .Put<T>(_apiKey, _username, _password, t);
+            }
+            catch (ApiException ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<T> PatchAsync<T>(string endPoint, Dictionary<string, object> param)
         {
-            var result = await baseUrl
+            try
+            {
+                return await _baseUrl
                     .AppendPathSegments(endPoint)
-                    .Patch<T>(apiKey, username, password, param);
-            return result;
+                    .Patch<T>(_apiKey, _username, _password, param);
+            }
+            catch (ApiException ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task DeleteAsync<T>(string endPoint)
         {
-            await baseUrl
+            try
+            {
+                await _baseUrl
                     .AppendPathSegments(endPoint)
-                    .Delete<T>(apiKey, username, password);
+                    .Delete<T>(_apiKey, _username, _password);
+            }
+            catch (ApiException ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task DeleteAsync<T>(string endPoint, T t)
         {
-            await baseUrl
+            try
+            {
+                await _baseUrl
                     .AppendPathSegments(endPoint)
-                    .Post<T>(apiKey, username, password, t);
+                    .Post<T>(_apiKey, _username, _password, t);
+            }
+            catch (ApiException ex)
+            {
+                throw ex;
+            }
         }
 
     }

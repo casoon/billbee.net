@@ -51,7 +51,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.AddAsync<Invoice>(this.EndPoint + "/CreateInvoice/" + orderId, new Invoice(), queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -133,7 +133,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<Invoice>(this.EndPoint + "/invoices", queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }

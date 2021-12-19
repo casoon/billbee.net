@@ -29,7 +29,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.AddAsync<Account>(this.EndPoint + "/createaccount/", account);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -46,7 +46,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAsync<TermsResult>(this.EndPoint + "/termsinfo");
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }

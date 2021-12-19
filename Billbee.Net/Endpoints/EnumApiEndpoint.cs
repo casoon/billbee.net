@@ -31,7 +31,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAsync<String>(this.EndPoint + "/paymenttypes");
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -48,7 +48,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAsync<String>(this.EndPoint + "/shippingcarriers");
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -65,7 +65,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAsync<String>(this.EndPoint + "/shipmenttypes");
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -82,7 +82,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAsync<String>(this.EndPoint + "/orderstates");
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }

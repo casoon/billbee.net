@@ -32,7 +32,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<Order>(this.EndPoint + "/" + id.ToString() + "/" + "orders", queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
@@ -53,7 +53,7 @@ namespace Billbee.Net.Endpoints
                 var result = await billbeeClient.GetAllAsync<Address>(this.EndPoint + "/" + id.ToString() + "/" + "addresses", queryParams);
                 return result;
             }
-            catch (NotFoundException)
+            catch (ApiException)
             {
                 throw;
             }
