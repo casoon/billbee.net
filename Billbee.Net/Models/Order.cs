@@ -228,5 +228,26 @@ namespace Billbee.Net.Models
 
         public string CustomerVatId { get; set; }
 
+        public string PaymentReference { get; set; }
+
+        public string DistributionCenter { get; set; }
+
+        public decimal AdjustmentCost { get; set; }
+
+        public string AdjustmentReason { get; set; }
+
+        public decimal RebateDifference { get; set; }
+
+       
+        /// <summary>
+        /// The list of payments
+        /// </summary>
+        public List<Payment> Payments { get; set; }
+
+        /// <summary>
+        /// Orderhistory
+        /// </summary>
+        public List<HistoryItem> History { get; set; }
+
     }
 }
