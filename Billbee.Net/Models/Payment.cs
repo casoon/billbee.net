@@ -15,7 +15,7 @@ namespace Billbee.Net.Models
 
         public DateTime PayDate { get; set; }
 
-        public PaymentTypeEnum PaymentType { get; set; }
+        public PaymentTypeEnum? PaymentType { get; set; }
 
         public string SourceTechnology { get; set; }
 
