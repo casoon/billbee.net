@@ -33,9 +33,7 @@
             var orders = provider.GetRequiredService<IOrderEndpoint>();
             var customers = provider.GetRequiredService<ICustomerEndpoint>();
 
-            var order = orders.GetAsync(175972519).GetAwaiter().GetResult();
 
-            int i = 0;
 
         }
     }
