@@ -214,5 +214,19 @@ namespace Billbee.Net.Models
         public string CustomerNumber { get; set; }
 
         public Customer Customer { get; set; }
+
+        /// <summary>
+        /// The timestamp, this order was modified.
+        /// </summary>
+        public DateTime LastModifiedAt { get; set; }
+
+        public string ApiAccountName { get; set; }
+
+        public long? ApiAccountId { get; set; }
+
+        public string MerchantVatId { get; set; }
+
+        public string CustomerVatId { get; set; }
+
     }
 }
