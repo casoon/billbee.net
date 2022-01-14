@@ -72,7 +72,7 @@ namespace Billbee.Net
             AsyncRetryPolicy retryPolicy = Policy
                 .Handle<FlurlHttpException>()
                 .WaitAndRetryAsync(
-                    53,
+                    10,
                     retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                     (exception, timeSpan, retryCount, context) => {
                         // logging
@@ -87,12 +87,24 @@ namespace Billbee.Net
                     durationOfBreak: TimeSpan.FromSeconds(_pollyCircuitBreakDurationInSecondsValue)
                 );
 
+
+            AsyncRetryPolicy throttlePolicy = Policy
+                .Handle<FlurlParsingException> (a => a.StatusCode != null && a.StatusCode == (int)System.Net.HttpStatusCode.TooManyRequests)
+                .WaitAndRetryAsync(
+                    10,
+                    retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                    (exception, timeSpan, retryCount, context) => {
+                        // logging
+                    }
+                );
+
+
             AsyncTimeoutPolicy timeoutPolicy = Policy.TimeoutAsync(TimeSpan.FromMilliseconds(2500));
 
             AsyncBulkheadPolicy bulkheadPolicy =  Policy.BulkheadAsync(10, 2);
 
 
-            _policyWrap = Policy.WrapAsync(/*retryPolicy, circuitBreaker, */timeoutPolicy, bulkheadPolicy);
+            _policyWrap = Policy.WrapAsync(retryPolicy, throttlePolicy, circuitBreaker, timeoutPolicy, bulkheadPolicy);
 
 
             FlurlHttp.ConfigureClient(_baseUrl, cli => cli
