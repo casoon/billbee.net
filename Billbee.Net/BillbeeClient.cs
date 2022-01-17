@@ -29,8 +29,6 @@ namespace Billbee.Net
         protected internal readonly string _username;
         protected internal readonly string _password;
         protected internal readonly string _apiKey;
-        protected internal readonly string _pollyCircuitBreakDurationInSeconds;
-        protected internal readonly string _pollyCircuitBreakExceptionCount;
         protected internal readonly double _pollyCircuitBreakDurationInSecondsValue = 100;
         protected internal readonly int _pollyCircuitBreakExceptionCountValue = 10;
         private readonly ILogger<BillbeeClient> _logger;
@@ -44,8 +42,6 @@ namespace Billbee.Net
             _username = this._config["Username"];
             _password = this._config["Password"];
             _apiKey = this._config["ApiKey"];
-            _pollyCircuitBreakDurationInSeconds = this._config["PollyCircuitBreakDurationInSeconds"];
-            _pollyCircuitBreakExceptionCount = this._config["PollyCircuitBreakExceptionCount"];
             _logger = logger;
 
             if (string.IsNullOrWhiteSpace(_baseUrl))
@@ -129,13 +125,10 @@ namespace Billbee.Net
                 param = new Dictionary<string, string>();
 
             try {
-                return await _policyWrap.ExecuteAsync(() =>
-                {
-                    return _baseUrl
-                            .AppendPathSegments(endPoint)
-                            .SetQueryParams(param)
-                            .Get<T>(_apiKey, _username, _password);
-                });
+                return await _policyWrap.ExecuteAsync(() => _baseUrl
+                    .AppendPathSegments(endPoint)
+                    .SetQueryParams(param)
+                    .Get<T>(_apiKey, _username, _password));
 
             } catch (ApiException ex)
             {
@@ -151,10 +144,10 @@ namespace Billbee.Net
 
             try
             {
-                return await _baseUrl
+                return await _policyWrap.ExecuteAsync(() => _baseUrl
                     .AppendPathSegments(endPoint)
                     .SetQueryParams(param)
-                    .GetAll<T>(_apiKey, _username, _password);
+                    .GetAll<T>(_apiKey, _username, _password));
             }
             catch (ApiException ex)
             {
@@ -170,10 +163,11 @@ namespace Billbee.Net
 
             try
             {
-                return await _baseUrl
+                return await _policyWrap.ExecuteAsync(() => _baseUrl
                     .AppendPathSegments(endPoint)
                     .SetQueryParams(param)
-                    .Post<T>(_apiKey, _username, _password, t);
+                    .Post<T>(_apiKey, _username, _password, t));
+
             }
             catch (ApiException ex)
             {
@@ -188,10 +182,10 @@ namespace Billbee.Net
 
             try
             {
-                return await _baseUrl
+                return await _policyWrap.ExecuteAsync(() => _baseUrl
                     .AppendPathSegments(endPoint)
                     .SetQueryParams(param)
-                    .Put<T>(_apiKey, _username, _password, t);
+                    .Put<T>(_apiKey, _username, _password, t));
             }
             catch (ApiException ex)
             {
@@ -203,9 +197,10 @@ namespace Billbee.Net
         {
             try
             {
-                return await _baseUrl
+                return await _policyWrap.ExecuteAsync(() => _baseUrl
                     .AppendPathSegments(endPoint)
-                    .Patch<T>(_apiKey, _username, _password, param);
+                    .Patch<T>(_apiKey, _username, _password, param));
+
             }
             catch (ApiException ex)
             {
@@ -217,9 +212,13 @@ namespace Billbee.Net
         {
             try
             {
-                await _baseUrl
-                    .AppendPathSegments(endPoint)
-                    .Delete<T>(_apiKey, _username, _password);
+                await _policyWrap.ExecuteAsync(async () =>
+                {
+                     await _baseUrl
+                         .AppendPathSegments(endPoint)
+                         .Delete<T>(_apiKey, _username, _password);
+                });
+
             }
             catch (ApiException ex)
             {
@@ -231,9 +230,13 @@ namespace Billbee.Net
         {
             try
             {
-                await _baseUrl
-                    .AppendPathSegments(endPoint)
-                    .Post<T>(_apiKey, _username, _password, t);
+                await _policyWrap.ExecuteAsync(async () =>
+                {
+                     await _baseUrl
+                         .AppendPathSegments(endPoint)
+                         .Post<T>(_apiKey, _username, _password, t);
+                });
+
             }
             catch (ApiException ex)
             {
