@@ -128,7 +128,7 @@ namespace Billbee.Net.Extensions
             result = await req.PutJsonAsync(t).ReceiveJson<Response<T>>();
 
 
-            if (result.ErrorCode == 0 && result.Data != null)
+            if (result != null && result.ErrorCode == 0 && result.Data != null)
                 try
                 {
                     return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
@@ -138,7 +138,7 @@ namespace Billbee.Net.Extensions
                     throw e;
                 }
 
-            throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
+            return default;
         }
 
 
@@ -182,7 +182,7 @@ namespace Billbee.Net.Extensions
             result = await req.PatchJsonAsync(json).ReceiveJson<Response<T>>();
 
 
-            if (result.ErrorCode == 0 && result.Data != null)
+            if (result != null && result.ErrorCode == 0 && result.Data != null)
                 try
                 {
                     return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
@@ -192,7 +192,7 @@ namespace Billbee.Net.Extensions
                     throw e;
                 }
 
-            throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
+            return default;
         }
 
 
@@ -233,7 +233,7 @@ namespace Billbee.Net.Extensions
                     throw e;
                 }
 
-            throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
+            return default;
         }
 
         public static Task Delete<T>(this Url url, string apiKey, string clientId, string clientSecret)

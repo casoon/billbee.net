@@ -25,7 +25,8 @@ namespace Billbee.Net.Logging
             };
 
             if (call.Response != null &&
-                call.Response.ResponseMessage.Content != null)
+                call.Response.ResponseMessage.Content != null &&
+                call.Response.ResponseMessage.Content.Headers.ContentType != null)
             {
                 var ct = call.Response.ResponseMessage.Content.Headers.ContentType.ToString();
                 if (ct.ToLower().Contains("application/json") || ct.ToLower().Contains("text/plain"))

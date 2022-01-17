@@ -30,5 +30,6 @@ public class Program
 
         var orders = provider.GetRequiredService<IOrderEndpoint>();
         var events = provider.GetRequiredService<IEventEndpoint>();
+        
     }
 }
