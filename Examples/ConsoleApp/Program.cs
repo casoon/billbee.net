@@ -1,4 +1,6 @@
-﻿namespace ConsoleApp
+﻿using Serilog;
+
+namespace ConsoleApp
 {
     public class Program
     {
@@ -15,12 +17,9 @@
         {
             IConfiguration Configuration = new Microsoft.Extensions.Configuration.ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
-            return Host.CreateDefaultBuilder(args)
-                .ConfigureLogging(logging =>
-                {
-                    logging.ClearProviders();
-                    logging.AddConsole();
-                })
+            return Host.CreateDefaultBuilder(args).UseSerilog((ctx, lc) => lc
+                    .WriteTo.Console())
+
                 .ConfigureServices((_, services) =>
                     services.RegisterBillbee(Configuration));
         }
@@ -31,10 +30,8 @@
             var provider = serviceScope.ServiceProvider;
 
             var orders = provider.GetRequiredService<IOrderEndpoint>();
-            var customers = provider.GetRequiredService<ICustomerEndpoint>();
-
-
-
+            var events = provider.GetRequiredService<IEventEndpoint>();
+            
         }
     }
 }
