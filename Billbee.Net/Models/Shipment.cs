@@ -69,11 +69,23 @@ namespace Billbee.Net.Models
             ///     Date and time of shipment
             /// </summary>
             public DateTime? ShipDate { get; set; }
-
+            
+            /// <summary>
+            /// The id of a connected Cloudprinter to sent the export docs to
+            /// </summary>
+            public long? PrinterIdForExportDocs { get; set; }
+            
             /// <summary>
             ///     The Id of the carrier, the parcel will be send with
             /// </summary>
             public byte shippingCarrier { get; set; }
+            
+            /// <summary>
+            /// The value of the shipments content (net)
+            /// </summary>
+            public decimal TotalNet { get; set; }
+
+            public ShipmentDimensions Dimension { get; set; }
         }
     }
 }
