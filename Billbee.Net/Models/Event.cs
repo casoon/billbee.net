@@ -27,7 +27,7 @@ namespace Billbee.Net.Models
         /// <summary>
         /// Internal id of the employee, that initiated this event, if applicable
         /// </summary>
-        public long? EmployeeId { get; set; }
+        public string EmployeeId { get; set; }
 
         /// <summary>
         /// Name of the employee, that initiated this event, if applicable
