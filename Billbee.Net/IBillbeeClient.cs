@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Billbee.Net
@@ -15,4 +14,3 @@ namespace Billbee.Net
         Task DeleteAsync<T>(string endPoint, T t);
     }
 }
-

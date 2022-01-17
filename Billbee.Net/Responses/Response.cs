@@ -1,7 +1,5 @@
-﻿using System;
-namespace Billbee.Net.Responses
+﻿namespace Billbee.Net.Responses
 {
-
     public class Response<T>
     {
         public int ErrorCode { get; set; }
@@ -13,4 +11,3 @@ namespace Billbee.Net.Responses
         public T Data { get; set; }
     }
 }
-

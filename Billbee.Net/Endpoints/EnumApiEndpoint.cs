@@ -1,97 +1,73 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Billbee.Net.Exceptions;
-using Billbee.Net.Models;
 
 namespace Billbee.Net.Endpoints
 {
-
     public interface IEnumApiEndpoint : IBaseEndpoint
     {
-        Task<String> GetPaymentTypesAsync();
-        Task<String> GetShippingCarriersAsync();
-        Task<String> GetShipmentTypesAsync();
-        Task<String> GetOrderStatesAsync();
-
+        Task<string> GetPaymentTypesAsync();
+        Task<string> GetShippingCarriersAsync();
+        Task<string> GetShipmentTypesAsync();
+        Task<string> GetOrderStatesAsync();
     }
 
     public class EnumApiEndpoint : BaseEndpoint, IEnumApiEndpoint
     {
         public EnumApiEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
         {
-            this.EndPoint = "enums";
+            EndPoint = "enums";
         }
 
-        public async Task<String> GetPaymentTypesAsync()
+        public async Task<string> GetPaymentTypesAsync()
         {
             try
             {
-                var result = await billbeeClient.GetAsync<String>(this.EndPoint + "/paymenttypes");
+                var result = await billbeeClient.GetAsync<string>(EndPoint + "/paymenttypes");
                 return result;
             }
             catch (ApiException)
             {
                 throw;
             }
-            catch (Exception)
-            {
-                throw;
-            }
         }
 
-        public async Task<String> GetShippingCarriersAsync()
+        public async Task<string> GetShippingCarriersAsync()
         {
             try
             {
-                var result = await billbeeClient.GetAsync<String>(this.EndPoint + "/shippingcarriers");
+                var result = await billbeeClient.GetAsync<string>(EndPoint + "/shippingcarriers");
                 return result;
             }
             catch (ApiException)
             {
                 throw;
             }
-            catch (Exception)
-            {
-                throw;
-            }
         }
 
-        public async Task<String> GetShipmentTypesAsync()
+        public async Task<string> GetShipmentTypesAsync()
         {
             try
             {
-                var result = await billbeeClient.GetAsync<String>(this.EndPoint + "/shipmenttypes");
+                var result = await billbeeClient.GetAsync<string>(EndPoint + "/shipmenttypes");
                 return result;
             }
             catch (ApiException)
             {
                 throw;
             }
-            catch (Exception)
-            {
-                throw;
-            }
         }
 
-        public async Task<String> GetOrderStatesAsync()
+        public async Task<string> GetOrderStatesAsync()
         {
             try
             {
-                var result = await billbeeClient.GetAsync<String>(this.EndPoint + "/orderstates");
+                var result = await billbeeClient.GetAsync<string>(EndPoint + "/orderstates");
                 return result;
             }
             catch (ApiException)
             {
                 throw;
             }
-            catch (Exception)
-            {
-                throw;
-            }
         }
-
     }
 }
-

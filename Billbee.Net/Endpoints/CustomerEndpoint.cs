@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Billbee.Net.Exceptions;
 using Billbee.Net.Models;
@@ -17,7 +15,7 @@ namespace Billbee.Net.Endpoints
     {
         public CustomerEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
         {
-            this.EndPoint = "customers";
+            EndPoint = "customers";
         }
 
 
@@ -29,14 +27,10 @@ namespace Billbee.Net.Endpoints
 
             try
             {
-                var result = await billbeeClient.GetAllAsync<Order>(this.EndPoint + "/" + id.ToString() + "/" + "orders", queryParams);
+                var result = await billbeeClient.GetAllAsync<Order>(EndPoint + "/" + id + "/" + "orders", queryParams);
                 return result;
             }
             catch (ApiException)
-            {
-                throw;
-            }
-            catch (Exception)
             {
                 throw;
             }
@@ -50,19 +44,14 @@ namespace Billbee.Net.Endpoints
 
             try
             {
-                var result = await billbeeClient.GetAllAsync<Address>(this.EndPoint + "/" + id.ToString() + "/" + "addresses", queryParams);
+                var result =
+                    await billbeeClient.GetAllAsync<Address>(EndPoint + "/" + id + "/" + "addresses", queryParams);
                 return result;
             }
             catch (ApiException)
             {
                 throw;
             }
-            catch (Exception)
-            {
-                throw;
-            }
         }
- 
     }
 }
-

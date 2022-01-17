@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Flurl.Http;
 using Newtonsoft.Json;
 using Serilog;
@@ -12,7 +11,7 @@ namespace Billbee.Net.Logging
 
         public FlurlTelemetryLogger(ILogger logger)
         {
-            this._logger = logger;
+            _logger = logger;
         }
 
         public async Task Log(FlurlCall call)
@@ -30,17 +29,13 @@ namespace Billbee.Net.Logging
             {
                 var ct = call.Response.ResponseMessage.Content.Headers.ContentType.ToString();
                 if (ct.ToLower().Contains("application/json") || ct.ToLower().Contains("text/plain"))
-                {
                     flurlTelemetry.ResponseBody = await call.Response.ResponseMessage.Content.ReadAsStringAsync();
-                }
             }
 
             if (call.Response.StatusCode < 300)
-                this._logger.Information("{@FlurlTelemetry}", JsonConvert.SerializeObject(flurlTelemetry));
+                _logger.Information("{@FlurlTelemetry}", JsonConvert.SerializeObject(flurlTelemetry));
             else
-                this._logger.Error("{@FlurlTelemetry}", JsonConvert.SerializeObject(flurlTelemetry));
+                _logger.Error("{@FlurlTelemetry}", JsonConvert.SerializeObject(flurlTelemetry));
         }
     }
-
 }
-

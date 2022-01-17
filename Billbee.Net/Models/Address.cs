@@ -1,12 +1,12 @@
 ﻿namespace Billbee.Net.Models
 {
     /// <summary>
-    /// Basic address for usage in orders
+    ///     Basic address for usage in orders
     /// </summary>
     public class Address
     {
         /// <summary>
-        /// Internal id of this address
+        ///     Internal id of this address
         /// </summary>
         public string Id { get; set; }
 
@@ -19,12 +19,12 @@
         public string State { get; set; }
 
         /// <summary>
-        /// Name of the country
+        ///     Name of the country
         /// </summary>
         public string Country { get; set; }
 
         /// <summary>
-        /// The ISO 2 code of the country
+        ///     The ISO 2 code of the country
         /// </summary>
         public string CountryISO2 { get; set; }
 
@@ -32,19 +32,19 @@
         public string LastName { get; set; }
 
         /// <summary>
-        /// Phone number of an addressee, used for notification purposes.
+        ///     Phone number of an addressee, used for notification purposes.
         /// </summary>
         public string Phone { get; set; }
 
         /// <summary>
-        /// E-mail address of an addressee, used for notification purposes.
+        ///     E-mail address of an addressee, used for notification purposes.
         /// </summary>
         public string Email { get; set; }
 
         public string HouseNumber { get; set; }
 
         /// <summary>
-        /// A comment about the address for better differentiation
+        ///     A comment about the address for better differentiation
         /// </summary>
         public string Comment { get; set; }
 

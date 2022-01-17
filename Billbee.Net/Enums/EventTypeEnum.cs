@@ -1,7 +1,7 @@
 ﻿namespace Billbee.Net.Enums
 {
     /// <summary>
-    /// Possible event types
+    ///     Possible event types
     /// </summary>
     public enum EventTypeEnum
     {

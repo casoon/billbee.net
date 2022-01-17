@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Billbee.Net.Enums;
 
 namespace Billbee.Net.Models
@@ -7,7 +6,7 @@ namespace Billbee.Net.Models
     public class Payment
     {
         /// <summary>
-        /// Internal Id of billbee
+        ///     Internal Id of billbee
         /// </summary>
         public long? BillbeeId { get; set; }
 
@@ -26,6 +25,5 @@ namespace Billbee.Net.Models
         public string Purpose { get; set; }
 
         public string Name { get; set; }
-
     }
 }

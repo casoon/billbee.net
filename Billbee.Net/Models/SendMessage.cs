@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Billbee.Net.Models
 {
-
     public enum ConfirmationMessageSendMode
     {
         None = 0,
@@ -17,28 +12,28 @@ namespace Billbee.Net.Models
     }
 
     /// <summary>
-    /// Container to store information for a message, that can be send via an order.
+    ///     Container to store information for a message, that can be send via an order.
     /// </summary>
     public class SendMessage
     {
         /// <summary>
-        /// Defines, how the message is send
+        ///     An alternative recipient email address
         /// </summary>
-        public ConfirmationMessageSendMode SendMode = ConfirmationMessageSendMode.EmailThenApi;
+        public string AlternativeMail = null;
 
         /// <summary>
-        /// The Subject of the message
-        /// </summary>
-        public List<MultiLanguageString> Subject = new List<MultiLanguageString>();
-
-        /// <summary>
-        /// The body of the message
+        ///     The body of the message
         /// </summary>
         public List<MultiLanguageString> Body = new List<MultiLanguageString>();
 
         /// <summary>
-        /// An alternative recipient email address
+        ///     Defines, how the message is send
         /// </summary>
-        public string AlternativeMail = null;
+        public ConfirmationMessageSendMode SendMode = ConfirmationMessageSendMode.EmailThenApi;
+
+        /// <summary>
+        ///     The Subject of the message
+        /// </summary>
+        public List<MultiLanguageString> Subject = new List<MultiLanguageString>();
     }
 }

@@ -1,22 +1,17 @@
-﻿using System;
-using System.Threading.Tasks;
-using Billbee.Net.Endpoints;
+﻿using Billbee.Net.Endpoints;
 using Billbee.Net.Logging;
-using Flurl.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace Billbee.Net
 {
     public static class ServiceRegistration
     {
-
         internal static IConfiguration Configuration;
 
-        public static IServiceCollection RegisterBillbee(this IServiceCollection serviceCollection, IConfiguration configuration)
+        public static IServiceCollection RegisterBillbee(this IServiceCollection serviceCollection,
+            IConfiguration configuration)
         {
-
             Configuration = configuration;
 
             serviceCollection.AddScoped<IFlurlTelemetryLogger, FlurlTelemetryLogger>();
@@ -36,7 +31,5 @@ namespace Billbee.Net
 
             return serviceCollection;
         }
-
     }
 }
-

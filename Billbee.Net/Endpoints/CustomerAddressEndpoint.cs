@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Billbee.Net.Exceptions;
 using Billbee.Net.Models;
 
 namespace Billbee.Net.Endpoints
@@ -19,7 +16,7 @@ namespace Billbee.Net.Endpoints
     {
         public CustomerAddressEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
         {
-            this.EndPoint = "customer-addresses";
+            EndPoint = "customer-addresses";
         }
 
 
@@ -27,53 +24,20 @@ namespace Billbee.Net.Endpoints
         {
             var queryParams = new Dictionary<string, string>();
 
-            try
-            {
-                var result = await billbeeClient.AddAsync<CustomerAddress>(this.EndPoint, address, queryParams);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            var result = await billbeeClient.AddAsync(EndPoint, address, queryParams);
+            return result;
         }
 
         public async Task<CustomerAddress> GetAsync(long id)
         {
-            try
-            {
-                var result = await billbeeClient.GetAsync<CustomerAddress>(this.EndPoint + "/" + id.ToString());
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAsync<CustomerAddress>(EndPoint + "/" + id);
+            return result;
         }
 
         public async Task<CustomerAddress> UpdateAsync(CustomerAddress address)
         {
-            try
-            {
-                var result = await billbeeClient.UpdateAsync<CustomerAddress>(this.EndPoint + "/" + address.Id.ToString(), address);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            var result = await billbeeClient.UpdateAsync(EndPoint + "/" + address.Id, address);
+            return result;
         }
 
 
@@ -83,21 +47,8 @@ namespace Billbee.Net.Endpoints
             queryParams.Add("page", page.ToString());
             queryParams.Add("pageSize", pageSize.ToString());
 
-            try
-            {
-                var result = await billbeeClient.GetAllAsync<CustomerAddress>(this.EndPoint, queryParams);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAllAsync<CustomerAddress>(EndPoint, queryParams);
+            return result;
         }
-
     }
 }
-

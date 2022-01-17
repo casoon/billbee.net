@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Billbee.Net.Models
+﻿namespace Billbee.Net.Models
 {
     public class CustomerAddress
     {
-
         public long? Id { get; set; }
+
         /// <summary>
-        /// 1 = Invoiceaddress
-        /// 2 = Shippingaddress
+        ///     1 = Invoiceaddress
+        ///     2 = Shippingaddress
         /// </summary>
         public int AddressType { get; set; }
+
         public long? CustomerId { get; set; }
         public string Company { get; set; }
         public string FirstName { get; set; }

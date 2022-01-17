@@ -12,14 +12,24 @@ namespace Billbee.Net.Extensions
 {
     public static class BillbeeFlurlExtension
     {
-
         private static readonly string userAgent = $"Billbee.Net/{typeof(BillbeeClient).Assembly.GetName().Version}";
 
-        public static Task<T> Get<T>(this Url url, string apiKey, string clientId, string clientSecret) => new FlurlRequest(url).Get<T>(apiKey, clientId, clientSecret);
-        public static Task<T> Get<T>(this Uri uri, string apiKey, string clientId, string clientSecret) => new FlurlRequest(uri).Get<T>(apiKey, clientId, clientSecret);
-        public static Task<T> Get<T>(this string url, string apiKey, string clientId, string clientSecret) => new FlurlRequest(url).Get<T>(apiKey, clientId, clientSecret);
+        public static Task<T> Get<T>(this Url url, string apiKey, string clientId, string clientSecret)
+        {
+            return new FlurlRequest(url).Get<T>(apiKey, clientId, clientSecret);
+        }
 
-        public async static Task<T> Get<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret)
+        public static Task<T> Get<T>(this Uri uri, string apiKey, string clientId, string clientSecret)
+        {
+            return new FlurlRequest(uri).Get<T>(apiKey, clientId, clientSecret);
+        }
+
+        public static Task<T> Get<T>(this string url, string apiKey, string clientId, string clientSecret)
+        {
+            return new FlurlRequest(url).Get<T>(apiKey, clientId, clientSecret);
+        }
+
+        public static async Task<T> Get<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret)
         {
             Response<T> result = null;
 
@@ -28,9 +38,8 @@ namespace Billbee.Net.Extensions
                 .WithHeader("User-Agent", userAgent)
                 .WithBasicAuth(clientId, clientSecret);
             result = await req.GetJsonAsync<Response<T>>();
-    
+
             if (result.ErrorCode == 0 && result.Data != null)
-            {
                 try
                 {
                     return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
@@ -40,20 +49,28 @@ namespace Billbee.Net.Extensions
                     throw e;
                 }
 
-            }
-            else
-            {
-                throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
-            }
+            throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
         }
 
 
-        public static Task<T> Post<T>(this Url url, string apiKey, string clientId, string clientSecret, T t) => new FlurlRequest(url).Post<T>(apiKey, clientId, clientSecret, t);
-        public static Task<T> Post<T>(this Uri uri, string apiKey, string clientId, string clientSecret, T t) => new FlurlRequest(uri).Post<T>(apiKey, clientId, clientSecret, t);
-        public static Task<T> Post<T>(this string url, string apiKey, string clientId, string clientSecret, T t) => new FlurlRequest(url).Post<T>(apiKey, clientId, clientSecret, t);
+        public static Task<T> Post<T>(this Url url, string apiKey, string clientId, string clientSecret, T t)
+        {
+            return new FlurlRequest(url).Post(apiKey, clientId, clientSecret, t);
+        }
+
+        public static Task<T> Post<T>(this Uri uri, string apiKey, string clientId, string clientSecret, T t)
+        {
+            return new FlurlRequest(uri).Post(apiKey, clientId, clientSecret, t);
+        }
+
+        public static Task<T> Post<T>(this string url, string apiKey, string clientId, string clientSecret, T t)
+        {
+            return new FlurlRequest(url).Post(apiKey, clientId, clientSecret, t);
+        }
 
 
-        public async static Task<T> Post<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret, T t)
+        public static async Task<T> Post<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret,
+            T t)
         {
             var json = JsonConvert.SerializeObject(t);
 
@@ -68,7 +85,6 @@ namespace Billbee.Net.Extensions
 
 
             if (result.ErrorCode == 0 && result.Data != null)
-            {
                 try
                 {
                     return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
@@ -78,20 +94,28 @@ namespace Billbee.Net.Extensions
                     throw e;
                 }
 
-            }
-            else
-            {
-                throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
-            }
+            throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
         }
 
 
-        public static Task<T> Put<T>(this Url url, string apiKey, string clientId, string clientSecret, T t) => new FlurlRequest(url).Put<T>(apiKey, clientId, clientSecret, t);
-        public static Task<T> Put<T>(this Uri uri, string apiKey, string clientId, string clientSecret, T t) => new FlurlRequest(uri).Put<T>(apiKey, clientId, clientSecret, t);
-        public static Task<T> Put<T>(this string url, string apiKey, string clientId, string clientSecret, T t) => new FlurlRequest(url).Put<T>(apiKey, clientId, clientSecret, t);
+        public static Task<T> Put<T>(this Url url, string apiKey, string clientId, string clientSecret, T t)
+        {
+            return new FlurlRequest(url).Put(apiKey, clientId, clientSecret, t);
+        }
+
+        public static Task<T> Put<T>(this Uri uri, string apiKey, string clientId, string clientSecret, T t)
+        {
+            return new FlurlRequest(uri).Put(apiKey, clientId, clientSecret, t);
+        }
+
+        public static Task<T> Put<T>(this string url, string apiKey, string clientId, string clientSecret, T t)
+        {
+            return new FlurlRequest(url).Put(apiKey, clientId, clientSecret, t);
+        }
 
 
-        public async static Task<T> Put<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret, T t)
+        public static async Task<T> Put<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret,
+            T t)
         {
             var json = JsonConvert.SerializeObject(t);
 
@@ -105,7 +129,6 @@ namespace Billbee.Net.Extensions
 
 
             if (result.ErrorCode == 0 && result.Data != null)
-            {
                 try
                 {
                     return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
@@ -115,26 +138,36 @@ namespace Billbee.Net.Extensions
                     throw e;
                 }
 
-            }
-            else
-            {
-                throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
-            }
+            throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
         }
 
 
-        public static Task<T> Patch<T>(this Url url, string apiKey, string clientId, string clientSecret, Dictionary<string, object> fields) => new FlurlRequest(url).Patch<T>(apiKey, clientId, clientSecret, fields);
-        public static Task<T> Patch<T>(this Uri uri, string apiKey, string clientId, string clientSecret, Dictionary<string, object> fields) => new FlurlRequest(uri).Patch<T>(apiKey, clientId, clientSecret, fields);
-        public static Task<T> Patch<T>(this string url, string apiKey, string clientId, string clientSecret, Dictionary<string, object> fields) => new FlurlRequest(url).Patch<T>(apiKey, clientId, clientSecret, fields);
-
-
-        public async static Task<T> Patch<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret, Dictionary<string, object> fields)
+        public static Task<T> Patch<T>(this Url url, string apiKey, string clientId, string clientSecret,
+            Dictionary<string, object> fields)
         {
+            return new FlurlRequest(url).Patch<T>(apiKey, clientId, clientSecret, fields);
+        }
 
-            JObject obj = new JObject();
+        public static Task<T> Patch<T>(this Uri uri, string apiKey, string clientId, string clientSecret,
+            Dictionary<string, object> fields)
+        {
+            return new FlurlRequest(uri).Patch<T>(apiKey, clientId, clientSecret, fields);
+        }
+
+        public static Task<T> Patch<T>(this string url, string apiKey, string clientId, string clientSecret,
+            Dictionary<string, object> fields)
+        {
+            return new FlurlRequest(url).Patch<T>(apiKey, clientId, clientSecret, fields);
+        }
+
+
+        public static async Task<T> Patch<T>(this IFlurlRequest req, string apiKey, string clientId,
+            string clientSecret, Dictionary<string, object> fields)
+        {
+            var obj = new JObject();
             foreach (var element in fields)
             {
-                JProperty prop = new JProperty(element.Key, element.Value);
+                var prop = new JProperty(element.Key, element.Value);
                 obj.Add(prop);
             }
 
@@ -150,7 +183,6 @@ namespace Billbee.Net.Extensions
 
 
             if (result.ErrorCode == 0 && result.Data != null)
-            {
                 try
                 {
                     return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
@@ -160,21 +192,28 @@ namespace Billbee.Net.Extensions
                     throw e;
                 }
 
-            }
-            else
-            {
-                throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
-            }
+            throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
         }
 
 
+        public static Task<List<T>> GetAll<T>(this Url url, string apiKey, string clientId, string clientSecret)
+        {
+            return new FlurlRequest(url).GetAll<T>(apiKey, clientId, clientSecret);
+        }
 
-        public static Task<List<T>> GetAll<T>(this Url url, string apiKey, string clientId, string clientSecret) => new FlurlRequest(url).GetAll<T>(apiKey, clientId, clientSecret);
-        public static Task<List<T>> GetAll<T>(this Uri uri, string apiKey, string clientId, string clientSecret) => new FlurlRequest(uri).GetAll<T>(apiKey, clientId, clientSecret);
-        public static Task<List<T>> GetAll<T>(this string url, string apiKey, string clientId, string clientSecret) => new FlurlRequest(url).GetAll<T>(apiKey, clientId, clientSecret);
+        public static Task<List<T>> GetAll<T>(this Uri uri, string apiKey, string clientId, string clientSecret)
+        {
+            return new FlurlRequest(uri).GetAll<T>(apiKey, clientId, clientSecret);
+        }
+
+        public static Task<List<T>> GetAll<T>(this string url, string apiKey, string clientId, string clientSecret)
+        {
+            return new FlurlRequest(url).GetAll<T>(apiKey, clientId, clientSecret);
+        }
 
 
-        public async static Task<List<T>> GetAll<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret)
+        public static async Task<List<T>> GetAll<T>(this IFlurlRequest req, string apiKey, string clientId,
+            string clientSecret)
         {
             PagedResponse<T> result = null;
 
@@ -185,7 +224,6 @@ namespace Billbee.Net.Extensions
             result = await req.GetJsonAsync<PagedResponse<T>>();
 
             if (result.ErrorCode == 0 && result.Data != null)
-            {
                 try
                 {
                     return JsonConvert.DeserializeObject<List<T>>(JsonConvert.SerializeObject(result.Data));
@@ -195,19 +233,26 @@ namespace Billbee.Net.Extensions
                     throw e;
                 }
 
-            }
-            else
-            {
-                throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
-            }
+            throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
         }
 
-        public static Task Delete<T>(this Url url, string apiKey, string clientId, string clientSecret) => new FlurlRequest(url).Delete<T>(apiKey, clientId, clientSecret);
-        public static Task Delete<T>(this Uri uri, string apiKey, string clientId, string clientSecret) => new FlurlRequest(uri).Delete<T>(apiKey, clientId, clientSecret);
-        public static Task Delete<T>(this string url, string apiKey, string clientId, string clientSecret) => new FlurlRequest(url).Delete<T>(apiKey, clientId, clientSecret);
+        public static Task Delete<T>(this Url url, string apiKey, string clientId, string clientSecret)
+        {
+            return new FlurlRequest(url).Delete<T>(apiKey, clientId, clientSecret);
+        }
+
+        public static Task Delete<T>(this Uri uri, string apiKey, string clientId, string clientSecret)
+        {
+            return new FlurlRequest(uri).Delete<T>(apiKey, clientId, clientSecret);
+        }
+
+        public static Task Delete<T>(this string url, string apiKey, string clientId, string clientSecret)
+        {
+            return new FlurlRequest(url).Delete<T>(apiKey, clientId, clientSecret);
+        }
 
 
-        public async static Task Delete<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret)
+        public static async Task Delete<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret)
         {
             req
                 .WithHeader("X-Billbee-Api-Key", apiKey)
@@ -217,4 +262,3 @@ namespace Billbee.Net.Extensions
         }
     }
 }
-

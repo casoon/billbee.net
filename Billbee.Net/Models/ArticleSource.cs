@@ -3,32 +3,32 @@
 namespace Billbee.Net.Models
 {
     /// <summary>
-    /// Defines the sources in external systems, to which this article is attached to
+    ///     Defines the sources in external systems, to which this article is attached to
     /// </summary>
     public class ArticleSource
     {
         /// <summary>
-        /// Name of the source
+        ///     Name of the source
         /// </summary>
         public string Source { get; set; }
 
         /// <summary>
-        /// The id on the source
+        ///     The id on the source
         /// </summary>
         public string SourceId { get; set; }
 
         /// <summary>
-        /// The internal id of this article source definition
+        ///     The internal id of this article source definition
         /// </summary>
         public long Id { get; set; }
 
         /// <summary>
-        /// Name of the api account, this source belongs to
+        ///     Name of the api account, this source belongs to
         /// </summary>
         public string ApiAccountName { get; set; }
 
         /// <summary>
-        /// Id of the api account, this source belongs to
+        ///     Id of the api account, this source belongs to
         /// </summary>
         public long? ApiAccountId { get; set; }
 

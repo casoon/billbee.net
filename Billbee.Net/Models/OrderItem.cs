@@ -5,7 +5,8 @@ namespace Billbee.Net.Models
     public class OrderItem
     {
         /// <summary>
-        /// Id der Einzeltransaktion. Wird nur von Ebay benötigt, um zusammengefasste Bestellungen zu erkennen  OR  Id of the individual transaction. Only required by Ebay to detect aggregated orders
+        ///     Id der Einzeltransaktion. Wird nur von Ebay benötigt, um zusammengefasste Bestellungen zu erkennen  OR  Id of the
+        ///     individual transaction. Only required by Ebay to detect aggregated orders
         /// </summary>
         public string TransactionId { get; set; }
 
@@ -16,7 +17,7 @@ namespace Billbee.Net.Models
         public byte? TaxIndex { get; set; }
 
         /// <summary>
-        /// Sets the discount in percent
+        ///     Sets the discount in percent
         /// </summary>
         public decimal Discount { get; set; }
 
@@ -24,25 +25,21 @@ namespace Billbee.Net.Models
         public bool GetPriceFromArticleIfAny { get; set; }
 
         /// <summary>
-        /// Legt fest, ob es sich bei dieser Position um einen Gutschein handelt, der als umsatzsteuerfreie Zahlung interpretiert wird OR Determines if it is a coupon, which is interpreted as tax-free payment
+        ///     Legt fest, ob es sich bei dieser Position um einen Gutschein handelt, der als umsatzsteuerfreie Zahlung
+        ///     interpretiert wird OR Determines if it is a coupon, which is interpreted as tax-free payment
         /// </summary>
         public bool IsCoupon { get; set; }
 
         public string ShippingProfileId { get; set; }
 
-        public override string ToString()
-        {
-            return $"Q:{Quantity} TP:{TotalPrice} Tax:{TaxIndex} Discount:{Discount}";
-        }
-
         /// <summary>
-        /// If true, the import of this order won't adjust the stock level at billbee.
+        ///     If true, the import of this order won't adjust the stock level at billbee.
         /// </summary>
         /// <remarks>This is used for amazon refunds</remarks>
         public bool DontAdjustStock { get; set; }
 
         /// <summary>
-        /// Internal Id of billbee
+        ///     Internal Id of billbee
         /// </summary>
         public long? BillbeeId { get; set; }
 
@@ -53,5 +50,10 @@ namespace Billbee.Net.Models
 
         /// <summary>Contains the used serial number</summary>
         public string SerialNumber { get; set; }
+
+        public override string ToString()
+        {
+            return $"Q:{Quantity} TP:{TotalPrice} Tax:{TaxIndex} Discount:{Discount}";
+        }
     }
 }

@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Billbee.Net.Models
+﻿namespace Billbee.Net.Models
 {
     public class AtticleCustomFieldValue
     {
-        public long? Id;
-
-        public long? DefinitionId;
+        public long? ArticleId;
 
         public ArticleCustomFieldDefinition Definition;
 
-        public long? ArticleId;
+        public long? DefinitionId;
+        public long? Id;
 
         public object Value;
     }

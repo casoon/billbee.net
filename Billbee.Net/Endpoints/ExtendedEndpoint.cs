@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Billbee.Net.Exceptions;
 
 namespace Billbee.Net.Endpoints
 {
-
     public interface IExtendedEndpoint<T>
     {
-
         Task<T> AddAsync(T t, Dictionary<string, string> param = null);
 
         Task<T> GetAsync(long id);
@@ -16,7 +13,6 @@ namespace Billbee.Net.Endpoints
         Task<List<T>> GetAllAsync(int page, int pageSize);
 
         Task<T> UpdateAsync(T t);
-
     }
 
     public abstract class ExtendedEndpoint<T> : BaseEndpoint, IExtendedEndpoint<T>
@@ -32,14 +28,10 @@ namespace Billbee.Net.Endpoints
 
             try
             {
-                var result = await billbeeClient.AddAsync<T>(this.EndPoint, t, param);
+                var result = await billbeeClient.AddAsync(EndPoint, t, param);
                 return result;
             }
             catch (ApiException)
-            {
-                throw;
-            }
-            catch (Exception)
             {
                 throw;
             }
@@ -47,7 +39,7 @@ namespace Billbee.Net.Endpoints
 
         public async Task<T> GetAsync(long id)
         {
-            var result = await billbeeClient.GetAsync<T>(this.EndPoint + "/" + id);
+            var result = await billbeeClient.GetAsync<T>(EndPoint + "/" + id);
             return result;
         }
 
@@ -59,14 +51,10 @@ namespace Billbee.Net.Endpoints
 
             try
             {
-                var result = await billbeeClient.GetAllAsync<T>(this.EndPoint, queryParams);
+                var result = await billbeeClient.GetAllAsync<T>(EndPoint, queryParams);
                 return result;
             }
             catch (ApiException)
-            {
-                throw;
-            }
-            catch (Exception)
             {
                 throw;
             }
@@ -77,20 +65,13 @@ namespace Billbee.Net.Endpoints
         {
             try
             {
-                var result = await billbeeClient.UpdateAsync<T>(this.EndPoint, t);
+                var result = await billbeeClient.UpdateAsync(EndPoint, t);
                 return result;
             }
             catch (ApiException)
             {
                 throw;
             }
-            catch (Exception)
-            {
-                throw;
-            }
         }
-
-
     }
 }
-

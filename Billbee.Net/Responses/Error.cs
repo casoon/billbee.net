@@ -1,13 +1,7 @@
-﻿using System;
-namespace Billbee.Net.Responses
+﻿namespace Billbee.Net.Responses
 {
-	public class Error
-	{
-		public Error()
-		{
-		}
-
-		public string ErrorMessage { get; set; }
-	}
+    public class Error
+    {
+        public string ErrorMessage { get; set; }
+    }
 }
-

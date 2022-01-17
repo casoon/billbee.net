@@ -1,5 +1,4 @@
-﻿using System;
-namespace Billbee.Net.Logging
+﻿namespace Billbee.Net.Logging
 {
     public class HttpTelemetry
     {
@@ -10,4 +9,3 @@ namespace Billbee.Net.Logging
         public string ResponseBody { get; set; }
     }
 }
-

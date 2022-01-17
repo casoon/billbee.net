@@ -5,8 +5,8 @@ namespace Billbee.Net.Models
     public class OrderItemProduct
     {
         /// <summary>
-        /// This is for migration scenarios when the internal id of a product changes
-        /// I.E. Etsy when switching to the new inventory management, the ids for variants will change.
+        ///     This is for migration scenarios when the internal id of a product changes
+        ///     I.E. Etsy when switching to the new inventory management, the ids for variants will change.
         /// </summary>
         public string OldId { get; set; }
 
@@ -14,16 +14,13 @@ namespace Billbee.Net.Models
         public string Title { get; set; }
 
         /// <summary>
-        /// Weight of one item in gram
+        ///     Weight of one item in gram
         /// </summary>
         public int? Weight { get; set; }
 
         public string SKU { get; set; }
 
-        public string SkuOrId
-        {
-            get { return string.IsNullOrEmpty(SKU) ? Id : SKU; }
-        }
+        public string SkuOrId => string.IsNullOrEmpty(SKU) ? Id : SKU;
 
         public bool? IsDigital { get; set; }
 
@@ -32,7 +29,7 @@ namespace Billbee.Net.Models
         public string EAN { get; set; }
 
         /// <summary>
-        /// Optional platform specific Data as serialized JSON Object for the product
+        ///     Optional platform specific Data as serialized JSON Object for the product
         /// </summary>
         public string PlatformData { get; set; }
 

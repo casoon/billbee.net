@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Billbee.Net.Exceptions;
 using Billbee.Net.Models;
 
 namespace Billbee.Net.Endpoints
 {
-
     public interface IAutomaticProvisionEndpoint : IBaseEndpoint
     {
         Task<Account> CreateAccountAsync(Account account);
@@ -19,21 +15,17 @@ namespace Billbee.Net.Endpoints
     {
         public AutomaticProvisionEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
         {
-            this.EndPoint = "automaticprovision";
+            EndPoint = "automaticprovision";
         }
 
         public async Task<Account> CreateAccountAsync(Account account)
         {
             try
             {
-                var result = await billbeeClient.AddAsync<Account>(this.EndPoint + "/createaccount/", account);
+                var result = await billbeeClient.AddAsync(EndPoint + "/createaccount/", account);
                 return result;
             }
             catch (ApiException)
-            {
-                throw;
-            }
-            catch (Exception)
             {
                 throw;
             }
@@ -43,18 +35,13 @@ namespace Billbee.Net.Endpoints
         {
             try
             {
-                var result = await billbeeClient.GetAsync<TermsResult>(this.EndPoint + "/termsinfo");
+                var result = await billbeeClient.GetAsync<TermsResult>(EndPoint + "/termsinfo");
                 return result;
             }
             catch (ApiException)
             {
                 throw;
             }
-            catch (Exception)
-            {
-                throw;
-            }
         }
     }
 }
-

@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Billbee.Net.Exceptions;
-using Billbee.Net.Models;
-
-namespace Billbee.Net.Endpoints
+﻿namespace Billbee.Net.Endpoints
 {
-
     public interface IDeliveryNoteEndpoint : IBaseEndpoint
     {
-
     }
 
 
@@ -18,8 +9,7 @@ namespace Billbee.Net.Endpoints
     {
         public DeliveryNoteEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
         {
-            this.EndPoint = "";
+            EndPoint = "";
         }
     }
 }
-

@@ -1,29 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Billbee.Net.Models
+﻿namespace Billbee.Net.Models
 {
     public enum ApiArticleCustomFieldType
     {
         TextField,
         Textarea,
         NumberInput,
-        SelectInput,
+        SelectInput
     }
 
     public class ArticleCustomFieldDefinition
     {
+        public object Configuration;
         public long? Id;
+
+        public bool IsNullable;
 
         public string Name;
 
-        public object Configuration;
-
         public ApiArticleCustomFieldType? Type;
-
-        public bool IsNullable;
     }
 }

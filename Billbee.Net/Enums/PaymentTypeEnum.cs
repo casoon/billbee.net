@@ -8,12 +8,14 @@
         Barzahlung = 4,
         Gutschein = 6,
         Sofortüberweisung = 19,
+
         /// <summary>
-        /// etsy
+        ///     etsy
         /// </summary>
         MoneyOrder = 20, // etsy
+
         /// <summary>
-        /// etsy ck
+        ///     etsy ck
         /// </summary>
         Check = 21, // etsy ck
         Andere = 22,
@@ -105,6 +107,6 @@
         MollieSofort = 108,
         MollieGiroPay = 109,
         MollieMaestro = 110,
-        MollieKlarnaPayLater = 111,
+        MollieKlarnaPayLater = 111
     }
 }

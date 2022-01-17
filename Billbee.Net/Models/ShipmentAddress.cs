@@ -12,12 +12,12 @@
         public string City { get; set; }
 
         /// <summary>
-        /// The ISO 2 code of the country
+        ///     The ISO 2 code of the country
         /// </summary>
         public string CountryCode { get; set; }
 
         /// <summary>
-        /// The ISO 3 code of the country
+        ///     The ISO 3 code of the country
         /// </summary>
         public string CountryCodeISO3 { get; set; }
 

@@ -3,82 +3,82 @@
     public enum OrderStateEnum
     {
         /// <summary>
-        /// Ordered
+        ///     Ordered
         /// </summary>
         Bestellt = 1,
 
         /// <summary>
-        /// Confirmed
+        ///     Confirmed
         /// </summary>
         Bestaetigt = 2,
 
         /// <summary>
-        /// Payment Received
+        ///     Payment Received
         /// </summary>
         Zahlung_erhalten = 3,
 
         /// <summary>
-        /// sent
+        ///     sent
         /// </summary>
         Versendet = 4,
 
         /// <summary>
-        /// complaints
+        ///     complaints
         /// </summary>
         Reklamation = 5,
 
         /// <summary>
-        /// deleted
+        ///     deleted
         /// </summary>
         Geloescht = 6,
 
         /// <summary>
-        /// completed
+        ///     completed
         /// </summary>
         Abgeschlossen = 7,
 
         /// <summary>
-        /// cancelled
+        ///     cancelled
         /// </summary>
         Storniert = 8,
 
         /// <summary>
-        /// archived
+        ///     archived
         /// </summary>
         Archiviert = 9,
 
         /// <summary>
-        /// rated
+        ///     rated
         /// </summary>
         Rated = 10,
 
         /// <summary>
-        /// warning
+        ///     warning
         /// </summary>
         Mahnung = 11,
 
         /// <summary>
-        /// warning2
+        ///     warning2
         /// </summary>
         Mahnung2 = 12,
 
         /// <summary>
-        /// packed
+        ///     packed
         /// </summary>
         Gepackt = 13,
 
         /// <summary>
-        /// Offered 
+        ///     Offered
         /// </summary>
         Angeboten = 14,
 
         /// <summary>
-        /// reminder
+        ///     reminder
         /// </summary>
         Zahlungserinnerung = 15,
 
         /// <summary>
-        /// In sending process
+        ///     In sending process
         /// </summary>
         Im_Fulfillment = 16
     }
