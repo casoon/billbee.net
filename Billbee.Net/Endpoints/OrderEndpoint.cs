@@ -28,7 +28,7 @@ namespace Billbee.Net.Endpoints
             DateTime? modifiedAtMax = null,
             bool excludeTags = false
         );
-        Task<List<Order>> GetInvoicesAsync(
+        Task<List<Invoice>> GetInvoicesAsync(
             int page = 0,
             int pageSize = 50,
             DateTime? minInvoiceDate = null,
@@ -214,7 +214,7 @@ namespace Billbee.Net.Endpoints
             }
         }
 
-        public async Task<List<Order>> GetInvoicesAsync(
+        public async Task<List<Invoice>> GetInvoicesAsync(
              int page = 0,
              int pageSize = 50,
              DateTime? minInvoiceDate = null,
@@ -284,7 +284,7 @@ namespace Billbee.Net.Endpoints
 
             try
             {
-                var result = await billbeeClient.GetAllAsync<Order>(this.EndPoint + "/invoices", queryParams);
+                var result = await billbeeClient.GetAllAsync<Invoice>(this.EndPoint + "/invoices", queryParams);
                 return result;
             }
             catch (ApiException)
