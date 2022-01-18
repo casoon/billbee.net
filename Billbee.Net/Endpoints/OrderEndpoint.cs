@@ -140,7 +140,7 @@ namespace Billbee.Net.Endpoints
             if (maxOrderDate != null) queryParams.Add("maxOrderDate", maxOrderDate.Value.ToString("yyyy-MM-dd HH:mm"));
 
             if (modifiedAtMin != null)
-                queryParams.Add("modifiedAtMin", modifiedAtMax.Value.ToString("yyyy-MM-dd HH:mm"));
+                queryParams.Add("modifiedAtMin", modifiedAtMin.Value.ToString("yyyy-MM-dd HH:mm"));
 
             if (modifiedAtMax != null)
                 queryParams.Add("modifiedAtMax", modifiedAtMax.Value.ToString("yyyy-MM-dd HH:mm"));
