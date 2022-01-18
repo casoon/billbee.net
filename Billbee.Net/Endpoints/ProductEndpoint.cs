@@ -16,8 +16,13 @@ namespace Billbee.Net.Endpoints
         {
             EndPoint = "products";
         }
-
-
+        
+        public async Task<List<Stock>> GetStocksAsync(long orderId, List<UpdateStock> updateStockList)
+        {
+            var result = await billbeeClient.GetAllAsync<Stock>(EndPoint + "/stocks");
+            return result;
+        }
+        
         public async Task<dynamic> UpdateStockMultipleAsync(long orderId, List<UpdateStock> updateStockList)
         {
             var result = await billbeeClient.UpdateAsync<dynamic>(EndPoint + "/updatestockmultiple", updateStockList);
