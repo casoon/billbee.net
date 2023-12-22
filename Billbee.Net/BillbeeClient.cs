@@ -89,14 +89,13 @@ namespace Billbee.Net
 
             _policyWrap = Policy.WrapAsync(retryPolicy, throttlePolicy, circuitBreaker, timeoutPolicy, bulkheadPolicy);
 
-
-            FlurlHttp.ConfigureClientForUrl(_baseUrl)
-                .AfterCall(call => flurlTelemetryLogger.Log(call))
+            FlurlHttp.Clients.WithDefaults(builder =>
+                builder.AfterCall(call => flurlTelemetryLogger.Log(call))
                 .AllowAnyHttpStatus()
                 .WithHeaders(new
                 {
                     Accept = "application/json"
-                });
+                }));
             
         }
 
