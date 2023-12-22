@@ -16,14 +16,14 @@ namespace Billbee.Net
 {
     public class BillbeeClient : IBillbeeClient
     {
-        protected internal readonly string _apiKey;
-        protected internal readonly string _baseUrl;
+        private readonly string _apiKey;
+        private readonly string _baseUrl;
         private readonly ILogger<BillbeeClient> _logger;
-        protected internal readonly string _password;
-        protected internal readonly double _pollyCircuitBreakDurationInSecondsValue = 100;
-        protected internal readonly int _pollyCircuitBreakExceptionCountValue = 10;
-        protected internal readonly string _username;
-        protected IConfiguration _config;
+        private readonly string _password;
+        private readonly double _pollyCircuitBreakDurationInSecondsValue = 100;
+        private readonly int _pollyCircuitBreakExceptionCountValue = 10;
+        private readonly string _username;
+        private IConfiguration _config;
         private readonly AsyncPolicyWrap _policyWrap;
 
         public BillbeeClient(ILogger<BillbeeClient> logger, IFlurlTelemetryLogger flurlTelemetryLogger)
@@ -90,18 +90,14 @@ namespace Billbee.Net
             _policyWrap = Policy.WrapAsync(retryPolicy, throttlePolicy, circuitBreaker, timeoutPolicy, bulkheadPolicy);
 
 
-            FlurlHttp.ConfigureClient(_baseUrl, cli => cli
-                .Configure(settings =>
-                {
-                    //settings.BeforeCall = call => _logger.LogInformation($"Calling {call.Request.Url}");
-                    //settings.OnError = call => logger.LogError($"Call to Billbee API failed: {call.Exception}");
-                    settings.AfterCallAsync = flurlCall => flurlTelemetryLogger.Log(flurlCall);
-                })
+            FlurlHttp.ConfigureClientForUrl(_baseUrl)
+                .AfterCall(call => flurlTelemetryLogger.Log(call))
                 .AllowAnyHttpStatus()
                 .WithHeaders(new
                 {
                     Accept = "application/json"
-                }));
+                });
+            
         }
 
         public async Task<T> GetAsync<T>(string endPoint, Dictionary<string, string> param = null)

@@ -52,7 +52,7 @@ namespace Billbee.Net.Endpoints
         {
             try
             {
-                var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/shipment", shipment);
+                var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/shipment/shipment", shipment);
                 return result;
             }
             catch (ApiException)
@@ -65,7 +65,7 @@ namespace Billbee.Net.Endpoints
         {
             try
             {
-                var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/shipment", shipment);
+                var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/shipment/shipwithlabel", shipment);
                 return result;
             }
             catch (ApiException)
@@ -73,5 +73,6 @@ namespace Billbee.Net.Endpoints
                 throw;
             }
         }
+
     }
 }
