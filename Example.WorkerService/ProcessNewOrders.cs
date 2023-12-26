@@ -14,8 +14,7 @@ public class ProcessNewOrders(
         {
             var orderList = orders.GetAllAsync(minOrderDate: DateTime.Today.AddDays(-10)).GetAwaiter().GetResult();
             foreach (var order in orderList)
-                if (order.BillBeeOrderId != null)
-                    Console.WriteLine(order.BillBeeOrderId.Value);
+                Console.WriteLine(order.BillBeeOrderId);
         }
         catch (Exception ex)
         {
