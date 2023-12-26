@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Billbee.Net.Exceptions;
 
 namespace Billbee.Net.Endpoints
 {
@@ -20,54 +19,26 @@ namespace Billbee.Net.Endpoints
 
         public async Task<string> GetPaymentTypesAsync()
         {
-            try
-            {
-                var result = await billbeeClient.GetAsync<string>(EndPoint + "/paymenttypes");
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAsync<string>(EndPoint + "/paymenttypes");
+            return result;
         }
 
         public async Task<string> GetShippingCarriersAsync()
         {
-            try
-            {
-                var result = await billbeeClient.GetAsync<string>(EndPoint + "/shippingcarriers");
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAsync<string>(EndPoint + "/shippingcarriers");
+            return result;
         }
 
         public async Task<string> GetShipmentTypesAsync()
         {
-            try
-            {
-                var result = await billbeeClient.GetAsync<string>(EndPoint + "/shipmenttypes");
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAsync<string>(EndPoint + "/shipmenttypes");
+            return result;
         }
 
         public async Task<string> GetOrderStatesAsync()
         {
-            try
-            {
-                var result = await billbeeClient.GetAsync<string>(EndPoint + "/orderstates");
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAsync<string>(EndPoint + "/orderstates");
+            return result;
         }
     }
 }

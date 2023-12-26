@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Billbee.Net.Exceptions;
 using Billbee.Net.Models;
 using Billbee.Net.Models.Rechnungsdruck.WebApp.Model.Api;
 
@@ -24,55 +23,26 @@ namespace Billbee.Net.Endpoints
 
         public async Task<List<ShippingProvider>> GetShippingProviderAsync()
         {
-            try
-            {
-                var result = await billbeeClient.GetAllAsync<ShippingProvider>(EndPoint + "/shippingproviders");
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAllAsync<ShippingProvider>(EndPoint + "/shippingproviders");
+            return result;
         }
 
         public async Task<List<ShippingCarrier>> GetShippingCarriersAsync()
         {
-            try
-            {
-                var result = await billbeeClient.GetAllAsync<ShippingCarrier>(EndPoint + "/shippingcarriers");
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAllAsync<ShippingCarrier>(EndPoint + "/shippingcarriers");
+            return result;
         }
 
         public async Task<dynamic> AddShipmentAsync(PostShipment shipment)
         {
-            try
-            {
-                var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/shipment", shipment);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/shipment", shipment);
+            return result;
         }
 
         public async Task<dynamic> ShipOrderWithLabelAsync(ShipmentWithLabel shipment)
         {
-            try
-            {
-                var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/shipwithlabel", shipment);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/shipwithlabel", shipment);
+            return result;
         }
-
     }
 }

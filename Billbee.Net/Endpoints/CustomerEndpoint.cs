@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Billbee.Net.Exceptions;
 using Billbee.Net.Models;
 
 namespace Billbee.Net.Endpoints
@@ -25,15 +24,8 @@ namespace Billbee.Net.Endpoints
             queryParams.Add("page", page.ToString());
             queryParams.Add("pageSize", pageSize.ToString());
 
-            try
-            {
-                var result = await billbeeClient.GetAllAsync<Order>(EndPoint + "/" + id + "/" + "orders", queryParams);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAllAsync<Order>(EndPoint + "/" + id + "/" + "orders", queryParams);
+            return result;
         }
 
         public async Task<List<Address>> GetAddressesForCustomerAsync(long id, int page, int pageSize)
@@ -42,16 +34,9 @@ namespace Billbee.Net.Endpoints
             queryParams.Add("page", page.ToString());
             queryParams.Add("pageSize", pageSize.ToString());
 
-            try
-            {
-                var result =
-                    await billbeeClient.GetAllAsync<Address>(EndPoint + "/" + id + "/" + "addresses", queryParams);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result =
+                await billbeeClient.GetAllAsync<Address>(EndPoint + "/" + id + "/" + "addresses", queryParams);
+            return result;
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Billbee.Net.Enums;
-using Billbee.Net.Exceptions;
 using Billbee.Net.Models;
 
 namespace Billbee.Net.Endpoints
@@ -42,15 +41,8 @@ namespace Billbee.Net.Endpoints
                     index++;
                 }
 
-            try
-            {
-                var result = await billbeeClient.GetAllAsync<Event>(EndPoint, queryParams);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAllAsync<Event>(EndPoint, queryParams);
+            return result;
         }
     }
 }

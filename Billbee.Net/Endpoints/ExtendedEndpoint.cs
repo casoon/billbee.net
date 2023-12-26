@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Billbee.Net.Exceptions;
 
 namespace Billbee.Net.Endpoints
 {
@@ -26,15 +25,8 @@ namespace Billbee.Net.Endpoints
             if (param == null)
                 param = new Dictionary<string, string>();
 
-            try
-            {
-                var result = await billbeeClient.AddAsync(EndPoint, t, param);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.AddAsync(EndPoint, t, param);
+            return result;
         }
 
         public async Task<T> GetAsync(long id)
@@ -49,29 +41,15 @@ namespace Billbee.Net.Endpoints
             queryParams.Add("page", page.ToString());
             queryParams.Add("pageSize", pageSize.ToString());
 
-            try
-            {
-                var result = await billbeeClient.GetAllAsync<T>(EndPoint, queryParams);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAllAsync<T>(EndPoint, queryParams);
+            return result;
         }
 
 
         public async Task<T> UpdateAsync(T t)
         {
-            try
-            {
-                var result = await billbeeClient.UpdateAsync(EndPoint, t);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.UpdateAsync(EndPoint, t);
+            return result;
         }
     }
 }

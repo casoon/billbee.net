@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Billbee.Net.Exceptions;
 using Billbee.Net.Models;
 
 namespace Billbee.Net.Endpoints
@@ -20,28 +19,14 @@ namespace Billbee.Net.Endpoints
 
         public async Task<Account> CreateAccountAsync(Account account)
         {
-            try
-            {
-                var result = await billbeeClient.AddAsync(EndPoint + "/createaccount/", account);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.AddAsync(EndPoint + "/createaccount/", account);
+            return result;
         }
 
         public async Task<TermsResult> TermsInfoAsync()
         {
-            try
-            {
-                var result = await billbeeClient.GetAsync<TermsResult>(EndPoint + "/termsinfo");
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAsync<TermsResult>(EndPoint + "/termsinfo");
+            return result;
         }
     }
 }

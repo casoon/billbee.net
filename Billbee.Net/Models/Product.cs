@@ -143,7 +143,7 @@ namespace Billbee.Net.Models
         public string TaricNumber { get; set; }
 
         public List<AtticleCustomFieldValue> CustomFields { get; set; } = new List<AtticleCustomFieldValue>();
-        
+
         public bool? IsDeactivated { get; set; }
     }
 }

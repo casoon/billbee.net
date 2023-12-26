@@ -65,55 +65,27 @@ namespace Billbee.Net.Endpoints
 
         public async Task<string> GetLayoutsAsync()
         {
-            try
-            {
-                var result = await billbeeClient.GetAsync<string>(EndPoint + "/" + "layouts");
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAsync<string>(EndPoint + "/" + "layouts");
+            return result;
         }
 
         public async Task<string> GetPatchableFieldsAsync()
         {
-            try
-            {
-                var result = await billbeeClient.GetAsync<string>(EndPoint + "/patchablefields");
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAsync<string>(EndPoint + "/patchablefields");
+            return result;
         }
 
 
         public async Task<string> PatchOrderAsync(long id, Dictionary<string, object> fields)
         {
-            try
-            {
-                var result = await billbeeClient.PatchAsync<string>(EndPoint + "/" + id, fields);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.PatchAsync<string>(EndPoint + "/" + id, fields);
+            return result;
         }
 
         public async Task<Order> GetOrderByExternalReferenceAsync(string id)
         {
-            try
-            {
-                var result = await billbeeClient.GetAsync<Order>(EndPoint + "/findbyextref/" + id);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAsync<Order>(EndPoint + "/findbyextref/" + id);
+            return result;
         }
 
         public async Task<List<Order>> GetAllAsync(
@@ -166,15 +138,8 @@ namespace Billbee.Net.Endpoints
                 foreach (var id in orderStateId) queryParams.Add($"orderStateId[{i++}]", ((int) id).ToString());
             }
 
-            try
-            {
-                var result = await billbeeClient.GetAllAsync<Order>(EndPoint, queryParams);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAllAsync<Order>(EndPoint, queryParams);
+            return result;
         }
 
         public async Task<List<Invoice>> GetInvoicesAsync(
@@ -226,15 +191,8 @@ namespace Billbee.Net.Endpoints
             }
 
 
-            try
-            {
-                var result = await billbeeClient.GetAllAsync<Invoice>(EndPoint + "/invoices", queryParams);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAllAsync<Invoice>(EndPoint + "/invoices", queryParams);
+            return result;
         }
 
 
@@ -243,15 +201,8 @@ namespace Billbee.Net.Endpoints
             var queryParams = new Dictionary<string, string>();
             queryParams.Add("shopId", shopId.ToString());
 
-            try
-            {
-                var result = await billbeeClient.AddAsync(EndPoint, order, queryParams);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.AddAsync(EndPoint, order, queryParams);
+            return result;
         }
 
 
@@ -276,29 +227,15 @@ namespace Billbee.Net.Endpoints
 
         public async Task<dynamic> UpdateTagsAsync(long orderId, List<string> tags)
         {
-            try
-            {
-                var result =
-                    await billbeeClient.UpdateAsync<dynamic>(EndPoint + "/" + orderId + "/tags", new {Tags = tags});
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result =
+                await billbeeClient.UpdateAsync<dynamic>(EndPoint + "/" + orderId + "/tags", new {Tags = tags});
+            return result;
         }
 
         public async Task<OrderShipment> AddShipmentAsync(OrderShipment shipment)
         {
-            try
-            {
-                var result = await billbeeClient.AddAsync(EndPoint + "/" + shipment.OrderId + "/shipment", shipment);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.AddAsync(EndPoint + "/" + shipment.OrderId + "/shipment", shipment);
+            return result;
         }
 
         public async Task<DeliveryNote> AddDeliveryNoteAsync(long orderId, bool includePdf = false,
@@ -307,16 +244,9 @@ namespace Billbee.Net.Endpoints
             var queryParams = new Dictionary<string, string>();
             queryParams.Add("includePdf", includePdf.ToString());
 
-            try
-            {
-                var result = await billbeeClient.AddAsync(EndPoint + "/CreateDeliveryNote/" + orderId + "/shipment",
-                    new DeliveryNote(), queryParams);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.AddAsync(EndPoint + "/CreateDeliveryNote/" + orderId + "/shipment",
+                new DeliveryNote(), queryParams);
+            return result;
         }
 
         public async Task<Invoice> AddInvoiceAsync(long orderId, bool includePdf = false, long? templateId = null,
@@ -331,45 +261,24 @@ namespace Billbee.Net.Endpoints
             if (templateId.HasValue)
                 queryParams.Add("templateId", templateId.ToString());
 
-            try
-            {
-                var result = await billbeeClient.AddAsync(EndPoint + "/CreateInvoice/" + orderId, new Invoice(),
-                    queryParams);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.AddAsync(EndPoint + "/CreateInvoice/" + orderId, new Invoice(),
+                queryParams);
+            return result;
         }
 
 
         public async Task<dynamic> UpdateOrderStateAsync(long orderId, OrderStateEnum state)
         {
-            try
-            {
-                var result = await billbeeClient.UpdateAsync<dynamic>(EndPoint + "/" + orderId + "/orderstate",
-                    new {NewStateId = (int) state});
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.UpdateAsync<dynamic>(EndPoint + "/" + orderId + "/orderstate",
+                new {NewStateId = (int) state});
+            return result;
         }
 
 
         public async Task<dynamic> SendMailAsync(long orderId, SendMessage message)
         {
-            try
-            {
-                var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/" + orderId + "/send-message", message);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/" + orderId + "/send-message", message);
+            return result;
         }
 
         public async Task<dynamic> CreateEventAsync(long orderId, string eventName, uint delayInMinutes = 0)
@@ -380,15 +289,8 @@ namespace Billbee.Net.Endpoints
                 Name = eventName
             };
 
-            try
-            {
-                var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/" + orderId + "/trigger-event", model);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/" + orderId + "/trigger-event", model);
+            return result;
         }
     }
 }

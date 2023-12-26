@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Billbee.Net.Enums;
-using Billbee.Net.Exceptions;
 using Billbee.Net.Models;
 
 namespace Billbee.Net.Endpoints
@@ -80,15 +79,8 @@ namespace Billbee.Net.Endpoints
                 foreach (var id in orderStateId) queryParams.Add($"orderStateId[{i++}]", ((int) id).ToString());
             }
 
-            try
-            {
-                var result = await billbeeClient.GetAllAsync<Invoice>(EndPoint + "/invoices", queryParams);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAllAsync<Invoice>(EndPoint + "/invoices", queryParams);
+            return result;
         }
 
 
@@ -104,16 +96,9 @@ namespace Billbee.Net.Endpoints
             if (templateId.HasValue)
                 queryParams.Add("templateId", templateId.ToString());
 
-            try
-            {
-                var result = await billbeeClient.AddAsync(EndPoint + "/CreateInvoice/" + orderId, new Invoice(),
-                    queryParams);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.AddAsync(EndPoint + "/CreateInvoice/" + orderId, new Invoice(),
+                queryParams);
+            return result;
         }
     }
 }

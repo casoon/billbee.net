@@ -131,7 +131,7 @@ namespace Billbee.Net.Models
         /// <summary>
         ///     The Order.Id from the Billbee database if available in the external system
         /// </summary>
-        public long? BillBeeOrderId { get; set; }
+        public long BillBeeOrderId { get; set; }
 
         public long? BillBeeParentOrderId { get; set; }
 

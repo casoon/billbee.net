@@ -21,24 +21,24 @@ namespace Billbee.Net.Models
         ///     The date, this shipment was created
         /// </summary>
         public DateTime? Created { get; set; }
-        
+
         /// <summary>
-        /// The Tracking url
+        ///     The Tracking url
         /// </summary>
         public string TrackingUrl { get; set; }
 
         /// <summary>
-        /// The id of the used shipping provider
+        ///     The id of the used shipping provider
         /// </summary>
         public long? ShippingProviderId { get; set; }
 
         /// <summary>
-        /// The id of the used shipping provider product
+        ///     The id of the used shipping provider product
         /// </summary>
         public long? ShippingProviderProductId { get; set; }
 
         /// <summary>
-        /// The carrier used to ship the parcel with
+        ///     The carrier used to ship the parcel with
         /// </summary>
         public byte? ShippingCarrier { get; set; }
     }

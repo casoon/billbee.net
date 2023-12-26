@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Billbee.Net.Exceptions;
 using Billbee.Net.Models;
 
 namespace Billbee.Net.Endpoints
@@ -20,15 +19,8 @@ namespace Billbee.Net.Endpoints
 
         public async Task<List<CloudStorage>> GetAllAsync()
         {
-            try
-            {
-                var result = await billbeeClient.GetAllAsync<CloudStorage>(EndPoint);
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
+            var result = await billbeeClient.GetAllAsync<CloudStorage>(EndPoint);
+            return result;
         }
     }
 }
