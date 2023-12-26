@@ -1,13 +1,4 @@
-# Billbee.Net
-
-![Nuget](https://img.shields.io/nuget/v/Billbee.Net)
-![Nuget](https://img.shields.io/nuget/dt/Billbee.Net)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/casoon/billbee.net/.NET)
-![GitHub Release Date](https://img.shields.io/github/release-date/casoon/billbee.net)
-[![HitCount](http://hits.dwyl.com/casoon/billbeenet.svg?style=flat-square)](http://hits.dwyl.com/casoon/billbeenet)
-
 Billbee.Net is a modern and asynchronous .Net client library based on Flurl and Polly.
-
 
 ## GOAL
 

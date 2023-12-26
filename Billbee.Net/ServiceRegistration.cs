@@ -2,6 +2,7 @@
 using Billbee.Net.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Billbee.Net
 {
@@ -14,6 +15,7 @@ namespace Billbee.Net
         {
             Configuration = configuration;
 
+            serviceCollection.AddTransient<ILogger>(s => s.GetService<ILogger<BillbeeClient>>());
             serviceCollection.AddScoped<IFlurlTelemetryLogger, FlurlTelemetryLogger>();
             serviceCollection.AddScoped<IBillbeeClient, BillbeeClient>();
             serviceCollection.AddScoped<IAutomaticProvisionEndpoint, AutomaticProvisionEndpoint>();

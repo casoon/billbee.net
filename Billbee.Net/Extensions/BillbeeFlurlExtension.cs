@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Billbee.Net.Exceptions;
 using Billbee.Net.Responses;
@@ -12,7 +13,7 @@ namespace Billbee.Net.Extensions
 {
     public static class BillbeeFlurlExtension
     {
-        private static readonly string userAgent = $"Billbee.Net/{typeof(BillbeeClient).Assembly.GetName().Version}";
+        private static readonly string UserAgent = $"Billbee.Net/{typeof(BillbeeClient).Assembly.GetName().Version}";
 
         public static Task<T> Get<T>(this Url url, string apiKey, string clientId, string clientSecret)
         {
@@ -29,25 +30,26 @@ namespace Billbee.Net.Extensions
             return new FlurlRequest(url).Get<T>(apiKey, clientId, clientSecret);
         }
 
-        public static async Task<T> Get<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret)
+        private static async Task<T> Get<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret)
         {
             Response<T> result = null;
 
             req
                 .WithHeader("X-Billbee-Api-Key", apiKey)
-                .WithHeader("User-Agent", userAgent)
+                .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
             result = await req.GetJsonAsync<Response<T>>();
 
-            if (result.ErrorCode == 0 && result.Data != null)
-                try
-                {
-                    return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+            if (result.ErrorCode != 0 || result.Data == null)
+                throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
             throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
         }
@@ -69,7 +71,8 @@ namespace Billbee.Net.Extensions
         }
 
 
-        public static async Task<T> Post<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret,
+        private static async Task<T> Post<T>(this IFlurlRequest req, string apiKey, string clientId,
+            string clientSecret,
             T t)
         {
             var json = JsonConvert.SerializeObject(t);
@@ -78,21 +81,22 @@ namespace Billbee.Net.Extensions
 
             req
                 .WithHeader("X-Billbee-Api-Key", apiKey)
-                .WithHeader("User-Agent", userAgent)
+                .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
 
             result = await req.PostJsonAsync(t).ReceiveJson<Response<T>>();
 
 
-            if (result.ErrorCode == 0 && result.Data != null)
-                try
-                {
-                    return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+            if (result.ErrorCode != 0 || result.Data == null)
+                throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
             throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
         }
@@ -114,7 +118,7 @@ namespace Billbee.Net.Extensions
         }
 
 
-        public static async Task<T> Put<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret,
+        private static async Task<T> Put<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret,
             T t)
         {
             var json = JsonConvert.SerializeObject(t);
@@ -123,20 +127,20 @@ namespace Billbee.Net.Extensions
 
             req
                 .WithHeader("X-Billbee-Api-Key", apiKey)
-                .WithHeader("User-Agent", userAgent)
+                .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
             result = await req.PutJsonAsync(t).ReceiveJson<Response<T>>();
 
 
-            if (result != null && result.ErrorCode == 0 && result.Data != null)
-                try
-                {
-                    return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+            if (!(result is {ErrorCode: 0}) || result.Data == null) return default;
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
             return default;
         }
@@ -161,15 +165,11 @@ namespace Billbee.Net.Extensions
         }
 
 
-        public static async Task<T> Patch<T>(this IFlurlRequest req, string apiKey, string clientId,
+        private static async Task<T> Patch<T>(this IFlurlRequest req, string apiKey, string clientId,
             string clientSecret, Dictionary<string, object> fields)
         {
             var obj = new JObject();
-            foreach (var element in fields)
-            {
-                var prop = new JProperty(element.Key, element.Value);
-                obj.Add(prop);
-            }
+            foreach (var prop in fields.Select(element => new JProperty(element.Key, element.Value))) obj.Add(prop);
 
             var json = JsonConvert.SerializeObject(obj);
 
@@ -177,7 +177,7 @@ namespace Billbee.Net.Extensions
 
             req
                 .WithHeader("X-Billbee-Api-Key", apiKey)
-                .WithHeader("User-Agent", userAgent)
+                .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
             result = await req.PatchJsonAsync(json).ReceiveJson<Response<T>>();
 
@@ -215,25 +215,38 @@ namespace Billbee.Net.Extensions
         public static async Task<List<T>> GetAll<T>(this IFlurlRequest req, string apiKey, string clientId,
             string clientSecret)
         {
-            PagedResponse<T> result = null;
+            var loading = true;
+            var pageValue = 1;
+            var resultList = new List<T>();
 
-            req
-                .WithHeader("X-Billbee-Api-Key", apiKey)
-                .WithHeader("User-Agent", userAgent)
-                .WithBasicAuth(clientId, clientSecret);
-            result = await req.GetJsonAsync<PagedResponse<T>>();
+            while (loading)
+            {
+                req
+                    .WithHeader("X-Billbee-Api-Key", apiKey)
+                    .WithHeader("User-Agent", UserAgent)
+                    .SetQueryParams(new {page = pageValue})
+                    .WithBasicAuth(clientId, clientSecret);
 
-            if (result.ErrorCode == 0 && result.Data != null)
-                try
-                {
-                    return JsonConvert.DeserializeObject<List<T>>(JsonConvert.SerializeObject(result.Data));
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
+                var result = await req.GetJsonAsync<PagedResponse<T>>();
 
-            return default;
+                if (result.ErrorCode != 0 || result.Data == null) return default;
+
+                if (result.Paging.Page == result.Paging.TotalPages)
+                    loading = false;
+
+                resultList.AddRange(result.Data);
+
+                pageValue++;
+            }
+
+            try
+            {
+                return JsonConvert.DeserializeObject<List<T>>(JsonConvert.SerializeObject(resultList));
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public static Task Delete<T>(this Url url, string apiKey, string clientId, string clientSecret)
@@ -256,7 +269,7 @@ namespace Billbee.Net.Extensions
         {
             req
                 .WithHeader("X-Billbee-Api-Key", apiKey)
-                .WithHeader("User-Agent", userAgent)
+                .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
             await req.DeleteAsync();
         }

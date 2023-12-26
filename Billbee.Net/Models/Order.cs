@@ -81,7 +81,7 @@ namespace Billbee.Net.Models
         ///     Auto generated number, to build the invoice number.
         ///     <<see cref="InvoiceNumberPrefix" /><<see cref="InvoiceNumber" /><<see cref="InvoiceNumberPostfix" />
         /// </summary>
-        public string InvoiceNumber { get; set; }
+        public int? InvoiceNumber { get; set; }
 
         /// <summary>
         ///     The date of the invoice.
@@ -237,16 +237,5 @@ namespace Billbee.Net.Models
         public string AdjustmentReason { get; set; }
 
         public decimal RebateDifference { get; set; }
-
-
-        /// <summary>
-        ///     The list of payments
-        /// </summary>
-        public List<Payment> Payments { get; set; }
-
-        /// <summary>
-        ///     Orderhistory
-        /// </summary>
-        public List<HistoryItem> History { get; set; }
     }
 }

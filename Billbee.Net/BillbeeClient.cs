@@ -7,7 +7,6 @@ using Billbee.Net.Extensions;
 using Billbee.Net.Logging;
 using Flurl;
 using Flurl.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Wrap;
@@ -18,23 +17,22 @@ namespace Billbee.Net
     {
         private readonly string _apiKey;
         private readonly string _baseUrl;
-        private readonly ILogger<BillbeeClient> _logger;
         private readonly string _password;
+        private readonly AsyncPolicyWrap _policyWrap;
         private readonly double _pollyCircuitBreakDurationInSecondsValue = 100;
         private readonly int _pollyCircuitBreakExceptionCountValue = 10;
         private readonly string _username;
-        private IConfiguration _config;
-        private readonly AsyncPolicyWrap _policyWrap;
 
-        public BillbeeClient(ILogger<BillbeeClient> logger, IFlurlTelemetryLogger flurlTelemetryLogger)
+        public BillbeeClient(IFlurlTelemetryLogger flurlTelemetryLogger, ILogger logger)
         {
-            _config = ServiceRegistration.Configuration;
+            bool loggingEnabled;
+            var config = ServiceRegistration.Configuration;
 
-            _baseUrl = _config["BillbeeUrl"];
-            _username = _config["Username"];
-            _password = _config["Password"];
-            _apiKey = _config["ApiKey"];
-            _logger = logger;
+            _baseUrl = config.GetSection("Billbee")["Url"];
+            _username = config.GetSection("Billbee")["Username"];
+            _password = config.GetSection("Billbee")["Password"];
+            _apiKey = config.GetSection("Billbee")["ApiKey"];
+            var logging = config.GetSection("Billbee")["Logging"];
 
             if (string.IsNullOrWhiteSpace(_baseUrl))
                 throw new Exception("Base Url not configured. Please add BillbeeUrl to configuration");
@@ -46,8 +44,12 @@ namespace Billbee.Net
                 throw new Exception(
                     "Username and or Password are not configured. Please add Username and Password to configuration file");
 
-            if (string.IsNullOrWhiteSpace(_baseUrl)) throw new Exception("billbee url not provided");
+            if (!string.IsNullOrWhiteSpace(logging) && logging == "true")
+                loggingEnabled = true;
+            else
+                loggingEnabled = false;
 
+            if (string.IsNullOrWhiteSpace(_baseUrl)) throw new Exception("billbee url not provided");
 
             var retryPolicy = Policy
                 .Handle<FlurlHttpException>()
@@ -56,7 +58,7 @@ namespace Billbee.Net
                     retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                     (exception, timeSpan, retryCount, context) =>
                     {
-                        // logging
+                        if (exception != null) logger.LogError(exception.Message);
                     }
                 );
 
@@ -77,26 +79,24 @@ namespace Billbee.Net
                     retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                     (exception, timeSpan, retryCount, context) =>
                     {
-                        // logging
+                        if (exception.Message != null) logger.LogWarning(exception.Message);
                     }
                 );
 
-
-            var timeoutPolicy = Policy.TimeoutAsync(TimeSpan.FromMilliseconds(2500));
+            var timeoutPolicy = Policy.TimeoutAsync(TimeSpan.FromMilliseconds(1000));
 
             var bulkheadPolicy = Policy.BulkheadAsync(10, 2);
 
+            _policyWrap = Policy.WrapAsync(retryPolicy, timeoutPolicy, throttlePolicy, circuitBreaker, bulkheadPolicy);
 
-            _policyWrap = Policy.WrapAsync(retryPolicy, throttlePolicy, circuitBreaker, timeoutPolicy, bulkheadPolicy);
-
-            FlurlHttp.Clients.WithDefaults(builder =>
-                builder.AfterCall(call => flurlTelemetryLogger.Log(call))
-                .AllowAnyHttpStatus()
-                .WithHeaders(new
-                {
-                    Accept = "application/json"
-                }));
-            
+            if (loggingEnabled)
+                FlurlHttp.Clients.WithDefaults(builder =>
+                    builder.AfterCall(call => flurlTelemetryLogger.Log(call))
+                        .AllowAnyHttpStatus()
+                        .WithHeaders(new
+                        {
+                            Accept = "application/json"
+                        }));
         }
 
         public async Task<T> GetAsync<T>(string endPoint, Dictionary<string, string> param = null)
