@@ -52,9 +52,9 @@ namespace Billbee.Net
             if (string.IsNullOrWhiteSpace(_baseUrl)) throw new Exception("billbee url not provided");
 
             var retryPolicy = Policy
-                .Handle<FlurlHttpException>()
+                .Handle<FlurlHttpTimeoutException>()
                 .WaitAndRetryAsync(
-                    10,
+                    3,
                     retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                     (exception, timeSpan, retryCount, context) =>
                     {
@@ -62,20 +62,12 @@ namespace Billbee.Net
                     }
                 );
 
-            var circuitBreaker = Policy
-                .Handle<FlurlHttpException>()
-                .Or<FlurlHttpTimeoutException>()
-                .CircuitBreakerAsync(
-                    _pollyCircuitBreakExceptionCountValue,
-                    TimeSpan.FromSeconds(_pollyCircuitBreakDurationInSecondsValue)
-                );
-
 
             var throttlePolicy = Policy
                 .Handle<FlurlParsingException>(a =>
                     a.StatusCode != null && a.StatusCode == (int) HttpStatusCode.TooManyRequests)
                 .WaitAndRetryAsync(
-                    10,
+                    3,
                     retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                     (exception, timeSpan, retryCount, context) =>
                     {
@@ -83,11 +75,8 @@ namespace Billbee.Net
                     }
                 );
 
-            var timeoutPolicy = Policy.TimeoutAsync(TimeSpan.FromMilliseconds(1000));
 
-            var bulkheadPolicy = Policy.BulkheadAsync(10, 2);
-
-            _policyWrap = Policy.WrapAsync(retryPolicy, timeoutPolicy, throttlePolicy, circuitBreaker, bulkheadPolicy);
+            _policyWrap = Policy.WrapAsync(retryPolicy, throttlePolicy);
 
             if (loggingEnabled)
                 FlurlHttp.Clients.WithDefaults(builder =>
