@@ -215,33 +215,20 @@ namespace Billbee.Net.Extensions
         public static async Task<List<T>> GetAll<T>(this IFlurlRequest req, string apiKey, string clientId,
             string clientSecret)
         {
-            var loading = true;
-            var pageValue = 1;
             var resultList = new List<T>();
 
-            while (loading)
-            {
-                req
-                    .WithHeader("X-Billbee-Api-Key", apiKey)
-                    .WithHeader("User-Agent", UserAgent)
-                    .SetQueryParams(new {page = pageValue})
-                    .WithBasicAuth(clientId, clientSecret);
 
-                var result = await req.GetJsonAsync<PagedResponse<T>>();
+            req
+                .WithHeader("X-Billbee-Api-Key", apiKey)
+                .WithHeader("User-Agent", UserAgent)
+                .WithBasicAuth(clientId, clientSecret);
 
-                if (result.ErrorCode != 0 || result.Data == null) return default;
-
-                if (result.Paging.Page == result.Paging.TotalPages)
-                    loading = false;
-
-                resultList.AddRange(result.Data);
-
-                pageValue++;
-            }
+            var result = await req.GetJsonAsync<PagedResponse<T>>();
+            if (result.ErrorCode != 0 || result.Data == null) return default;
 
             try
             {
-                return JsonConvert.DeserializeObject<List<T>>(JsonConvert.SerializeObject(resultList));
+                return JsonConvert.DeserializeObject<List<T>>(JsonConvert.SerializeObject(result.Data));
             }
             catch (Exception e)
             {
