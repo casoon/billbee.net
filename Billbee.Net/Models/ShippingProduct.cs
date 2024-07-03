@@ -1,20 +1,22 @@
-﻿namespace Billbee.Net.Models
+﻿namespace Billbee.Net.Models;
+
+/// <summary>
+///     Represents a shipping product with its details.
+/// </summary>
+public class ShippingProduct
 {
-    public class ShippingProduct
-    {
-        /// <summary>
-        ///     Id of this shipping product
-        /// </summary>
-        public long id { get; set; }
+    /// <summary>
+    ///     Gets or sets the identifier of this shipping product.
+    /// </summary>
+    public long Id { get; set; }
 
-        /// <summary>
-        ///     Human readable name of this shippingproduct
-        /// </summary>
-        public string displayName { get; set; }
+    /// <summary>
+    ///     Gets or sets the human-readable name of this shipping product.
+    /// </summary>
+    public string DisplayName { get; set; }
 
-        /// <summary>
-        ///     Provider specific product name
-        /// </summary>
-        public string productName { get; set; }
-    }
+    /// <summary>
+    ///     Gets or sets the provider-specific product name.
+    /// </summary>
+    public string ProductName { get; set; }
 }

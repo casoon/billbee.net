@@ -1,85 +1,87 @@
-﻿namespace Billbee.Net.Enums
+﻿namespace Billbee.Net.Enums;
+
+/// <summary>
+///     Represents the possible states of an order.
+/// </summary>
+public enum OrderStateEnum
 {
-    public enum OrderStateEnum
-    {
-        /// <summary>
-        ///     Ordered
-        /// </summary>
-        Bestellt = 1,
+    /// <summary>
+    ///     Order has been placed.
+    /// </summary>
+    Bestellt = 1,
 
-        /// <summary>
-        ///     Confirmed
-        /// </summary>
-        Bestaetigt = 2,
+    /// <summary>
+    ///     Order has been confirmed.
+    /// </summary>
+    Bestaetigt = 2,
 
-        /// <summary>
-        ///     Payment Received
-        /// </summary>
-        Zahlung_erhalten = 3,
+    /// <summary>
+    ///     Payment has been received for the order.
+    /// </summary>
+    Zahlung_erhalten = 3,
 
-        /// <summary>
-        ///     sent
-        /// </summary>
-        Versendet = 4,
+    /// <summary>
+    ///     Order has been shipped.
+    /// </summary>
+    Versendet = 4,
 
-        /// <summary>
-        ///     complaints
-        /// </summary>
-        Reklamation = 5,
+    /// <summary>
+    ///     Order is in complaint or return process.
+    /// </summary>
+    Reklamation = 5,
 
-        /// <summary>
-        ///     deleted
-        /// </summary>
-        Geloescht = 6,
+    /// <summary>
+    ///     Order has been deleted.
+    /// </summary>
+    Geloescht = 6,
 
-        /// <summary>
-        ///     completed
-        /// </summary>
-        Abgeschlossen = 7,
+    /// <summary>
+    ///     Order has been completed.
+    /// </summary>
+    Abgeschlossen = 7,
 
-        /// <summary>
-        ///     cancelled
-        /// </summary>
-        Storniert = 8,
+    /// <summary>
+    ///     Order has been canceled.
+    /// </summary>
+    Storniert = 8,
 
-        /// <summary>
-        ///     archived
-        /// </summary>
-        Archiviert = 9,
+    /// <summary>
+    ///     Order has been archived.
+    /// </summary>
+    Archiviert = 9,
 
-        /// <summary>
-        ///     rated
-        /// </summary>
-        Rated = 10,
+    /// <summary>
+    ///     Order has been rated.
+    /// </summary>
+    Rated = 10,
 
-        /// <summary>
-        ///     warning
-        /// </summary>
-        Mahnung = 11,
+    /// <summary>
+    ///     First reminder has been sent for the order.
+    /// </summary>
+    Mahnung = 11,
 
-        /// <summary>
-        ///     warning2
-        /// </summary>
-        Mahnung2 = 12,
+    /// <summary>
+    ///     Second reminder has been sent for the order.
+    /// </summary>
+    Mahnung2 = 12,
 
-        /// <summary>
-        ///     packed
-        /// </summary>
-        Gepackt = 13,
+    /// <summary>
+    ///     Order has been packed.
+    /// </summary>
+    Gepackt = 13,
 
-        /// <summary>
-        ///     Offered
-        /// </summary>
-        Angeboten = 14,
+    /// <summary>
+    ///     Order has been offered.
+    /// </summary>
+    Angeboten = 14,
 
-        /// <summary>
-        ///     reminder
-        /// </summary>
-        Zahlungserinnerung = 15,
+    /// <summary>
+    ///     Payment reminder has been sent for the order.
+    /// </summary>
+    Zahlungserinnerung = 15,
 
-        /// <summary>
-        ///     In sending process
-        /// </summary>
-        Im_Fulfillment = 16
-    }
+    /// <summary>
+    ///     Order is in the fulfillment process.
+    /// </summary>
+    Im_Fulfillment = 16
 }

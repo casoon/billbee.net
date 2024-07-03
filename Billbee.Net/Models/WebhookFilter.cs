@@ -1,8 +1,17 @@
-﻿namespace Billbee.Net.Models
+﻿namespace Billbee.Net.Models;
+
+/// <summary>
+///     Represents a filter for a webhook, containing a name and a description.
+/// </summary>
+public class WebhookFilter
 {
-    public class WebhookFilter
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-    }
+    /// <summary>
+    ///     Gets or sets the name of the webhook filter.
+    /// </summary>
+    public string Name { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the description of the webhook filter.
+    /// </summary>
+    public string Description { get; set; }
 }

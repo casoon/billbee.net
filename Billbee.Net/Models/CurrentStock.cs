@@ -1,18 +1,17 @@
-﻿namespace Billbee.Net.Models
+﻿namespace Billbee.Net.Models;
+
+/// <summary>
+///     Provides information about the current stock of an article.
+/// </summary>
+public class CurrentStockInfo
 {
     /// <summary>
-    ///     Information abaout the current stock of an article
+    ///     Gets or sets the SKU (Stock Keeping Unit) of the article.
     /// </summary>
-    public class CurrentStockInfo
-    {
-        /// <summary>
-        ///     SKU of the article
-        /// </summary>
-        public string SKU { get; set; }
+    public string SKU { get; set; }
 
-        /// <summary>
-        ///     Amount, that is currently available from the stock.
-        /// </summary>
-        public decimal? CurrentStock { get; set; }
-    }
+    /// <summary>
+    ///     Gets or sets the amount currently available in stock.
+    /// </summary>
+    public decimal? CurrentStock { get; set; }
 }

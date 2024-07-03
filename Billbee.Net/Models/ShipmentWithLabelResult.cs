@@ -1,47 +1,49 @@
 ﻿using System;
 
-namespace Billbee.Net.Models
+namespace Billbee.Net.Models;
+
+/// <summary>
+///     Represents the result of a shipment with label creation, containing various shipment details.
+/// </summary>
+public class ShipmentWithLabelResult
 {
-    public class ShipmentWithLabelResult
-    {
-        /// <summary>
-        ///     Id of the order, that was shipped
-        /// </summary>
-        public long OrderId { get; set; }
+    /// <summary>
+    ///     Gets or sets the identifier of the order that was shipped.
+    /// </summary>
+    public long OrderId { get; set; }
 
-        /// <summary>
-        ///     Reference number of the carrier or provider
-        /// </summary>
-        public string OrderReference { get; set; }
+    /// <summary>
+    ///     Gets or sets the reference number of the carrier or provider.
+    /// </summary>
+    public string OrderReference { get; set; }
 
-        /// <summary>
-        ///     Order or tracking number of the carrier or provider
-        /// </summary>
-        public string ShippingId { get; set; }
+    /// <summary>
+    ///     Gets or sets the order or tracking number of the carrier or provider.
+    /// </summary>
+    public string ShippingId { get; set; }
 
-        /// <summary>
-        ///     URL to track the shipment
-        /// </summary>
-        public string TrackingUrl { get; set; }
+    /// <summary>
+    ///     Gets or sets the URL to track the shipment.
+    /// </summary>
+    public string TrackingUrl { get; set; }
 
-        /// <summary>
-        ///     If applicable, the pdf data of the label as base 64 encoded data.
-        /// </summary>
-        public byte[] LabelDataPdf { get; set; }
+    /// <summary>
+    ///     Gets or sets the PDF data of the label as base64 encoded data, if applicable.
+    /// </summary>
+    public byte[] LabelDataPdf { get; set; }
 
-        /// <summary>
-        ///     If applicable, the pdf data of the export documents as base 64 encoded data.
-        /// </summary>
-        public byte[] ExportDocsPdf { get; set; }
+    /// <summary>
+    ///     Gets or sets the PDF data of the export documents as base64 encoded data, if applicable.
+    /// </summary>
+    public byte[] ExportDocsPdf { get; set; }
 
-        /// <summary>
-        ///     Text representation of the used carrier
-        /// </summary>
-        public string Carrier { get; set; }
+    /// <summary>
+    ///     Gets or sets the text representation of the used carrier.
+    /// </summary>
+    public string Carrier { get; set; }
 
-        /// <summary>
-        ///     The datetime, defining, when the order should be send
-        /// </summary>
-        public DateTime ShippingDate { get; set; }
-    }
+    /// <summary>
+    ///     Gets or sets the datetime defining when the order should be sent.
+    /// </summary>
+    public DateTime ShippingDate { get; set; }
 }

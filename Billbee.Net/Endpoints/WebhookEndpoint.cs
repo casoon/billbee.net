@@ -1,15 +1,19 @@
-﻿namespace Billbee.Net.Endpoints
+﻿namespace Billbee.Net.Endpoints;
+
+/// <summary>
+///     Represents the endpoint for handling webhook-related operations.
+/// </summary>
+public class WebhookEndpoint
 {
-    public interface IWebhookEndpoint : IBaseEndpoint
-    {
-    }
+    private readonly ApiClient _apiClient;
+    private readonly string _endpointPath = "webhooks";
 
-
-    public class WebhookEndpoint : BaseEndpoint, IWebhookEndpoint
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="WebhookEndpoint" /> class.
+    /// </summary>
+    /// <param name="apiClient">The API client used to make requests.</param>
+    public WebhookEndpoint(ApiClient apiClient)
     {
-        public WebhookEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
-        {
-            EndPoint = "";
-        }
+        _apiClient = apiClient;
     }
 }

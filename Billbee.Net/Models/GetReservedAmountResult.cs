@@ -1,10 +1,13 @@
-﻿namespace Billbee.Net.Models
+﻿namespace Billbee.Net.Models;
+
+/// <summary>
+///     Represents the result of a query to get the reserved amount of an article.
+/// </summary>
+public class GetReservedAmountResult
 {
-    public class GetReservedAmountResult
-    {
-        /// <summary>
-        ///     The reserve (not fulfilled) qty of the article
-        /// </summary>
-        public decimal ReservedAmount { get; set; }
-    }
+    /// <summary>
+    ///     Gets or sets the reserved (not fulfilled) quantity of the article.
+    /// </summary>
+    /// <value>The quantity of the article that is reserved but not yet fulfilled.</value>
+    public decimal ReservedAmount { get; set; }
 }

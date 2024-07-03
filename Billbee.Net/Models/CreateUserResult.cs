@@ -1,25 +1,25 @@
 ﻿using System;
 
-namespace Billbee.Net.Models
+namespace Billbee.Net.Models;
+
+/// <summary>
+///     Represents the result of a create user request.
+/// </summary>
+public class CreateUserResult
 {
     /// <summary>
-    ///     Result of a create user request
+    ///     Gets or sets the password that was assigned to the user.
+    ///     Note: This password cannot be recovered afterwards.
     /// </summary>
-    public class CreateUserResult
-    {
-        /// <summary>
-        ///     Password, that was given for the user. This can't be recovered afterwards.
-        /// </summary>
-        public string Password { get; set; }
+    public string Password { get; set; }
 
-        /// <summary>
-        ///     Internal id this user was given
-        /// </summary>
-        public Guid UserId { get; set; }
+    /// <summary>
+    ///     Gets or sets the internal ID assigned to this user.
+    /// </summary>
+    public Guid UserId { get; set; }
 
-        /// <summary>
-        ///     Url to allow the user an one time login, without password
-        /// </summary>
-        public string OneTimeLoginUrl { get; set; }
-    }
+    /// <summary>
+    ///     Gets or sets the URL that allows the user a one-time login without a password.
+    /// </summary>
+    public string OneTimeLoginUrl { get; set; }
 }

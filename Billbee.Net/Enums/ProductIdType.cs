@@ -1,9 +1,22 @@
-﻿namespace Billbee.Net.Enums
+﻿namespace Billbee.Net.Enums;
+
+/// <summary>
+///     Represents the possible types of product identifiers.
+/// </summary>
+public enum ProductIdType
 {
-    public enum ProductIdType
-    {
-        id,
-        sku,
-        ean
-    }
+    /// <summary>
+    ///     Product identifier.
+    /// </summary>
+    id,
+
+    /// <summary>
+    ///     Stock keeping unit.
+    /// </summary>
+    sku,
+
+    /// <summary>
+    ///     European Article Number.
+    /// </summary>
+    ean
 }

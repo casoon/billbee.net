@@ -1,89 +1,128 @@
-﻿using Billbee.Net.Enums;
+﻿namespace Billbee.Net.Models;
 
-namespace Billbee.Net.Models
+/// <summary>
+///     Account information for creation of a new account.
+/// </summary>
+public class Account
 {
     /// <summary>
-    ///     Accountinformation for creation of a new account
+    ///     Gets or sets the Email address of the user to create.
     /// </summary>
-    public class Account
+    public string EMail { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the password of the user.
+    /// </summary>
+    public string Password { get; set; }
+
+    /// <summary>
+    ///     Gets or sets a value indicating whether the user has accepted the Billbee terms & conditions.
+    /// </summary>
+    public bool AcceptTerms { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the invoice address of the Billbee user.
+    /// </summary>
+    public UserAddress Address { get; set; }
+
+    /// <summary>
+    ///     Gets or sets a value indicating whether the user is interested in the Billbee newsletter.
+    /// </summary>
+    public bool Newsletter { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the Billbee affiliate code to attach to the user.
+    /// </summary>
+    public string AffiliateCouponCode { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the normal VAT rate of the user.
+    /// </summary>
+    public decimal? Vat1Rate { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the reduced VAT rate of the user.
+    /// </summary>
+    public decimal? Vat2Rate { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the default VAT mode of the user.
+    /// </summary>
+    /// <remarks>0: Show VAT, 1: Kleinunternehmer</remarks>
+    public VatModeEnum? DefaultVatMode { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the default currency of the user.
+    /// </summary>
+    public string DefaultCurrency { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the default VAT index of the user.
+    /// </summary>
+    /// <remarks>1: normal VAT, 2: reduced VAT</remarks>
+    public byte? DefaultVatIndex { get; set; }
+
+    /// <summary>
+    ///     Returns a string representation of the account.
+    /// </summary>
+    /// <returns>A string that represents the current account.</returns>
+    public override string ToString()
+    {
+        return $"EMail: {EMail}, Name: {Address?.Name}, Country: {Address?.Country}, Terms: {AcceptTerms}";
+    }
+
+    /// <summary>
+    ///     Represents the invoice address of a Billbee user.
+    /// </summary>
+    public class UserAddress
     {
         /// <summary>
-        ///     The Email address of the user to create
+        ///     Gets or sets the company name.
         /// </summary>
-        public string EMail { get; set; }
-
-        public string Password { get; set; }
+        public string Company { get; set; }
 
         /// <summary>
-        ///     Set to true, if the user has accepted the Billbee terms & conditions
+        ///     Gets or sets the name.
         /// </summary>
-        public bool AcceptTerms { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
-        ///     Gets or sets the invoice address of the Billbee user
+        ///     Gets or sets the first line of the address.
         /// </summary>
-        public UserAddress Address { get; set; }
+        public string Address1 { get; set; }
 
         /// <summary>
-        ///     Gets or sets if the user is interested in the Billbee newsletter
+        ///     Gets or sets the second line of the address.
         /// </summary>
-        public bool Newsletter { get; set; }
+        public string Address2 { get; set; }
 
         /// <summary>
-        ///     Specifies an billbee affiliate code to attach to the user
+        ///     Gets or sets the ZIP code.
         /// </summary>
-        public string AffiliateCouponCode { get; set; }
+        public string Zip { get; set; }
 
         /// <summary>
-        ///     Optionally specify the vat1 (normal) rate of the user
+        ///     Gets or sets the city.
         /// </summary>
-        public decimal? Vat1Rate { get; set; }
+        public string City { get; set; }
 
         /// <summary>
-        ///     Optionally specify the vat2 (reduced) rate of the user
+        ///     Gets or sets the ISO2 country code of the user's country.
         /// </summary>
-        public decimal? Vat2Rate { get; set; }
+        public string Country { get; set; }
 
         /// <summary>
-        ///     Optionally specify the default vat mode of the user
+        ///     Gets or sets the VAT ID.
         /// </summary>
-        /// <remarks>0: Show vat, 1: Kleinunternehmer</remarks>
-        public VatModeEnum? DefaultVatMode { get; set; }
-
-        /// <summary>
-        ///     Optionally specify the default currency of the user
-        /// </summary>
-        public string DefaultCurrrency { get; set; }
-
-        /// <summary>
-        ///     Optionally specify the default vat index of the user
-        /// </summary>
-        /// <remarks>1: normal vat, 2: reduced vat</remarks>
-        public byte? DefaultVatIndex { get; set; }
-
-        public override string ToString()
-        {
-            return $"EMail {EMail} Name {Address?.Name} Country {Address?.Country} Terms {AcceptTerms}";
-        }
-
-        /// <summary>
-        ///     Represents the invoice address of a Billbee user
-        /// </summary>
-        public class UserAddress
-        {
-            public string Company { get; set; }
-            public string Name { get; set; }
-            public string Address1 { get; set; }
-            public string Address2 { get; set; }
-            public string Zip { get; set; }
-            public string City { get; set; }
-
-            /// <summary>
-            ///     The ISO2 country code of the users country
-            /// </summary>
-            public string Country { get; set; }
-
-            public string VatId { get; set; }
-        }
+        public string VatId { get; set; }
     }
+}
+
+/// <summary>
+///     Enumeration for VAT modes.
+/// </summary>
+public enum VatModeEnum
+{
+    ShowVat = 0,
+    Kleinunternehmer = 1
 }

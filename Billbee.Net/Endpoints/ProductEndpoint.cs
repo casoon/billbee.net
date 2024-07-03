@@ -1,179 +1,301 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Billbee.Net.Enums;
 using Billbee.Net.Models;
+using Billbee.Net.Responses;
 
-namespace Billbee.Net.Endpoints
+namespace Billbee.Net.Endpoints;
+
+/// <summary>
+///     Represents the endpoint for handling product-related operations.
+/// </summary>
+public class ProductEndpoint : IApiEndpoint<Product>
 {
-    public interface IProductEndpoint : IExtendedEndpoint<Product>
+    private readonly ApiClient _apiClient;
+    private readonly string _endpointPath = "products";
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="ProductEndpoint" /> class.
+    /// </summary>
+    /// <param name="apiClient">The API client used to make requests.</param>
+    public ProductEndpoint(ApiClient apiClient)
     {
+        _apiClient = apiClient;
     }
 
-    public class ProductEndpoint : ExtendedEndpoint<Product>, IProductEndpoint
+    /// <summary>
+    ///     Retrieves all products asynchronously.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation. The task result contains a collection of products.</returns>
+    public async Task<IEnumerable<Product>> GetAllAsync()
     {
-        public ProductEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
-        {
-            EndPoint = "products";
-        }
+        return await _apiClient.GetAsync<IEnumerable<Product>>(_endpointPath);
+    }
 
-        public async Task<List<Stock>> GetStocksAsync(long orderId, List<UpdateStock> updateStockList)
-        {
-            var result = await billbeeClient.GetAllAsync<Stock>(EndPoint + "/stocks");
-            return result;
-        }
+    /// <summary>
+    ///     Adds a new product asynchronously.
+    /// </summary>
+    /// <param name="entity">The product to add.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task AddAsync(Product entity)
+    {
+        await _apiClient.PostAsync(_endpointPath, entity);
+    }
 
-        public async Task<dynamic> UpdateStockMultipleAsync(long orderId, List<UpdateStock> updateStockList)
-        {
-            var result = await billbeeClient.UpdateAsync<dynamic>(EndPoint + "/updatestockmultiple", updateStockList);
-            return result;
-        }
+    /// <summary>
+    ///     Retrieves a specific product by ID asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the product.</param>
+    /// <returns>A task representing the asynchronous operation. The task result contains the requested product.</returns>
+    public async Task<Product> GetAsync(long id)
+    {
+        return await _apiClient.GetAsync<Product>($"{_endpointPath}/{id}");
+    }
 
-        public async Task<dynamic> UpdateStockAsync(long orderId, UpdateStock updateStockModel)
-        {
-            var result = await billbeeClient.UpdateAsync<dynamic>(EndPoint + "/updatestock", updateStockModel);
-            return result;
-        }
+    /// <summary>
+    ///     Updates an existing product asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the product to update.</param>
+    /// <param name="entity">The updated product data.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task UpdateAsync(long id, Product entity)
+    {
+        await _apiClient.PutAsync($"{_endpointPath}/{id}", entity);
+    }
 
-        public async Task<GetReservedAmountResult> GetReservedAmountAsync(string idOrSku, string lookupBy = "id",
-            long? stockId = null)
-        {
-            var queryParams = new Dictionary<string, string>();
-            queryParams.Add("id", idOrSku);
-            queryParams.Add("lookupBy", lookupBy);
+    /// <summary>
+    ///     Retrieves stocks for a specific order asynchronously.
+    /// </summary>
+    /// <param name="orderId">The ID of the order.</param>
+    /// <param name="updateStockList">The list of stock updates.</param>
+    /// <returns>A task representing the asynchronous operation. The task result contains a list of stocks.</returns>
+    public async Task<List<Stock>> GetStocksAsync(long orderId, List<UpdateStock> updateStockList)
+    {
+        return await _apiClient.GetAsync<List<Stock>>($"{_endpointPath}/stocks");
+    }
 
-            if (stockId != null) queryParams.Add("stockId", stockId.Value.ToString());
+    /// <summary>
+    ///     Updates multiple stocks asynchronously.
+    /// </summary>
+    /// <param name="orderId">The ID of the order.</param>
+    /// <param name="updateStockList">The list of stock updates.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task UpdateStockMultipleAsync(long orderId, List<UpdateStock> updateStockList)
+    {
+        if (updateStockList == null) throw new ArgumentNullException(nameof(updateStockList));
+        await _apiClient.PutAsync($"{_endpointPath}/updatestockmultiple", updateStockList);
+    }
 
-            var result =
-                await billbeeClient.GetAsync<GetReservedAmountResult>(EndPoint + "/reservedamount", queryParams);
-            return result;
-        }
+    /// <summary>
+    ///     Updates a specific stock asynchronously.
+    /// </summary>
+    /// <param name="orderId">The ID of the order.</param>
+    /// <param name="updateStockModel">The stock update model.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task UpdateStockAsync(long orderId, UpdateStock updateStockModel)
+    {
+        if (updateStockModel == null) throw new ArgumentNullException(nameof(updateStockModel));
+        await _apiClient.PutAsync($"{_endpointPath}/updatestock", updateStockModel);
+    }
 
+    /// <summary>
+    ///     Retrieves the reserved amount of a product asynchronously.
+    /// </summary>
+    /// <param name="idOrSku">The ID or SKU of the product.</param>
+    /// <param name="lookupBy">The lookup type (default is "id").</param>
+    /// <param name="stockId">The stock ID to filter by, if applicable.</param>
+    /// <returns>A task representing the asynchronous operation. The task result contains the reserved amount result.</returns>
+    public async Task<GetReservedAmountResult> GetReservedAmountAsync(string idOrSku, string lookupBy = "id",
+        long? stockId = null)
+    {
+        var queryParams = new QueryParameterBuilder();
+        queryParams.Add("id", idOrSku);
+        queryParams.Add("lookupBy", lookupBy);
+        if (stockId != null) queryParams.Add("stockId", stockId.Value);
 
-        public async Task<object> UpdateStockCodeAsync(UpdateStockCode updateStockCodeModel)
-        {
-            var result = await billbeeClient.UpdateAsync<object>(EndPoint + "/updatestockcode", updateStockCodeModel);
-            return result;
-        }
+        return await _apiClient.GetAsync<GetReservedAmountResult>($"{_endpointPath}/reservedamount",
+            queryParams.Build());
+    }
 
+    /// <summary>
+    ///     Updates the stock code of a product asynchronously.
+    /// </summary>
+    /// <param name="updateStockCodeModel">The stock code update model.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task UpdateStockAsync(UpdateStockCode updateStockCodeModel)
+    {
+        if (updateStockCodeModel == null) throw new ArgumentNullException(nameof(updateStockCodeModel));
+        await _apiClient.PutAsync($"{_endpointPath}/updatestockcode", updateStockCodeModel);
+    }
 
-        public async Task<List<Product>> GetAllAsync(int page = 0, int pageSize = 50, DateTime? minCreatedAt = null)
-        {
-            var queryParams = new Dictionary<string, string>();
-            queryParams.Add("page", page.ToString());
-            queryParams.Add("pageSize", pageSize.ToString());
+    /// <summary>
+    ///     Retrieves all products asynchronously with pagination.
+    /// </summary>
+    /// <param name="page">The page number to retrieve.</param>
+    /// <param name="pageSize">The number of products per page.</param>
+    /// <param name="minCreatedAt">The minimum creation date filter.</param>
+    /// <returns>A task representing the asynchronous operation. The task result contains a paged response with the products.</returns>
+    public async Task<PagedResponse<Product>> GetAllAsync(int page = 0, int pageSize = 50,
+        DateTime? minCreatedAt = null)
+    {
+        var queryParams = new QueryParameterBuilder();
+        queryParams.Add("page", page);
+        queryParams.Add("pageSize", pageSize);
+        queryParams.AddDate("minCreatedAt", minCreatedAt);
+        return await _apiClient.GetPagedAsync<Product>(_endpointPath, queryParams.Build());
+    }
 
-            if (minCreatedAt != null) queryParams.Add("minCreatedAt", minCreatedAt.Value.ToString("yyyy-MM-dd"));
+    /// <summary>
+    ///     Retrieves a specific product by ID asynchronously with a specified lookup type.
+    /// </summary>
+    /// <param name="id">The ID of the product.</param>
+    /// <param name="type">The type of the product ID (default is ProductIdType.id).</param>
+    /// <returns>A task representing the asynchronous operation. The task result contains the requested product.</returns>
+    public async Task<Product> GetAsync(long id, ProductIdType type = ProductIdType.id)
+    {
+        if (!Enum.IsDefined(typeof(ProductIdType), type))
+            throw new InvalidEnumArgumentException(nameof(type), (int) type, typeof(ProductIdType));
+        var queryParams = new QueryParameterBuilder();
+        queryParams.Add("lookupBy", type.ToString());
+        return await _apiClient.GetAsync<Product>($"{_endpointPath}/{id}", queryParams.Build());
+    }
 
-            var result = await billbeeClient.GetAllAsync<Product>(EndPoint, queryParams);
-            return result;
-        }
+    /// <summary>
+    ///     Retrieves custom fields for products asynchronously with pagination.
+    /// </summary>
+    /// <param name="page">The page number to retrieve.</param>
+    /// <param name="pageSize">The number of custom fields per page.</param>
+    /// <returns>A task representing the asynchronous operation. The task result contains a list of custom field definitions.</returns>
+    public async Task<List<ArticleCustomFieldDefinition>> GetCustomFieldsAsync(int page = 0, int pageSize = 50)
+    {
+        var queryParams = new QueryParameterBuilder();
+        queryParams.Add("page", page);
+        queryParams.Add("pageSize", pageSize);
+        return await _apiClient.GetAsync<List<ArticleCustomFieldDefinition>>($"{_endpointPath}/custom-fields",
+            queryParams.Build());
+    }
 
+    /// <summary>
+    ///     Retrieves a specific custom field by ID asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the custom field.</param>
+    /// <returns>
+    ///     A task representing the asynchronous operation. The task result contains the requested custom field
+    ///     definition.
+    /// </returns>
+    public async Task<ArticleCustomFieldDefinition> GetCustomFieldAsync(long id)
+    {
+        return await _apiClient.GetAsync<ArticleCustomFieldDefinition>($"{_endpointPath}/custom-fields/{id}");
+    }
 
-        public async Task<Product> GetAsync(long id, ProductIdType type = ProductIdType.id)
-        {
-            var queryParams = new Dictionary<string, string>();
-            queryParams.Add("lookupBy", type.ToString());
+    /// <summary>
+    ///     Retrieves the patchable fields for a product asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the product.</param>
+    /// <returns>A task representing the asynchronous operation. The task result contains a list of patchable fields.</returns>
+    public async Task<List<string>> GetPatchableProductFieldsAsync(long id)
+    {
+        return await _apiClient.GetAsync<List<string>>($"{_endpointPath}/PatchableFields");
+    }
 
-            var result = await billbeeClient.GetAsync<Product>(EndPoint + "/" + id, queryParams);
-            return result;
-        }
+    /// <summary>
+    ///     Patches a product with specified fields asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the product.</param>
+    /// <param name="fields">The fields to patch.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task PatchAsync(long id, Dictionary<string, object> fields)
+    {
+        await _apiClient.PatchAsync<Product>($"{_endpointPath}/{id}", fields);
+    }
 
+    /// <summary>
+    ///     Retrieves images for a specific product asynchronously.
+    /// </summary>
+    /// <param name="id">The ID of the product.</param>
+    /// <returns>A task representing the asynchronous operation. The task result contains a list of product images.</returns>
+    public async Task<List<ArticleImage>> GetProductImagesAsync(long id)
+    {
+        return await _apiClient.GetAsync<List<ArticleImage>>($"{_endpointPath}/{id}/images");
+    }
 
-        public async Task<List<ArticleCustomFieldDefinition>> GetCustomFieldsAsync(int page = 0, int pageSize = 50)
-        {
-            var queryParams = new Dictionary<string, string>();
-            queryParams.Add("page", page.ToString());
-            queryParams.Add("pageSize", pageSize.ToString());
+    /// <summary>
+    ///     Retrieves a specific product image by product ID and image ID asynchronously.
+    /// </summary>
+    /// <param name="productId">The ID of the product.</param>
+    /// <param name="imageId">The ID of the image.</param>
+    /// <returns>A task representing the asynchronous operation. The task result contains the requested product image.</returns>
+    public async Task<ArticleImage> GetProductImageAsync(long productId, long imageId)
+    {
+        return await _apiClient.GetAsync<ArticleImage>($"{_endpointPath}/{productId}/images/{imageId}");
+    }
 
-            var result =
-                await billbeeClient.GetAllAsync<ArticleCustomFieldDefinition>(EndPoint + "/custom-fields", queryParams);
-            return result;
-        }
+    /// <summary>
+    ///     Adds a new product image asynchronously.
+    /// </summary>
+    /// <param name="image">The product image to add.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task AddProductImageAsync(ArticleImage image)
+    {
+        if (image.Id != 0) throw new Exception("To add a new image, only 0 as Id is allowed.");
+        await _apiClient.PostAsync($"{_endpointPath}/{image.ArticleId}/images/{image.Id}", image);
+    }
 
-        public async Task<ArticleCustomFieldDefinition> GetCustomFieldAsync(long id)
-        {
-            var result = await billbeeClient.GetAsync<ArticleCustomFieldDefinition>(EndPoint + "/custom-fields/" + id);
-            return result;
-        }
+    /// <summary>
+    ///     Updates an existing product image asynchronously.
+    /// </summary>
+    /// <param name="image">The product image to update.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task UpdateProductImageAsync(ArticleImage image)
+    {
+        if (image.Id != 0) throw new Exception("To add a new image, only 0 as Id is allowed.");
+        await _apiClient.PutAsync($"{_endpointPath}/{image.ArticleId}/images/{image.Id}", image);
+    }
 
-        public async Task<List<string>> GetPatchableProductFieldsAsync(long id)
-        {
-            var result = await billbeeClient.GetAllAsync<string>(EndPoint + "/PatchableFields");
-            return result;
-        }
+    /// <summary>
+    ///     Adds multiple product images asynchronously.
+    /// </summary>
+    /// <param name="productId">The ID of the product.</param>
+    /// <param name="images">The list of product images to add.</param>
+    /// <param name="replace">Whether to replace existing images.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task AddMultipleProductImageAsync(long productId, List<ArticleImage> images, bool replace = false)
+    {
+        var queryParams = new QueryParameterBuilder();
+        queryParams.Add("replace", replace);
+        await _apiClient.PutAsync($"{_endpointPath}/{productId}/images", images, queryParams.Build());
+    }
 
+    /// <summary>
+    ///     Deletes a specific product image by product ID and image ID asynchronously.
+    /// </summary>
+    /// <param name="productId">The ID of the product.</param>
+    /// <param name="imageId">The ID of the image.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task DeleteProductImageAsync(long productId, long imageId)
+    {
+        await _apiClient.DeleteAsync($"{_endpointPath}/{productId}/images/{imageId}");
+    }
 
-        public async Task<Product> PatchAsync(long id, Dictionary<string, object> fields)
-        {
-            var result = await billbeeClient.PatchAsync<Product>(EndPoint + "/" + id, fields);
-            return result;
-        }
+    /// <summary>
+    ///     Deletes a specific product image by image ID asynchronously.
+    /// </summary>
+    /// <param name="imageId">The ID of the image.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task DeleteProductImageAsync(long imageId)
+    {
+        await _apiClient.DeleteAsync($"{_endpointPath}/images/{imageId}");
+    }
 
-
-        public async Task<List<ArticleImage>> GetProductImagesAsync(long id)
-        {
-            var result = await billbeeClient.GetAllAsync<ArticleImage>(EndPoint + "/" + id + "/images");
-            return result;
-        }
-
-        public async Task<ArticleImage> GetProductImageAsync(long productId, long imageId)
-        {
-            var result = await billbeeClient.GetAsync<ArticleImage>(EndPoint + "/" + productId + "/images/" + imageId);
-            return result;
-        }
-
-        public async Task<ArticleImage> GetProductImageAsync(long imageId)
-        {
-            var result = await billbeeClient.GetAsync<ArticleImage>(EndPoint + "/images/" + imageId);
-            return result;
-        }
-
-        public async Task<ArticleImage> AddProductImageAsync(ArticleImage image)
-        {
-            if (image.Id != 0) throw new Exception("To add a new image, only 0 as Id is allowed.");
-
-            var result =
-                await billbeeClient.UpdateAsync(EndPoint + "/" + image.ArticleId + "/images/" + image.Id, image);
-            return result;
-        }
-
-        public async Task<ArticleImage> UpdateProductImageAsync(ArticleImage image)
-        {
-            if (image.Id != 0) throw new Exception("To update a new image, only 0 as Id is allowed.");
-
-            var result =
-                await billbeeClient.UpdateAsync(EndPoint + "/" + image.ArticleId + "/images/" + image.Id, image);
-            return result;
-        }
-
-
-        public async Task<List<ArticleImage>> AddMultipleProductImageAsync(long productId, List<ArticleImage> images,
-            bool replace = false)
-        {
-            var queryParams = new Dictionary<string, string>();
-            queryParams.Add("replace", replace.ToString());
-
-            var result = await billbeeClient.UpdateAsync(EndPoint + "/" + productId + "/images", images, queryParams);
-            return result;
-        }
-
-
-        public async Task DeleteProductImageAsync(long productId, long imageId)
-        {
-            await billbeeClient.DeleteAsync<dynamic>(EndPoint + "/" + productId + "/images/" + imageId);
-        }
-
-
-        public async Task DeleteProductImageAsync(long imageId)
-        {
-            await billbeeClient.DeleteAsync<dynamic>(EndPoint + "/images/" + imageId);
-        }
-
-
-        public async Task DeleteMultipleProductImageAsync(List<long> imageIds)
-        {
-            await billbeeClient.DeleteAsync<dynamic>(EndPoint + "/images/delete", imageIds);
-        }
+    /// <summary>
+    ///     Deletes multiple product images asynchronously.
+    /// </summary>
+    /// <param name="imageIds">The list of image IDs to delete.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task DeleteMultipleProductImageAsync(List<long> imageIds)
+    {
+        await _apiClient.DeleteAsync($"{_endpointPath}/images/delete", imageIds);
     }
 }

@@ -1,44 +1,64 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Text.Json;
 
-namespace Billbee.Net.Models
+namespace Billbee.Net.Models;
+
+/// <summary>
+///     Defines the sources in external systems to which this article is attached.
+/// </summary>
+public class ArticleSource
 {
     /// <summary>
-    ///     Defines the sources in external systems, to which this article is attached to
+    ///     Gets or sets the name of the source.
     /// </summary>
-    public class ArticleSource
-    {
-        /// <summary>
-        ///     Name of the source
-        /// </summary>
-        public string Source { get; set; }
+    public string Source { get; set; }
 
-        /// <summary>
-        ///     The id on the source
-        /// </summary>
-        public string SourceId { get; set; }
+    /// <summary>
+    ///     Gets or sets the ID on the source.
+    /// </summary>
+    public string SourceId { get; set; }
 
-        /// <summary>
-        ///     The internal id of this article source definition
-        /// </summary>
-        public long Id { get; set; }
+    /// <summary>
+    ///     Gets or sets the internal ID of this article source definition.
+    /// </summary>
+    public long Id { get; set; }
 
-        /// <summary>
-        ///     Name of the api account, this source belongs to
-        /// </summary>
-        public string ApiAccountName { get; set; }
+    /// <summary>
+    ///     Gets or sets the name of the API account this source belongs to.
+    /// </summary>
+    public string ApiAccountName { get; set; }
 
-        /// <summary>
-        ///     Id of the api account, this source belongs to
-        /// </summary>
-        public long? ApiAccountId { get; set; }
+    /// <summary>
+    ///     Gets or sets the ID of the API account this source belongs to.
+    /// </summary>
+    public long? ApiAccountId { get; set; }
 
-        public decimal? ExportFactor { get; set; }
+    /// <summary>
+    ///     Gets or sets the export factor.
+    /// </summary>
+    public decimal? ExportFactor { get; set; }
 
-        public bool? StockSyncInactive { get; set; }
-        public decimal? StockSyncMin { get; set; }
-        public decimal? StockSyncMax { get; set; }
-        public decimal? UnitsPerItem { get; set; }
+    /// <summary>
+    ///     Gets or sets a value indicating whether stock synchronization is inactive.
+    /// </summary>
+    public bool? StockSyncInactive { get; set; }
 
-        public JObject Custom { get; set; }
-    }
+    /// <summary>
+    ///     Gets or sets the minimum stock synchronization level.
+    /// </summary>
+    public decimal? StockSyncMin { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the maximum stock synchronization level.
+    /// </summary>
+    public decimal? StockSyncMax { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the number of units per item.
+    /// </summary>
+    public decimal? UnitsPerItem { get; set; }
+
+    /// <summary>
+    ///     Gets or sets custom properties for this article source.
+    /// </summary>
+    public JsonElement Custom { get; set; }
 }

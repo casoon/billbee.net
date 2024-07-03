@@ -1,39 +1,60 @@
 ﻿using System.Collections.Generic;
 
-namespace Billbee.Net.Models
+namespace Billbee.Net.Models;
+
+/// <summary>
+///     Specifies the mode of sending a confirmation message.
+/// </summary>
+public enum ConfirmationMessageSendMode
 {
-    public enum ConfirmationMessageSendMode
-    {
-        None = 0,
-        Email = 1,
-        Api = 2,
-        EmailThenApi = 3,
-        ExternalEmail = 4
-    }
+    /// <summary>
+    ///     No message is sent.
+    /// </summary>
+    None = 0,
 
     /// <summary>
-    ///     Container to store information for a message, that can be send via an order.
+    ///     Send the message via email.
     /// </summary>
-    public class SendMessage
-    {
-        /// <summary>
-        ///     An alternative recipient email address
-        /// </summary>
-        public string AlternativeMail = null;
+    Email = 1,
 
-        /// <summary>
-        ///     The body of the message
-        /// </summary>
-        public List<MultiLanguageString> Body = new List<MultiLanguageString>();
+    /// <summary>
+    ///     Send the message via API.
+    /// </summary>
+    Api = 2,
 
-        /// <summary>
-        ///     Defines, how the message is send
-        /// </summary>
-        public ConfirmationMessageSendMode SendMode = ConfirmationMessageSendMode.EmailThenApi;
+    /// <summary>
+    ///     Send the message via email first, then via API if the email fails.
+    /// </summary>
+    EmailThenApi = 3,
 
-        /// <summary>
-        ///     The Subject of the message
-        /// </summary>
-        public List<MultiLanguageString> Subject = new List<MultiLanguageString>();
-    }
+    /// <summary>
+    ///     Send the message via an external email service.
+    /// </summary>
+    ExternalEmail = 4
+}
+
+/// <summary>
+///     Container to store information for a message that can be sent via an order.
+/// </summary>
+public class SendMessage
+{
+    /// <summary>
+    ///     Gets or sets an alternative recipient email address.
+    /// </summary>
+    public string AlternativeMail { get; set; } = null;
+
+    /// <summary>
+    ///     Gets or sets the body of the message.
+    /// </summary>
+    public List<MultiLanguageString> Body { get; set; } = new();
+
+    /// <summary>
+    ///     Gets or sets the mode of sending the message.
+    /// </summary>
+    public ConfirmationMessageSendMode SendMode { get; set; } = ConfirmationMessageSendMode.EmailThenApi;
+
+    /// <summary>
+    ///     Gets or sets the subject of the message.
+    /// </summary>
+    public List<MultiLanguageString> Subject { get; set; } = new();
 }

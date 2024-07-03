@@ -1,90 +1,95 @@
-﻿namespace Billbee.Net.Models
+﻿namespace Billbee.Net.Models;
+
+/// <summary>
+///     Single entry result set for API requests.
+/// </summary>
+/// <typeparam name="T">Type of content as part of the result.</typeparam>
+public class ApiResult<T>
 {
     /// <summary>
-    ///     Single entry result set for api requests
+    ///     Enumeration of possible error codes.
     /// </summary>
-    /// <typeparam name="T">Type of content as part of the result</typeparam>
-    public class ApiResult<T>
+    public enum ErrorCodeEnum
     {
-        public enum ErrorCodeEnum
-        {
-            NoError = 0,
-            ApiNotActivated,
-            OrderNotFound,
-            InvoiceNotCreated,
-            CantCreateInvoice,
-            OrderCanceled,
-            OrderDeleted,
-            OrderNotPaid,
-            InternalError,
-            OrderExists,
-            WrongShopId,
-            InvalidData,
-            CreateUser_DuplicateEmail,
-            CreateUser_InvalidEmail,
-            CreateUser_UserRejected,
-            CreateUser_TermsNotAccepted,
-            NoPaidAccount,
-            APIServiceNotBooked,
-            CantCreateDeliveryNote
-        }
-
-        /// <summary>
-        ///     Shows, of a request was successful or not.
-        /// </summary>
-        public bool Success => ErrorMessage == null && ErrorCode == ErrorCodeEnum.NoError;
-
-        /// <summary>
-        ///     If a request failed, a detailed message can be found here.
-        /// </summary>
-        public string ErrorMessage { get; set; }
-
-        /// <summary>
-        ///     If a request failed, the failure cause can be found here <<see cref="ErrorCodeEnum" />
-        /// </summary>
-        public ErrorCodeEnum ErrorCode { get; set; }
-
-        /// <summary>
-        ///     Response content to a request.
-        /// </summary>
-        public T Data { get; set; }
+        NoError = 0,
+        ApiNotActivated,
+        OrderNotFound,
+        InvoiceNotCreated,
+        CantCreateInvoice,
+        OrderCanceled,
+        OrderDeleted,
+        OrderNotPaid,
+        InternalError,
+        OrderExists,
+        WrongShopId,
+        InvalidData,
+        CreateUser_DuplicateEmail,
+        CreateUser_InvalidEmail,
+        CreateUser_UserRejected,
+        CreateUser_TermsNotAccepted,
+        NoPaidAccount,
+        APIServiceNotBooked,
+        CantCreateDeliveryNote
     }
 
     /// <summary>
-    ///     Multi entry result set for api requests, with paging behaviour
+    ///     Gets a value indicating whether the request was successful.
     /// </summary>
-    /// <typeparam name="T">Type of content as part of the result typically of type IEnumerable.</typeparam>
-    public class ApiPagedResult<T> : ApiResult<T>
+    public bool Success => ErrorMessage == null && ErrorCode == ErrorCodeEnum.NoError;
+
+    /// <summary>
+    ///     Gets or sets the detailed error message if the request failed.
+    /// </summary>
+    public string ErrorMessage { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the error code if the request failed.
+    /// </summary>
+    /// <remarks>
+    ///     See <see cref="ErrorCodeEnum" /> for possible values.
+    /// </remarks>
+    public ErrorCodeEnum ErrorCode { get; set; }
+
+    /// <summary>
+    ///     Gets or sets the response content of the request.
+    /// </summary>
+    public T Data { get; set; }
+}
+
+/// <summary>
+///     Multi-entry result set for API requests with paging behavior.
+/// </summary>
+/// <typeparam name="T">Type of content as part of the result, typically of type IEnumerable.</typeparam>
+public class ApiPagedResult<T> : ApiResult<T>
+{
+    /// <summary>
+    ///     Gets or sets the paging information for the result set.
+    /// </summary>
+    public PagingInformation Paging { get; set; }
+
+    /// <summary>
+    ///     Information about the paging.
+    /// </summary>
+    public class PagingInformation
     {
         /// <summary>
-        ///     Shows the relation of the delivered content in terms of content paging.
+        ///     Gets or sets the currently delivered page.
         /// </summary>
-        public PagingInformation Paging { get; set; }
+        public int Page { get; set; }
 
         /// <summary>
-        ///     Information about the paging
+        ///     Gets or sets the total count of pages available with the given <see cref="PageSize" />.
         /// </summary>
-        public class PagingInformation
-        {
-            /// <summary>
-            ///     Currently delivered page
-            /// </summary>
-            public int Page { get; set; }
+        public int TotalPages { get; set; }
 
-            /// <summary>
-            ///     Total count of pages available with the given <see cref="PageSize" />
-            /// </summary>
-            public int TotalPages { get; set; }
+        /// <summary>
+        ///     Gets or sets the total count of available datasets.
+        /// </summary>
+        public int TotalRows { get; set; }
 
-            /// <summary>
-            ///     Total count of available datasets.
-            /// </summary>
-            public int TotalRows { get; set; }
-
-            /// <summary>
-            ///     Defines how many entries each page shoul contain
-            /// </summary>
-            public int PageSize { get; set; }
-        }
+        /// <summary>
+        ///     Gets or sets the number of entries each page should contain.
+        /// </summary>
+        public int PageSize { get; set; }
     }
 }

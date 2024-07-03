@@ -1,104 +1,93 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Billbee.Net.Enums;
 using Billbee.Net.Models;
+using Billbee.Net.Responses;
 
-namespace Billbee.Net.Endpoints
+namespace Billbee.Net.Endpoints;
+
+/// <summary>
+///     Represents the endpoint for handling invoices.
+/// </summary>
+public class InvoiceEndpoint
 {
-    public interface IInvoiceEndpoint : IBaseEndpoint
+    private readonly ApiClient _apiClient;
+    private readonly string _endpointPath = "orders";
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="InvoiceEndpoint" /> class.
+    /// </summary>
+    /// <param name="apiClient">The API client used to make requests.</param>
+    public InvoiceEndpoint(ApiClient apiClient)
     {
-        Task<List<Invoice>> GetAllAsync(
-            int page = 0,
-            int pageSize = 50,
-            DateTime? minInvoiceDate = null,
-            DateTime? maxInvoiceDate = null,
-            List<long> shopId = null,
-            List<OrderStateEnum> orderStateId = null,
-            List<string> tag = null,
-            DateTime? minPayDate = null,
-            DateTime? maxPayDate = null,
-            bool includePositions = false,
-            bool excludeTags = false
-        );
+        _apiClient = apiClient;
     }
 
-
-    public class InvoiceEndpoint : BaseEndpoint, IInvoiceEndpoint
+    /// <summary>
+    ///     Retrieves all invoices with pagination and filtering options asynchronously.
+    /// </summary>
+    /// <param name="page">The page number to retrieve.</param>
+    /// <param name="pageSize">The number of invoices per page.</param>
+    /// <param name="minInvoiceDate">The minimum invoice date filter.</param>
+    /// <param name="maxInvoiceDate">The maximum invoice date filter.</param>
+    /// <param name="shopId">The list of shop IDs to filter by.</param>
+    /// <param name="orderStateId">The list of order state IDs to filter by.</param>
+    /// <param name="tag">The list of tags to filter by.</param>
+    /// <param name="minPayDate">The minimum pay date filter.</param>
+    /// <param name="maxPayDate">The maximum pay date filter.</param>
+    /// <param name="includePositions">Whether to include positions in the response.</param>
+    /// <param name="excludeTags">Whether to exclude tags.</param>
+    /// <returns>
+    ///     A task representing the asynchronous operation. The task result contains a paged response with the filtered
+    ///     invoices.
+    /// </returns>
+    public async Task<PagedResponse<Invoice>> GetAllAsync(
+        int page = 0,
+        int pageSize = 50,
+        DateTime? minInvoiceDate = null,
+        DateTime? maxInvoiceDate = null,
+        List<long> shopId = null,
+        List<OrderStateEnum> orderStateId = null,
+        List<string> tag = null,
+        DateTime? minPayDate = null,
+        DateTime? maxPayDate = null,
+        bool includePositions = false,
+        bool excludeTags = false
+    )
     {
-        public InvoiceEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
-        {
-            EndPoint = "orders";
-        }
+        var queryParams = new QueryParameterBuilder();
+        queryParams.Add("page", page);
+        queryParams.Add("pageSize", pageSize);
+        queryParams.Add("excludeTags", excludeTags);
+        queryParams.AddDate("minInvoiceDate", minInvoiceDate);
+        queryParams.AddDate("maxInvoiceDate", maxInvoiceDate);
+        queryParams.AddDate("minPayDate", minPayDate);
+        queryParams.AddDate("maxPayDate", maxPayDate);
+        queryParams.AddList("shopId", shopId);
+        queryParams.AddList("tag", tag);
+        queryParams.AddList("orderStateId", orderStateId?.Select(id => (int) id));
 
+        return await _apiClient.GetPagedAsync<Invoice>(_endpointPath, queryParams.Build());
+    }
 
-        public async Task<List<Invoice>> GetAllAsync(
-            int page = 0,
-            int pageSize = 50,
-            DateTime? minInvoiceDate = null,
-            DateTime? maxInvoiceDate = null,
-            List<long> shopId = null,
-            List<OrderStateEnum> orderStateId = null,
-            List<string> tag = null,
-            DateTime? minPayDate = null,
-            DateTime? maxPayDate = null,
-            bool includePositions = false,
-            bool excludeTags = false
-        )
-        {
-            var queryParams = new Dictionary<string, string>();
-            queryParams.Add("page", page.ToString());
-            queryParams.Add("pageSize", pageSize.ToString());
-            queryParams.Add("excludeTags", excludeTags.ToString());
+    /// <summary>
+    ///     Adds an invoice to an order asynchronously.
+    /// </summary>
+    /// <param name="orderId">The ID of the order.</param>
+    /// <param name="includePdf">Whether to include a PDF in the response.</param>
+    /// <param name="templateId">The template ID to use for the invoice.</param>
+    /// <param name="sendToCloudId">The ID to send the invoice to the cloud.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    public async Task AddInvoiceAsync(long orderId, bool includePdf = false, long? templateId = null,
+        long? sendToCloudId = null)
+    {
+        var queryParams = new QueryParameterBuilder();
+        queryParams.Add("includeInvoicePdf", includePdf);
+        queryParams.Add("sendToCloudId", sendToCloudId);
+        queryParams.Add("templateId", templateId);
 
-            if (minInvoiceDate != null)
-                queryParams.Add("minOrderDate", minInvoiceDate.Value.ToString("yyyy-MM-dd HH:mm"));
-
-            if (maxInvoiceDate != null)
-                queryParams.Add("maxOrderDate", maxInvoiceDate.Value.ToString("yyyy-MM-dd HH:mm"));
-
-            if (minPayDate != null) queryParams.Add("modifiedAtMin", minPayDate.Value.ToString("yyyy-MM-dd HH:mm"));
-
-            if (maxPayDate != null) queryParams.Add("modifiedAtMax", maxPayDate.Value.ToString("yyyy-MM-dd HH:mm"));
-
-            if (shopId != null)
-            {
-                var i = 0;
-                foreach (var id in shopId) queryParams.Add($"shopId[{i++}]", id.ToString());
-            }
-
-            if (tag != null)
-            {
-                var i = 0;
-                foreach (var id in tag) queryParams.Add($"tag[{i++}]", id);
-            }
-
-            if (orderStateId != null)
-            {
-                var i = 0;
-                foreach (var id in orderStateId) queryParams.Add($"orderStateId[{i++}]", ((int) id).ToString());
-            }
-
-            var result = await billbeeClient.GetAllAsync<Invoice>(EndPoint + "/invoices", queryParams);
-            return result;
-        }
-
-
-        public async Task<Invoice> AddInvoiceAsync(long orderId, bool includePdf = false, long? templateId = null,
-            long? sendToCloudId = null)
-        {
-            var queryParams = new Dictionary<string, string>();
-            queryParams.Add("includeInvoicePdf", includePdf.ToString());
-
-            if (sendToCloudId.HasValue)
-                queryParams.Add("sendToCloudId", sendToCloudId.ToString());
-
-            if (templateId.HasValue)
-                queryParams.Add("templateId", templateId.ToString());
-
-            var result = await billbeeClient.AddAsync(EndPoint + "/CreateInvoice/" + orderId, new Invoice(),
-                queryParams);
-            return result;
-        }
+        await _apiClient.PostAsync($"{_endpointPath}/CreateInvoice/{orderId}", new Invoice(), queryParams.Build());
     }
 }

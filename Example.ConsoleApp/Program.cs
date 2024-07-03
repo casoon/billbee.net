@@ -1,34 +1,51 @@
 ﻿using Billbee.Net;
 using Billbee.Net.Endpoints;
-using Billbee.Net.Enums;
-using Microsoft.Extensions.Configuration;
+using Billbee.Net.Models;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
-IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-
-using var host = CreateHostBuilder(args).Build();
-using var scope = host.Services.CreateScope();
-
-var services = scope.ServiceProvider;
-
-
-try
+internal class Program
 {
-    var orders = services.GetRequiredService<IOrderEndpoint>();
-    var orderStates = new List<OrderStateEnum> {OrderStateEnum.Im_Fulfillment};
-    var result = orders.GetAllAsync(orderStateId: orderStates).GetAwaiter().GetResult();
-    foreach (var order in result)
-        Console.WriteLine(order.BillBeeOrderId + " " + order.OrderNumber + " " + order.Customer.Name + " " +
-                          order.CreatedAt);
-}
-catch (Exception e)
-{
-    Console.WriteLine(e.Message);
-}
+    private static async Task Main(string[] args)
+    {
+        // Setup Dependency Injection
+        var serviceProvider = new ServiceCollection()
+            .AddApiClient("https://api.yourservice.com/", "your-api-key", "your-password")
+            .BuildServiceProvider();
 
-IHostBuilder CreateHostBuilder(string[] strings)
-{
-    return Host.CreateDefaultBuilder()
-        .ConfigureServices((_, services) => { services.RegisterBillbee(configuration); });
+        var customerAddressEndpoint = serviceProvider.GetService<CustomerAddressEndpoint>();
+
+        if (customerAddressEndpoint == null)
+        {
+            Console.WriteLine("Failed to retrieve CustomerAddressEndpoint from service provider.");
+            return;
+        }
+
+        // Add a new customer address
+        var newAddress = new CustomerAddress
+        {
+            // Set the necessary properties for the new address
+            Street = "123 Main St",
+            City = "Anytown"
+            // Add other necessary fields as per your model
+        };
+
+        await customerAddressEndpoint.AddAsync(newAddress);
+        Console.WriteLine("New customer address added.");
+
+        // Retrieve a customer address by ID
+        Console.Write("Enter the ID of the customer address to retrieve: ");
+        if (long.TryParse(Console.ReadLine(), out var addressId))
+        {
+            var address = await customerAddressEndpoint.GetAsync(addressId);
+            if (address != null)
+                Console.WriteLine(
+                    $"Address retrieved: {address.Street}, {address.City}");
+            else
+                Console.WriteLine("Address not found.");
+        }
+        else
+        {
+            Console.WriteLine("Invalid ID.");
+        }
+    }
 }

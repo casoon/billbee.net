@@ -1,23 +1,22 @@
-﻿namespace Billbee.Net.Models
+﻿namespace Billbee.Net.Models;
+
+/// <summary>
+///     Represents the dimensions of a package to be used for shipping an order.
+/// </summary>
+public class ShipmentDimensions
 {
     /// <summary>
-    ///     Defines the dimnesion of an package, that should be used for shipping an order.
+    ///     Gets or sets the length of the package in centimeters.
     /// </summary>
-    public class ShipmentDimensions
-    {
-        /// <summary>
-        ///     Length of the package in cm
-        /// </summary>
-        public decimal length { get; set; }
+    public decimal Length { get; set; }
 
-        /// <summary>
-        ///     Width of the package in cm
-        /// </summary>
-        public decimal width { get; set; }
+    /// <summary>
+    ///     Gets or sets the width of the package in centimeters.
+    /// </summary>
+    public decimal Width { get; set; }
 
-        /// <summary>
-        ///     Height of the package in cm
-        /// </summary>
-        public decimal height { get; set; }
-    }
+    /// <summary>
+    ///     Gets or sets the height of the package in centimeters.
+    /// </summary>
+    public decimal Height { get; set; }
 }

@@ -1,22 +1,24 @@
 ﻿using System.Collections.Generic;
 
-namespace Billbee.Net.Models
+namespace Billbee.Net.Models;
+
+/// <summary>
+///     Represents a shipping provider with its details and available products.
+/// </summary>
+public class ShippingProvider
 {
-    public class ShippingProvider
-    {
-        /// <summary>
-        ///     internal id of this provider
-        /// </summary>
-        public long id { get; set; }
+    /// <summary>
+    ///     Gets or sets the internal identifier of this provider.
+    /// </summary>
+    public long Id { get; set; }
 
-        /// <summary>
-        ///     Name of this provider
-        /// </summary>
-        public string name { get; set; }
+    /// <summary>
+    ///     Gets or sets the name of this provider.
+    /// </summary>
+    public string Name { get; set; }
 
-        /// <summary>
-        ///     Available products
-        /// </summary>
-        public List<ShippingProduct> products { get; set; }
-    }
+    /// <summary>
+    ///     Gets or sets the list of available products offered by this provider.
+    /// </summary>
+    public List<ShippingProduct> Products { get; set; }
 }

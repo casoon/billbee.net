@@ -1,32 +1,41 @@
 ﻿using System.Threading.Tasks;
 using Billbee.Net.Models;
 
-namespace Billbee.Net.Endpoints
+namespace Billbee.Net.Endpoints;
+
+/// <summary>
+///     Provides methods for automatic account provisioning and retrieving terms information.
+/// </summary>
+public class AutomaticProvisionEndpoint
 {
-    public interface IAutomaticProvisionEndpoint : IBaseEndpoint
+    private readonly ApiClient _apiClient;
+    private readonly string _endpointPath = "automaticprovision";
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="AutomaticProvisionEndpoint" /> class.
+    /// </summary>
+    /// <param name="apiClient">The API client used to make requests.</param>
+    public AutomaticProvisionEndpoint(ApiClient apiClient)
     {
-        Task<Account> CreateAccountAsync(Account account);
-        Task<TermsResult> TermsInfoAsync();
+        _apiClient = apiClient;
     }
 
-
-    public class AutomaticProvisionEndpoint : BaseEndpoint, IAutomaticProvisionEndpoint
+    /// <summary>
+    ///     Creates a new account asynchronously.
+    /// </summary>
+    /// <param name="account">The account information to create.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public async Task CreateAccountAsync(Account account)
     {
-        public AutomaticProvisionEndpoint(IBillbeeClient billbeeClient) : base(billbeeClient)
-        {
-            EndPoint = "automaticprovision";
-        }
+        await _apiClient.PostAsync(_endpointPath, account);
+    }
 
-        public async Task<Account> CreateAccountAsync(Account account)
-        {
-            var result = await billbeeClient.AddAsync(EndPoint + "/createaccount/", account);
-            return result;
-        }
-
-        public async Task<TermsResult> TermsInfoAsync()
-        {
-            var result = await billbeeClient.GetAsync<TermsResult>(EndPoint + "/termsinfo");
-            return result;
-        }
+    /// <summary>
+    ///     Retrieves terms information asynchronously.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains the terms information.</returns>
+    public async Task<TermsResult> TermsInfoAsync()
+    {
+        return await _apiClient.GetAsync<TermsResult>($"{_endpointPath}/termsinfo");
     }
 }

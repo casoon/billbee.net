@@ -1,28 +1,27 @@
-﻿namespace Billbee.Net.Models
+﻿namespace Billbee.Net.Models;
+
+/// <summary>
+///     Represents information about a product image in an order.
+/// </summary>
+public class OrderProductImage
 {
     /// <summary>
-    ///     Information about a product image
+    ///     Gets or sets the URL where this image is located.
     /// </summary>
-    public class OrderProductImage
-    {
-        /// <summary>
-        ///     Url where this image is located
-        /// </summary>
-        public string Url { get; set; }
+    public string Url { get; set; }
 
-        /// <summary>
-        ///     Defines, wether this image should be used as default image, or not.
-        /// </summary>
-        public bool IsDefaultImage { get; set; }
+    /// <summary>
+    ///     Gets or sets a value indicating whether this image should be used as the default image.
+    /// </summary>
+    public bool IsDefaultImage { get; set; }
 
-        /// <summary>
-        ///     If more than one image was supplied, the position defines the order
-        /// </summary>
-        public byte? Position { get; set; }
+    /// <summary>
+    ///     Gets or sets the position of the image if more than one image is supplied, defining the order.
+    /// </summary>
+    public byte? Position { get; set; }
 
-        /// <summary>
-        ///     The if of the image in the external system, the corresponding order was received from
-        /// </summary>
-        public string ExternalId { get; set; }
-    }
+    /// <summary>
+    ///     Gets or sets the ID of the image in the external system from which the corresponding order was received.
+    /// </summary>
+    public string ExternalId { get; set; }
 }

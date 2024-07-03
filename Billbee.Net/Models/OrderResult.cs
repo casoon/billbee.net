@@ -1,7 +1,12 @@
-﻿namespace Billbee.Net.Models
+﻿namespace Billbee.Net.Models;
+
+/// <summary>
+///     Represents the result of an order operation in Billbee.
+/// </summary>
+public class OrderResult
 {
-    public class OrderResult
-    {
-        public long? Id { get; set; }
-    }
+    /// <summary>
+    ///     Gets or sets the ID of the order.
+    /// </summary>
+    public long? Id { get; set; }
 }
