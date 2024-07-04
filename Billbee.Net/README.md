@@ -1,5 +1,3 @@
-Natürlich! Hier ist die aktualisierte `README`:
-
 # Billbee.Net
 
 Billbee.Net is a modern and asynchronous .NET client library designed to interact with the Billbee API efficiently.
