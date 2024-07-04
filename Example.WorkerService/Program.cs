@@ -71,6 +71,7 @@ public class Program
         services.AddApiClient(
             configuration["ApiSettings:BaseAddress"],
             configuration["ApiSettings:ApiKey"],
+            configuration["ApiSettings:Username"],
             configuration["ApiSettings:Password"]);
     }
 }

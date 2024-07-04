@@ -1,15 +1,34 @@
 ﻿using Billbee.Net;
 using Billbee.Net.Endpoints;
 using Billbee.Net.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 internal class Program
 {
     private static async Task Main(string[] args)
     {
+        // Build configuration
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+        // Get API client settings from configuration
+        var apiSettings = configuration.GetSection("ApiSettings").Get<ApiSettings>();
+
+        // Validate API settings
+        if (apiSettings == null || string.IsNullOrEmpty(apiSettings.BaseAddress) ||
+            string.IsNullOrEmpty(apiSettings.ApiKey) || string.IsNullOrEmpty(apiSettings.Username) ||
+            string.IsNullOrEmpty(apiSettings.Password))
+        {
+            Console.WriteLine("API settings are not configured properly. Please check the appsettings.json file.");
+            return;
+        }
+
         // Setup Dependency Injection
         var serviceProvider = new ServiceCollection()
-            .AddApiClient("https://api.yourservice.com/", "your-api-key", "your-password")
+            .AddApiClient(apiSettings.BaseAddress, apiSettings.ApiKey, apiSettings.Password, apiSettings.Username)
             .BuildServiceProvider();
 
         var customerAddressEndpoint = serviceProvider.GetService<CustomerAddressEndpoint>();
@@ -48,4 +67,13 @@ internal class Program
             Console.WriteLine("Invalid ID.");
         }
     }
+}
+
+// Class to bind the API settings
+public class ApiSettings
+{
+    public string BaseAddress { get; set; }
+    public string ApiKey { get; set; }
+    public string Username { get; set; }
+    public string Password { get; set; }
 }

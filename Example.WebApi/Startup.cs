@@ -18,6 +18,7 @@ public class Startup
         services.AddApiClient(
             Configuration["ApiSettings:BaseAddress"],
             Configuration["ApiSettings:ApiKey"],
+            Configuration["ApiSettings:Username"],
             Configuration["ApiSettings:Password"]
         );
     }

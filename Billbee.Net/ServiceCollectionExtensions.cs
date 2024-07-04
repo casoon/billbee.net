@@ -2,7 +2,9 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenTelemetry.Logs;
@@ -16,17 +18,23 @@ public static class ServiceCollectionExtensions
 {
     /// <summary>
     ///     Adds the ApiClient and CustomerAddressEndpoint to the service collection with the specified base address, API key,
-    ///     and password.
+    ///     password, and username.
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="baseAddress">The base address of the API.</param>
     /// <param name="apiKey">The API key.</param>
     /// <param name="password">The password.</param>
+    /// <param name="username">The username.</param>
     /// <returns>The updated service collection.</returns>
-    public static IServiceCollection AddApiClient(this IServiceCollection services, string baseAddress, string apiKey,
+    public static IServiceCollection AddApiClient(
+        this IServiceCollection services,
+        string baseAddress,
+        string apiKey,
+        string username,
         string password)
     {
         var endpointsNamespace = "Billbee.Net.Endpoints";
+        var userAgent = $"Billbee.Net/{typeof(ApiClient).Assembly.GetName().Version}";
 
         // Create the ResiliencePipeline with a SlidingWindowRateLimiter
         var rateLimiterPolicy = Policy.RateLimitAsync<HttpResponseMessage>(2, TimeSpan.FromSeconds(1));
@@ -57,8 +65,12 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient<ApiClient>(client =>
             {
                 client.BaseAddress = new Uri(baseAddress);
-                client.DefaultRequestHeaders.Add("ApiKey", apiKey);
-                client.DefaultRequestHeaders.Add("Password", password);
+                client.DefaultRequestHeaders.Add("User-Agent", userAgent);
+                client.DefaultRequestHeaders.Add("X-Billbee-Api-Key", apiKey);
+
+                // Encode username and password for Basic Auth
+                var basicAuthToken = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basicAuthToken);
             })
             .AddPolicyHandler(rateLimiterPolicy)
             .AddPolicyHandler(retryPolicy)
@@ -82,7 +94,6 @@ public static class ServiceCollectionExtensions
             .Where(t => t.IsClass && t.Namespace == endpointsNamespace && t.Name.EndsWith("Endpoint"));
 
         foreach (var endpointType in endpointTypes) services.AddTransient(endpointType);
-
 
         return services;
     }
