@@ -47,7 +47,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         var serviceProvider = new ServiceCollection()
-            .AddApiClient("https://app.billbee.io/api/v1", "YOUR_API_KEY", "YOUR_PASSWORD")
+            .AddApiClient("https://app.billbee.io/api/v1", "YOUR_API_KEY", "YOUR_USERNAME", "YOUR_PASSWORD")
             .BuildServiceProvider();
     }
 }
