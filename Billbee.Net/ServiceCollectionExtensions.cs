@@ -26,10 +26,10 @@ public static class ServiceCollectionExtensions
     /// <param name="services">The service collection to add the API client to.</param>
     /// <param name="settings">The Billbee settings containing the base address, API key, username, and password.</param>
     /// <returns>The updated service collection.</returns>
-    public static IServiceCollection AddApiClient(this IServiceCollection services, BillbeeSettings settings)
+    public static IServiceCollection AddBillbeeClient(this IServiceCollection services, BillbeeSettings settings)
     {
         var endpointsNamespace = "Billbee.Net.Endpoints";
-        var userAgent = $"Billbee.Net/{typeof(ApiClient).Assembly.GetName().Version}";
+        var userAgent = $"Billbee.Net/{typeof(BillbeeClient).Assembly.GetName().Version}";
 
         // Define the rate limiter policy
         var rateLimiterPolicy = Policy.RateLimitAsync<HttpResponseMessage>(2, TimeSpan.FromSeconds(1));
@@ -58,7 +58,7 @@ public static class ServiceCollectionExtensions
                 () => Console.WriteLine("Circuit reset."));
 
         // Configure the HttpClient with the base address, headers, and resilience policies
-        services.AddHttpClient<ApiClient>(client =>
+        services.AddHttpClient<BillbeeClient>(client =>
             {
                 client.BaseAddress = new Uri(settings.BaseAddress);
                 client.DefaultRequestHeaders.Add("User-Agent", userAgent);
@@ -83,7 +83,7 @@ public static class ServiceCollectionExtensions
         });
 
         // Register the ApiClient as a singleton service
-        services.AddSingleton<ApiClient>();
+        services.AddSingleton<BillbeeClient>();
 
         // Dynamically register all endpoint classes in the specified namespace
         var endpointTypes = Assembly.GetExecutingAssembly()

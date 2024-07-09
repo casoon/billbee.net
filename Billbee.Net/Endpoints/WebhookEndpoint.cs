@@ -5,15 +5,15 @@
 /// </summary>
 public class WebhookEndpoint
 {
-    private readonly ApiClient _apiClient;
+    private readonly BillbeeClient _billbeeClient;
     private readonly string _endpointPath = "webhooks";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="WebhookEndpoint" /> class.
     /// </summary>
-    /// <param name="apiClient">The API client used to make requests.</param>
-    public WebhookEndpoint(ApiClient apiClient)
+    /// <param name="billbeeClient">The API client used to make requests.</param>
+    public WebhookEndpoint(BillbeeClient billbeeClient)
     {
-        _apiClient = apiClient;
+        _billbeeClient = billbeeClient;
     }
 }

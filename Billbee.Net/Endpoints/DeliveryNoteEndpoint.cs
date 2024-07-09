@@ -5,16 +5,16 @@
 /// </summary>
 public class DeliveryNoteEndpoint
 {
-    private readonly ApiClient _apiClient;
+    private readonly BillbeeClient _billbeeClient;
     private readonly string _endpointPath = "deliverynotes";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="DeliveryNoteEndpoint" /> class.
     /// </summary>
-    /// <param name="apiClient">The API client used to make requests.</param>
-    public DeliveryNoteEndpoint(ApiClient apiClient)
+    /// <param name="billbeeClient">The API client used to make requests.</param>
+    public DeliveryNoteEndpoint(BillbeeClient billbeeClient)
     {
-        _apiClient = apiClient;
+        _billbeeClient = billbeeClient;
     }
 
 

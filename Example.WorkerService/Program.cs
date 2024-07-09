@@ -71,6 +71,6 @@ public class Program
         var billbeeSettings = new BillbeeSettings();
         configuration.GetSection("Billbee").Bind(billbeeSettings);
 
-        services.AddApiClient(billbeeSettings);
+        services.AddBillbeeClient(billbeeSettings);
     }
 }

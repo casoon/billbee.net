@@ -9,16 +9,16 @@ namespace Billbee.Net.Endpoints;
 /// </summary>
 public class ShipmentEndpoint
 {
-    private readonly ApiClient _apiClient;
+    private readonly BillbeeClient _billbeeClient;
     private readonly string _endpointPath = "shipment";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="ShipmentEndpoint" /> class.
     /// </summary>
-    /// <param name="apiClient">The API client used to make requests.</param>
-    public ShipmentEndpoint(ApiClient apiClient)
+    /// <param name="billbeeClient">The API client used to make requests.</param>
+    public ShipmentEndpoint(BillbeeClient billbeeClient)
     {
-        _apiClient = apiClient;
+        _billbeeClient = billbeeClient;
     }
 
     /// <summary>
@@ -27,7 +27,7 @@ public class ShipmentEndpoint
     /// <returns>A task representing the asynchronous operation. The task result contains a list of shipping providers.</returns>
     public async Task<List<ShippingProvider>> GetShippingProviderAsync()
     {
-        return await _apiClient.GetAsync<List<ShippingProvider>>($"{_endpointPath}/shippingproviders");
+        return await _billbeeClient.GetAsync<List<ShippingProvider>>($"{_endpointPath}/shippingproviders");
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ public class ShipmentEndpoint
     /// <returns>A task representing the asynchronous operation. The task result contains a list of shipping carriers.</returns>
     public async Task<List<ShippingCarrier>> GetShippingCarriersAsync()
     {
-        return await _apiClient.GetAsync<List<ShippingCarrier>>($"{_endpointPath}/shippingcarriers");
+        return await _billbeeClient.GetAsync<List<ShippingCarrier>>($"{_endpointPath}/shippingcarriers");
     }
 
     /// <summary>
@@ -46,7 +46,7 @@ public class ShipmentEndpoint
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task AddShipmentAsync(Shipment entity)
     {
-        await _apiClient.PostAsync($"{_endpointPath}/shipment", entity);
+        await _billbeeClient.PostAsync($"{_endpointPath}/shipment", entity);
     }
 
     /// <summary>
@@ -56,6 +56,6 @@ public class ShipmentEndpoint
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task ShipOrderWithLabelAsync(ShipmentWithLabel entity)
     {
-        await _apiClient.PostAsync($"{_endpointPath}/shipwithlabel", entity);
+        await _billbeeClient.PostAsync($"{_endpointPath}/shipwithlabel", entity);
     }
 }

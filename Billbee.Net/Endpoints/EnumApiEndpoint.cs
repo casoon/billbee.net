@@ -7,16 +7,16 @@ namespace Billbee.Net.Endpoints;
 /// </summary>
 public class EnumApiEndpoint
 {
-    private readonly ApiClient _apiClient;
+    private readonly BillbeeClient _billbeeClient;
     private readonly string _endpointPath = "enums";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="EnumApiEndpoint" /> class.
     /// </summary>
-    /// <param name="apiClient">The API client used to make requests.</param>
-    public EnumApiEndpoint(ApiClient apiClient)
+    /// <param name="billbeeClient">The API client used to make requests.</param>
+    public EnumApiEndpoint(BillbeeClient billbeeClient)
     {
-        _apiClient = apiClient;
+        _billbeeClient = billbeeClient;
     }
 
     /// <summary>
@@ -25,7 +25,7 @@ public class EnumApiEndpoint
     /// <returns>A task representing the asynchronous operation. The task result contains a JSON string of payment types.</returns>
     public async Task<string> GetPaymentTypesAsync()
     {
-        return await _apiClient.GetAsync<string>($"{_endpointPath}/paymenttypes");
+        return await _billbeeClient.GetAsync<string>($"{_endpointPath}/paymenttypes");
     }
 
     /// <summary>
@@ -34,7 +34,7 @@ public class EnumApiEndpoint
     /// <returns>A task representing the asynchronous operation. The task result contains a JSON string of shipping carriers.</returns>
     public async Task<string> GetShippingCarriersAsync()
     {
-        return await _apiClient.GetAsync<string>($"{_endpointPath}/shippingcarriers");
+        return await _billbeeClient.GetAsync<string>($"{_endpointPath}/shippingcarriers");
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public class EnumApiEndpoint
     /// <returns>A task representing the asynchronous operation. The task result contains a JSON string of shipment types.</returns>
     public async Task<string> GetShipmentTypesAsync()
     {
-        return await _apiClient.GetAsync<string>($"{_endpointPath}/shipmenttypes");
+        return await _billbeeClient.GetAsync<string>($"{_endpointPath}/shipmenttypes");
     }
 
     /// <summary>
@@ -52,6 +52,6 @@ public class EnumApiEndpoint
     /// <returns>A task representing the asynchronous operation. The task result contains a JSON string of order states.</returns>
     public async Task<string> GetOrderStatesAsync()
     {
-        return await _apiClient.GetAsync<string>($"{_endpointPath}/orderstates");
+        return await _billbeeClient.GetAsync<string>($"{_endpointPath}/orderstates");
     }
 }

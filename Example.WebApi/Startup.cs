@@ -18,7 +18,7 @@ public class Startup
 
         services.AddControllers();
 
-        services.AddApiClient(billbeeSettings);
+        services.AddBillbeeClient(billbeeSettings);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

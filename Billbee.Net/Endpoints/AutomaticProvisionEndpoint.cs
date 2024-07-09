@@ -8,16 +8,16 @@ namespace Billbee.Net.Endpoints;
 /// </summary>
 public class AutomaticProvisionEndpoint
 {
-    private readonly ApiClient _apiClient;
+    private readonly BillbeeClient _billbeeClient;
     private readonly string _endpointPath = "automaticprovision";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="AutomaticProvisionEndpoint" /> class.
     /// </summary>
-    /// <param name="apiClient">The API client used to make requests.</param>
-    public AutomaticProvisionEndpoint(ApiClient apiClient)
+    /// <param name="billbeeClient">The API client used to make requests.</param>
+    public AutomaticProvisionEndpoint(BillbeeClient billbeeClient)
     {
-        _apiClient = apiClient;
+        _billbeeClient = billbeeClient;
     }
 
     /// <summary>
@@ -27,7 +27,7 @@ public class AutomaticProvisionEndpoint
     /// <returns>A task that represents the asynchronous operation.</returns>
     public async Task CreateAccountAsync(Account account)
     {
-        await _apiClient.PostAsync(_endpointPath, account);
+        await _billbeeClient.PostAsync(_endpointPath, account);
     }
 
     /// <summary>
@@ -36,6 +36,6 @@ public class AutomaticProvisionEndpoint
     /// <returns>A task that represents the asynchronous operation. The task result contains the terms information.</returns>
     public async Task<TermsResult> TermsInfoAsync()
     {
-        return await _apiClient.GetAsync<TermsResult>($"{_endpointPath}/termsinfo");
+        return await _billbeeClient.GetAsync<TermsResult>($"{_endpointPath}/termsinfo");
     }
 }

@@ -54,7 +54,7 @@ public class Startup
         Configuration.GetSection("Billbee").Bind(billbeeSettings);
         
         var serviceProvider = new ServiceCollection()
-            .AddApiClient(billbeeSettings)
+            .AddBillbeeClient(billbeeSettings)
             .BuildServiceProvider();
     }
 }

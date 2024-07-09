@@ -9,16 +9,16 @@ namespace Billbee.Net.Endpoints;
 /// </summary>
 public class CustomerAddressEndpoint
 {
-    private readonly ApiClient _apiClient;
+    private readonly BillbeeClient _billbeeClient;
     private readonly string _endpointPath = "customer-addresses";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="CustomerAddressEndpoint" /> class.
     /// </summary>
-    /// <param name="apiClient">The API client used to make requests.</param>
-    public CustomerAddressEndpoint(ApiClient apiClient)
+    /// <param name="billbeeClient">The API client used to make requests.</param>
+    public CustomerAddressEndpoint(BillbeeClient billbeeClient)
     {
-        _apiClient = apiClient;
+        _billbeeClient = billbeeClient;
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ public class CustomerAddressEndpoint
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task AddAsync(CustomerAddress address)
     {
-        await _apiClient.PostAsync(_endpointPath, address);
+        await _billbeeClient.PostAsync(_endpointPath, address);
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ public class CustomerAddressEndpoint
     /// <returns>A task representing the asynchronous operation. The task result contains the requested customer address.</returns>
     public async Task<CustomerAddress> GetAsync(long id)
     {
-        return await _apiClient.GetAsync<CustomerAddress>($"{_endpointPath}/{id}");
+        return await _billbeeClient.GetAsync<CustomerAddress>($"{_endpointPath}/{id}");
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public class CustomerAddressEndpoint
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task UpdateAsync(CustomerAddress address)
     {
-        await _apiClient.PutAsync($"{_endpointPath}/{address.Id}", address);
+        await _billbeeClient.PutAsync($"{_endpointPath}/{address.Id}", address);
     }
 
     /// <summary>
@@ -62,6 +62,6 @@ public class CustomerAddressEndpoint
     /// </returns>
     public async Task<PagedResponse<CustomerAddress>> GetAllAsync(int page = 0, int pageSize = 50)
     {
-        return await _apiClient.GetPagedAsync<CustomerAddress>(_endpointPath, page, pageSize);
+        return await _billbeeClient.GetPagedAsync<CustomerAddress>(_endpointPath, page, pageSize);
     }
 }

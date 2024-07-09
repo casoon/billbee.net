@@ -11,16 +11,16 @@ namespace Billbee.Net.Endpoints;
 /// </summary>
 public class ProductEndpoint
 {
-    private readonly ApiClient _apiClient;
+    private readonly BillbeeClient _billbeeClient;
     private readonly string _endpointPath = "products";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="ProductEndpoint" /> class.
     /// </summary>
-    /// <param name="apiClient">The API client used to make requests.</param>
-    public ProductEndpoint(ApiClient apiClient)
+    /// <param name="billbeeClient">The API client used to make requests.</param>
+    public ProductEndpoint(BillbeeClient billbeeClient)
     {
-        _apiClient = apiClient;
+        _billbeeClient = billbeeClient;
     }
 
     /// <summary>
@@ -30,7 +30,7 @@ public class ProductEndpoint
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task AddAsync(Product entity)
     {
-        await _apiClient.PostAsync(_endpointPath, entity);
+        await _billbeeClient.PostAsync(_endpointPath, entity);
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ public class ProductEndpoint
     /// <returns>A task representing the asynchronous operation. The task result contains the requested product.</returns>
     public async Task<Product> GetAsync(long id)
     {
-        return await _apiClient.GetAsync<Product>($"{_endpointPath}/{id}");
+        return await _billbeeClient.GetAsync<Product>($"{_endpointPath}/{id}");
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public class ProductEndpoint
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task UpdateAsync(long id, Product entity)
     {
-        await _apiClient.PutAsync($"{_endpointPath}/{id}", entity);
+        await _billbeeClient.PutAsync($"{_endpointPath}/{id}", entity);
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ public class ProductEndpoint
         queryParams.Add("minimumBillBeeArticleId", minimumBillBeeArticleId);
         queryParams.Add("maximumBillBeeArticleId", maximumBillBeeArticleId);
 
-        return await _apiClient.GetPagedAsync<Product>(_endpointPath, queryParams.Build());
+        return await _billbeeClient.GetPagedAsync<Product>(_endpointPath, queryParams.Build());
     }
 
     /// <summary>
@@ -84,7 +84,7 @@ public class ProductEndpoint
     /// <returns>A task representing the asynchronous operation. The task result contains a list of stocks.</returns>
     public async Task<List<Stock>> GetStocksAsync(long orderId, List<UpdateStock> updateStockList)
     {
-        return await _apiClient.GetAsync<List<Stock>>($"{_endpointPath}/stocks");
+        return await _billbeeClient.GetAsync<List<Stock>>($"{_endpointPath}/stocks");
     }
 
     /// <summary>
@@ -96,7 +96,7 @@ public class ProductEndpoint
     public async Task UpdateStockMultipleAsync(long orderId, List<UpdateStock> updateStockList)
     {
         if (updateStockList == null) throw new ArgumentNullException(nameof(updateStockList));
-        await _apiClient.PutAsync($"{_endpointPath}/updatestockmultiple", updateStockList);
+        await _billbeeClient.PutAsync($"{_endpointPath}/updatestockmultiple", updateStockList);
     }
 
     /// <summary>
@@ -108,7 +108,7 @@ public class ProductEndpoint
     public async Task UpdateStockAsync(long orderId, UpdateStock updateStockModel)
     {
         if (updateStockModel == null) throw new ArgumentNullException(nameof(updateStockModel));
-        await _apiClient.PutAsync($"{_endpointPath}/updatestock", updateStockModel);
+        await _billbeeClient.PutAsync($"{_endpointPath}/updatestock", updateStockModel);
     }
 
     /// <summary>
@@ -126,7 +126,7 @@ public class ProductEndpoint
         queryParams.Add("lookupBy", lookupBy);
         if (stockId != null) queryParams.Add("stockId", stockId.Value);
 
-        return await _apiClient.GetAsync<GetReservedAmountResult>($"{_endpointPath}/reservedamount",
+        return await _billbeeClient.GetAsync<GetReservedAmountResult>($"{_endpointPath}/reservedamount",
             queryParams.Build());
     }
 
@@ -138,7 +138,7 @@ public class ProductEndpoint
     public async Task UpdateStockAsync(UpdateStockCode updateStockCodeModel)
     {
         if (updateStockCodeModel == null) throw new ArgumentNullException(nameof(updateStockCodeModel));
-        await _apiClient.PutAsync($"{_endpointPath}/updatestockcode", updateStockCodeModel);
+        await _billbeeClient.PutAsync($"{_endpointPath}/updatestockcode", updateStockCodeModel);
     }
 
     /// <summary>
@@ -152,7 +152,7 @@ public class ProductEndpoint
         var queryParams = new QueryParameterBuilder();
         queryParams.Add("page", page);
         queryParams.Add("pageSize", pageSize);
-        return await _apiClient.GetAsync<List<ArticleCustomFieldDefinition>>($"{_endpointPath}/custom-fields",
+        return await _billbeeClient.GetAsync<List<ArticleCustomFieldDefinition>>($"{_endpointPath}/custom-fields",
             queryParams.Build());
     }
 
@@ -166,7 +166,7 @@ public class ProductEndpoint
     /// </returns>
     public async Task<ArticleCustomFieldDefinition> GetCustomFieldAsync(long id)
     {
-        return await _apiClient.GetAsync<ArticleCustomFieldDefinition>($"{_endpointPath}/custom-fields/{id}");
+        return await _billbeeClient.GetAsync<ArticleCustomFieldDefinition>($"{_endpointPath}/custom-fields/{id}");
     }
 
     /// <summary>
@@ -176,7 +176,7 @@ public class ProductEndpoint
     /// <returns>A task representing the asynchronous operation. The task result contains a list of patchable fields.</returns>
     public async Task<List<string>> GetPatchableProductFieldsAsync(long id)
     {
-        return await _apiClient.GetAsync<List<string>>($"{_endpointPath}/PatchableFields");
+        return await _billbeeClient.GetAsync<List<string>>($"{_endpointPath}/PatchableFields");
     }
 
     /// <summary>
@@ -187,7 +187,7 @@ public class ProductEndpoint
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task PatchAsync(long id, Dictionary<string, object> fields)
     {
-        await _apiClient.PatchAsync<Product>($"{_endpointPath}/{id}", fields);
+        await _billbeeClient.PatchAsync<Product>($"{_endpointPath}/{id}", fields);
     }
 
     /// <summary>
@@ -197,7 +197,7 @@ public class ProductEndpoint
     /// <returns>A task representing the asynchronous operation. The task result contains a list of product images.</returns>
     public async Task<List<ArticleImage>> GetProductImagesAsync(long id)
     {
-        return await _apiClient.GetAsync<List<ArticleImage>>($"{_endpointPath}/{id}/images");
+        return await _billbeeClient.GetAsync<List<ArticleImage>>($"{_endpointPath}/{id}/images");
     }
 
     /// <summary>
@@ -208,7 +208,7 @@ public class ProductEndpoint
     /// <returns>A task representing the asynchronous operation. The task result contains the requested product image.</returns>
     public async Task<ArticleImage> GetProductImageAsync(long productId, long imageId)
     {
-        return await _apiClient.GetAsync<ArticleImage>($"{_endpointPath}/{productId}/images/{imageId}");
+        return await _billbeeClient.GetAsync<ArticleImage>($"{_endpointPath}/{productId}/images/{imageId}");
     }
 
     /// <summary>
@@ -219,7 +219,7 @@ public class ProductEndpoint
     public async Task AddProductImageAsync(ArticleImage image)
     {
         if (image.Id != 0) throw new Exception("To add a new image, only 0 as Id is allowed.");
-        await _apiClient.PostAsync($"{_endpointPath}/{image.ArticleId}/images/{image.Id}", image);
+        await _billbeeClient.PostAsync($"{_endpointPath}/{image.ArticleId}/images/{image.Id}", image);
     }
 
     /// <summary>
@@ -230,7 +230,7 @@ public class ProductEndpoint
     public async Task UpdateProductImageAsync(ArticleImage image)
     {
         if (image.Id != 0) throw new Exception("To add a new image, only 0 as Id is allowed.");
-        await _apiClient.PutAsync($"{_endpointPath}/{image.ArticleId}/images/{image.Id}", image);
+        await _billbeeClient.PutAsync($"{_endpointPath}/{image.ArticleId}/images/{image.Id}", image);
     }
 
     /// <summary>
@@ -244,7 +244,7 @@ public class ProductEndpoint
     {
         var queryParams = new QueryParameterBuilder();
         queryParams.Add("replace", replace);
-        await _apiClient.PutAsync($"{_endpointPath}/{productId}/images", images, queryParams.Build());
+        await _billbeeClient.PutAsync($"{_endpointPath}/{productId}/images", images, queryParams.Build());
     }
 
     /// <summary>
@@ -255,7 +255,7 @@ public class ProductEndpoint
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task DeleteProductImageAsync(long productId, long imageId)
     {
-        await _apiClient.DeleteAsync($"{_endpointPath}/{productId}/images/{imageId}");
+        await _billbeeClient.DeleteAsync($"{_endpointPath}/{productId}/images/{imageId}");
     }
 
     /// <summary>
@@ -265,7 +265,7 @@ public class ProductEndpoint
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task DeleteProductImageAsync(long imageId)
     {
-        await _apiClient.DeleteAsync($"{_endpointPath}/images/{imageId}");
+        await _billbeeClient.DeleteAsync($"{_endpointPath}/images/{imageId}");
     }
 
     /// <summary>
@@ -275,6 +275,6 @@ public class ProductEndpoint
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task DeleteMultipleProductImageAsync(List<long> imageIds)
     {
-        await _apiClient.DeleteAsync($"{_endpointPath}/images/delete", imageIds);
+        await _billbeeClient.DeleteAsync($"{_endpointPath}/images/delete", imageIds);
     }
 }

@@ -10,16 +10,16 @@ namespace Billbee.Net.Endpoints;
 /// </summary>
 public class CustomerEndpoint : IApiEndpoint<Customer>
 {
-    private readonly ApiClient _apiClient;
+    private readonly BillbeeClient _billbeeClient;
     private readonly string _endpointPath = "customers";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="CustomerEndpoint" /> class.
     /// </summary>
-    /// <param name="apiClient">The API client used to make requests.</param>
-    public CustomerEndpoint(ApiClient apiClient)
+    /// <param name="billbeeClient">The API client used to make requests.</param>
+    public CustomerEndpoint(BillbeeClient billbeeClient)
     {
-        _apiClient = apiClient;
+        _billbeeClient = billbeeClient;
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ public class CustomerEndpoint : IApiEndpoint<Customer>
     /// <returns>A task representing the asynchronous operation. The task result contains a collection of customers.</returns>
     public async Task<IEnumerable<Customer>> GetAllAsync()
     {
-        return await _apiClient.GetAsync<IEnumerable<Customer>>(_endpointPath);
+        return await _billbeeClient.GetAsync<IEnumerable<Customer>>(_endpointPath);
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ public class CustomerEndpoint : IApiEndpoint<Customer>
     /// <returns>A task representing the asynchronous operation. The task result contains the requested customer.</returns>
     public async Task<Customer> GetAsync(long id)
     {
-        return await _apiClient.GetAsync<Customer>($"{_endpointPath}/{id}");
+        return await _billbeeClient.GetAsync<Customer>($"{_endpointPath}/{id}");
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public class CustomerEndpoint : IApiEndpoint<Customer>
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task AddAsync(Customer entity)
     {
-        await _apiClient.PostAsync(_endpointPath, entity);
+        await _billbeeClient.PostAsync(_endpointPath, entity);
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public class CustomerEndpoint : IApiEndpoint<Customer>
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task UpdateAsync(long id, Customer entity)
     {
-        await _apiClient.PutAsync($"{_endpointPath}/{id}", entity);
+        await _billbeeClient.PutAsync($"{_endpointPath}/{id}", entity);
     }
 
     /// <summary>
@@ -74,7 +74,7 @@ public class CustomerEndpoint : IApiEndpoint<Customer>
     /// </returns>
     public async Task<PagedResponse<Order>> GetOrdersForCustomerAsync(long id, int page, int pageSize)
     {
-        return await _apiClient.GetPagedAsync<Order>($"{_endpointPath}/{id}/orders", page, pageSize);
+        return await _billbeeClient.GetPagedAsync<Order>($"{_endpointPath}/{id}/orders", page, pageSize);
     }
 
     /// <summary>
@@ -89,6 +89,6 @@ public class CustomerEndpoint : IApiEndpoint<Customer>
     /// </returns>
     public async Task<PagedResponse<Address>> GetAddressesForCustomerAsync(long id, int page, int pageSize)
     {
-        return await _apiClient.GetPagedAsync<Address>($"{_endpointPath}/{id}/addresses", page, pageSize);
+        return await _billbeeClient.GetPagedAsync<Address>($"{_endpointPath}/{id}/addresses", page, pageSize);
     }
 }

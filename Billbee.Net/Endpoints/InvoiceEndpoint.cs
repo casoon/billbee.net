@@ -13,16 +13,16 @@ namespace Billbee.Net.Endpoints;
 /// </summary>
 public class InvoiceEndpoint
 {
-    private readonly ApiClient _apiClient;
+    private readonly BillbeeClient _billbeeClient;
     private readonly string _endpointPath = "orders";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="InvoiceEndpoint" /> class.
     /// </summary>
-    /// <param name="apiClient">The API client used to make requests.</param>
-    public InvoiceEndpoint(ApiClient apiClient)
+    /// <param name="billbeeClient">The API client used to make requests.</param>
+    public InvoiceEndpoint(BillbeeClient billbeeClient)
     {
-        _apiClient = apiClient;
+        _billbeeClient = billbeeClient;
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public class InvoiceEndpoint
         queryParams.AddList("tag", tag);
         queryParams.AddList("orderStateId", orderStateId?.Select(id => (int) id));
 
-        return await _apiClient.GetPagedAsync<Invoice>(_endpointPath, queryParams.Build());
+        return await _billbeeClient.GetPagedAsync<Invoice>(_endpointPath, queryParams.Build());
     }
 
     /// <summary>
@@ -88,6 +88,6 @@ public class InvoiceEndpoint
         queryParams.Add("sendToCloudId", sendToCloudId);
         queryParams.Add("templateId", templateId);
 
-        await _apiClient.PostAsync($"{_endpointPath}/CreateInvoice/{orderId}", new Invoice(), queryParams.Build());
+        await _billbeeClient.PostAsync($"{_endpointPath}/CreateInvoice/{orderId}", new Invoice(), queryParams.Build());
     }
 }

@@ -14,16 +14,16 @@ namespace Billbee.Net.Endpoints;
 /// </summary>
 public class OrderEndpoint : IApiEndpoint<Order>
 {
-    private readonly ApiClient _apiClient;
+    private readonly BillbeeClient _billbeeClient;
     private readonly string _endpointPath = "orders";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="OrderEndpoint" /> class.
     /// </summary>
-    /// <param name="apiClient">The API client used to make requests.</param>
-    public OrderEndpoint(ApiClient apiClient)
+    /// <param name="billbeeClient">The API client used to make requests.</param>
+    public OrderEndpoint(BillbeeClient billbeeClient)
     {
-        _apiClient = apiClient;
+        _billbeeClient = billbeeClient;
     }
 
     /// <summary>
@@ -32,7 +32,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
     /// <returns>A task representing the asynchronous operation. The task result contains a collection of orders.</returns>
     public async Task<IEnumerable<Order>> GetAllAsync()
     {
-        return await _apiClient.GetAsync<IEnumerable<Order>>(_endpointPath);
+        return await _billbeeClient.GetAsync<IEnumerable<Order>>(_endpointPath);
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
     /// <returns>A task representing the asynchronous operation. The task result contains the requested order.</returns>
     public async Task<Order> GetAsync(long id)
     {
-        return await _apiClient.GetAsync<Order>($"{_endpointPath}/{id}");
+        return await _billbeeClient.GetAsync<Order>($"{_endpointPath}/{id}");
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
     public async Task AddAsync(Order entity)
     {
         if (entity == null) throw new ArgumentNullException(nameof(entity));
-        await _apiClient.PostAsync(_endpointPath, entity);
+        await _billbeeClient.PostAsync(_endpointPath, entity);
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
     public async Task UpdateAsync(long id, Order entity)
     {
         if (entity == null) throw new ArgumentNullException(nameof(entity));
-        await _apiClient.PutAsync($"{_endpointPath}/{id}", entity);
+        await _billbeeClient.PutAsync($"{_endpointPath}/{id}", entity);
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
     {
         var queryParams = new QueryParameterBuilder();
         queryParams.Add("shopId", shopId);
-        await _apiClient.PostAsync(_endpointPath, entity, queryParams.Build());
+        await _billbeeClient.PostAsync(_endpointPath, entity, queryParams.Build());
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
     /// </returns>
     public async Task<string> GetLayoutsAsync()
     {
-        return await _apiClient.GetAsync<string>($"{_endpointPath}/layouts");
+        return await _billbeeClient.GetAsync<string>($"{_endpointPath}/layouts");
     }
 
     /// <summary>
@@ -102,7 +102,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
     /// </returns>
     public async Task<string> GetPatchableFieldsAsync()
     {
-        return await _apiClient.GetAsync<string>($"{_endpointPath}/patchablefields");
+        return await _billbeeClient.GetAsync<string>($"{_endpointPath}/patchablefields");
     }
 
     /// <summary>
@@ -114,7 +114,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
     public async Task PatchOrderAsync(long id, Dictionary<string, object> changes)
     {
         if (changes == null) throw new ArgumentNullException(nameof(changes));
-        await _apiClient.PatchAsync<Order>($"{_endpointPath}/{id}", changes);
+        await _billbeeClient.PatchAsync<Order>($"{_endpointPath}/{id}", changes);
     }
 
     /// <summary>
@@ -124,7 +124,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
     /// <returns>A task representing the asynchronous operation. The task result contains the requested order.</returns>
     public async Task<Order> GetOrderByExternalReferenceAsync(long id)
     {
-        return await _apiClient.GetAsync<Order>($"{_endpointPath}/findbyextref/{id}");
+        return await _billbeeClient.GetAsync<Order>($"{_endpointPath}/findbyextref/{id}");
     }
 
     /// <summary>
@@ -172,7 +172,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
         queryParams.AddList("tag", tag);
         queryParams.AddList("orderStateId", orderStateId?.Select(id => (int) id));
 
-        return await _apiClient.GetPagedAsync<Order>(_endpointPath, queryParams.Build());
+        return await _billbeeClient.GetPagedAsync<Order>(_endpointPath, queryParams.Build());
     }
 
     /// <summary>
@@ -219,7 +219,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
         queryParams.AddList("tag", tag);
         queryParams.AddList("orderStateId", orderStateId?.Select(id => id));
 
-        return await _apiClient.GetPagedAsync<Invoice>($"{_endpointPath}/invoices", queryParams.Build());
+        return await _billbeeClient.GetPagedAsync<Invoice>($"{_endpointPath}/invoices", queryParams.Build());
     }
 
     /// <summary>
@@ -231,7 +231,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
     public async Task AddTagsAsync(long orderId, List<string> tags)
     {
         if (tags == null) throw new ArgumentNullException(nameof(tags));
-        await _apiClient.PostAsync($"{_endpointPath}/{orderId}/tags", tags);
+        await _billbeeClient.PostAsync($"{_endpointPath}/{orderId}/tags", tags);
     }
 
     /// <summary>
@@ -243,7 +243,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
     public async Task UpdateTagsAsync(long orderId, List<string> tags)
     {
         if (tags == null) throw new ArgumentNullException(nameof(tags));
-        await _apiClient.PutAsync($"{_endpointPath}/{orderId}/tags", tags);
+        await _billbeeClient.PutAsync($"{_endpointPath}/{orderId}/tags", tags);
     }
 
     /// <summary>
@@ -254,7 +254,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
     public async Task AddShipmentAsync(OrderShipment shipment)
     {
         if (shipment == null) throw new ArgumentNullException(nameof(shipment));
-        await _apiClient.PostAsync($"{_endpointPath}/{shipment.OrderId}/shipment", shipment);
+        await _billbeeClient.PostAsync($"{_endpointPath}/{shipment.OrderId}/shipment", shipment);
     }
 
     /// <summary>
@@ -269,7 +269,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
         var queryParams = new QueryParameterBuilder();
         queryParams.Add("includePdf", includePdf);
         queryParams.Add("sendToCloudId", sendToCloudId);
-        await _apiClient.PostAsync($"{_endpointPath}/CreateDeliveryNote/{orderId}/shipment", new DeliveryNote(),
+        await _billbeeClient.PostAsync($"{_endpointPath}/CreateDeliveryNote/{orderId}/shipment", new DeliveryNote(),
             queryParams.Build());
     }
 
@@ -288,7 +288,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
         queryParams.Add("includeInvoicePdf", includePdf);
         queryParams.Add("sendToCloudId", sendToCloudId);
         queryParams.Add("templateId", templateId);
-        await _apiClient.PostAsync($"{_endpointPath}/CreateInvoice/{orderId}/shipment", new Invoice(),
+        await _billbeeClient.PostAsync($"{_endpointPath}/CreateInvoice/{orderId}/shipment", new Invoice(),
             queryParams.Build());
     }
 
@@ -302,7 +302,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
     {
         if (!Enum.IsDefined(typeof(OrderStateEnum), state))
             throw new InvalidEnumArgumentException(nameof(state), (int) state, typeof(OrderStateEnum));
-        await _apiClient.PutAsync($"{_endpointPath}/{orderId}/orderstate", new {NewStateId = (int) state});
+        await _billbeeClient.PutAsync($"{_endpointPath}/{orderId}/orderstate", new {NewStateId = (int) state});
     }
 
     /// <summary>
@@ -314,7 +314,7 @@ public class OrderEndpoint : IApiEndpoint<Order>
     public async Task SendMailAsync(long orderId, SendMessage message)
     {
         if (message == null) throw new ArgumentNullException(nameof(message));
-        await _apiClient.PostAsync($"{_endpointPath}/{orderId}/send-message", message);
+        await _billbeeClient.PostAsync($"{_endpointPath}/{orderId}/send-message", message);
     }
 
     /// <summary>
@@ -331,6 +331,6 @@ public class OrderEndpoint : IApiEndpoint<Order>
             DelayInMinutes = delayInMinutes,
             Name = eventName
         };
-        await _apiClient.PostAsync($"{_endpointPath}/{orderId}/trigger-event", model);
+        await _billbeeClient.PostAsync($"{_endpointPath}/{orderId}/trigger-event", model);
     }
 }

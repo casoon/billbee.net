@@ -13,16 +13,16 @@ namespace Billbee.Net.Endpoints;
 /// </summary>
 public class EventEndpoint
 {
-    private readonly ApiClient _apiClient;
+    private readonly BillbeeClient _billbeeClient;
     private readonly string _endpointPath = "events";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="EventEndpoint" /> class.
     /// </summary>
-    /// <param name="apiClient">The API client used to make requests.</param>
-    public EventEndpoint(ApiClient apiClient)
+    /// <param name="billbeeClient">The API client used to make requests.</param>
+    public EventEndpoint(BillbeeClient billbeeClient)
     {
-        _apiClient = apiClient;
+        _billbeeClient = billbeeClient;
     }
 
     /// <summary>
@@ -56,6 +56,6 @@ public class EventEndpoint
 
         queryParams.AddList("typeId", typeIds?.Select(id => ((int) id).ToString()));
 
-        return await _apiClient.GetPagedAsync<Event>(_endpointPath, queryParams.Build());
+        return await _billbeeClient.GetPagedAsync<Event>(_endpointPath, queryParams.Build());
     }
 }

@@ -9,16 +9,16 @@ namespace Billbee.Net.Endpoints;
 /// </summary>
 public class CloudStorageEndpoint
 {
-    private readonly ApiClient _apiClient;
+    private readonly BillbeeClient _billbeeClient;
     private readonly string _endpointPath = "cloudstorages";
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="CloudStorageEndpoint" /> class.
     /// </summary>
-    /// <param name="apiClient">The API client used to make requests.</param>
-    public CloudStorageEndpoint(ApiClient apiClient)
+    /// <param name="billbeeClient">The API client used to make requests.</param>
+    public CloudStorageEndpoint(BillbeeClient billbeeClient)
     {
-        _apiClient = apiClient;
+        _billbeeClient = billbeeClient;
     }
 
     /// <summary>
@@ -30,6 +30,6 @@ public class CloudStorageEndpoint
     /// </returns>
     public async Task<IEnumerable<CloudStorage>> GetAllAsync()
     {
-        return await _apiClient.GetAsync<IEnumerable<CloudStorage>>(_endpointPath);
+        return await _billbeeClient.GetAsync<IEnumerable<CloudStorage>>(_endpointPath);
     }
 }

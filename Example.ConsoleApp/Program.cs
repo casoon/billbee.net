@@ -20,7 +20,7 @@ internal class Program
 
         // Setup Dependency Injection
         var serviceProvider = new ServiceCollection()
-            .AddApiClient(billbeeSettings)
+            .AddBillbeeClient(billbeeSettings)
             .BuildServiceProvider();
 
         var customerAddressEndpoint = serviceProvider.GetService<CustomerAddressEndpoint>();

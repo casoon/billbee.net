@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Billbee.Net;
 
-public class ApiClient(HttpClient httpClient, ILogger<ApiClient> logger)
+public class BillbeeClient(HttpClient httpClient, ILogger<BillbeeClient> logger)
 {
     public async Task<PagedResponse<T>> GetPagedAsync<T>(string endpoint, int pageNumber, int pageSize)
     {
