@@ -36,7 +36,7 @@ public class ProcessNewOrders : IJob
         {
             // Fetch orders from the last 10 days
             PagedResponse<Order> orderList = await _orders.GetAllAsync(minOrderDate: DateTime.Today.AddDays(-10));
-            foreach (var order in orderList.Data) Console.WriteLine(order.BillBeeOrderId);
+            foreach (var order in orderList.Items) Console.WriteLine(order.BillBeeOrderId);
         }
         catch (Exception ex)
         {
