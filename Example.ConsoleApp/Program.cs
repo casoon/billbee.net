@@ -14,21 +14,13 @@ internal class Program
             .AddJsonFile("appsettings.json")
             .Build();
 
-        // Get API client settings from configuration
-        var apiSettings = configuration.GetSection("ApiSettings").Get<ApiSettings>();
-
-        // Validate API settings
-        if (apiSettings == null || string.IsNullOrEmpty(apiSettings.BaseAddress) ||
-            string.IsNullOrEmpty(apiSettings.ApiKey) || string.IsNullOrEmpty(apiSettings.Username) ||
-            string.IsNullOrEmpty(apiSettings.Password))
-        {
-            Console.WriteLine("API settings are not configured properly. Please check the appsettings.json file.");
-            return;
-        }
+        // Billbee-Einstellungen
+        var billbeeSettings = new BillbeeSettings();
+        configuration.GetSection("Billbee").Bind(billbeeSettings);
 
         // Setup Dependency Injection
         var serviceProvider = new ServiceCollection()
-            .AddApiClient(apiSettings.BaseAddress, apiSettings.ApiKey, apiSettings.Password, apiSettings.Username)
+            .AddApiClient(billbeeSettings)
             .BuildServiceProvider();
 
         var customerAddressEndpoint = serviceProvider.GetService<CustomerAddressEndpoint>();

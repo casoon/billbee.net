@@ -68,10 +68,9 @@ public class Program
     /// <param name="configuration">The IConfiguration to retrieve settings from.</param>
     private static void ConfigureApiClient(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddApiClient(
-            configuration["ApiSettings:BaseAddress"],
-            configuration["ApiSettings:ApiKey"],
-            configuration["ApiSettings:Username"],
-            configuration["ApiSettings:Password"]);
+        var billbeeSettings = new BillbeeSettings();
+        configuration.GetSection("Billbee").Bind(billbeeSettings);
+
+        services.AddApiClient(billbeeSettings);
     }
 }

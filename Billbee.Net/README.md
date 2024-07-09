@@ -21,11 +21,10 @@ To use Billbee.Net in your .NET projects, add the necessary configuration to you
 ```json
 {
   "Billbee": {
-    "Url": "https://app.billbee.io/api/v1",
+    "BaseAddress": "https://app.billbee.io/api/v1",
     "ApiKey": "YOUR_API_KEY",
     "Username": "YOUR_USERNAME",
-    "Password": "YOUR_PASSWORD",
-    "Logging": "false"
+    "Password": "YOUR_PASSWORD"
   }
 }
 ```

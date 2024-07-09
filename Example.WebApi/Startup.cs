@@ -13,14 +13,12 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        var billbeeSettings = new BillbeeSettings();
+        Configuration.GetSection("Billbee").Bind(billbeeSettings);
+
         services.AddControllers();
 
-        services.AddApiClient(
-            Configuration["ApiSettings:BaseAddress"],
-            Configuration["ApiSettings:ApiKey"],
-            Configuration["ApiSettings:Username"],
-            Configuration["ApiSettings:Password"]
-        );
+        services.AddApiClient(billbeeSettings);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
