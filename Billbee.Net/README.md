@@ -41,10 +41,20 @@ using Billbee.Net;
 
 public class Startup
 {
+    public Startup(IConfiguration configuration)
+    {
+        Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
+    
     public void ConfigureServices(IServiceCollection services)
     {
+        var billbeeSettings = new BillbeeSettings();
+        Configuration.GetSection("Billbee").Bind(billbeeSettings);
+        
         var serviceProvider = new ServiceCollection()
-            .AddApiClient("https://app.billbee.io/api/v1", "YOUR_API_KEY", "YOUR_USERNAME", "YOUR_PASSWORD")
+            .AddApiClient(billbeeSettings)
             .BuildServiceProvider();
     }
 }
