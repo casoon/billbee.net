@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading.Tasks;
-using Billbee.Net.Enums;
 using Billbee.Net.Models;
 using Billbee.Net.Responses;
 
@@ -11,7 +9,7 @@ namespace Billbee.Net.Endpoints;
 /// <summary>
 ///     Represents the endpoint for handling product-related operations.
 /// </summary>
-public class ProductEndpoint : IApiEndpoint<Product>
+public class ProductEndpoint
 {
     private readonly ApiClient _apiClient;
     private readonly string _endpointPath = "products";
@@ -23,15 +21,6 @@ public class ProductEndpoint : IApiEndpoint<Product>
     public ProductEndpoint(ApiClient apiClient)
     {
         _apiClient = apiClient;
-    }
-
-    /// <summary>
-    ///     Retrieves all products asynchronously.
-    /// </summary>
-    /// <returns>A task representing the asynchronous operation. The task result contains a collection of products.</returns>
-    public async Task<IEnumerable<Product>> GetAllAsync()
-    {
-        return await _apiClient.GetAsync<IEnumerable<Product>>(_endpointPath);
     }
 
     /// <summary>
@@ -63,6 +52,28 @@ public class ProductEndpoint : IApiEndpoint<Product>
     public async Task UpdateAsync(long id, Product entity)
     {
         await _apiClient.PutAsync($"{_endpointPath}/{id}", entity);
+    }
+
+    /// <summary>
+    ///     Retrieves all products asynchronously with pagination and optional filters.
+    /// </summary>
+    /// <param name="page">The page number to retrieve.</param>
+    /// <param name="pageSize">The number of products per page.</param>
+    /// <param name="minCreatedAt">The minimum creation date filter.</param>
+    /// <param name="minimumBillBeeArticleId">The minimum BillBee article ID filter.</param>
+    /// <param name="maximumBillBeeArticleId">The maximum BillBee article ID filter.</param>
+    /// <returns>A task representing the asynchronous operation. The task result contains a paged response with the products.</returns>
+    public async Task<PagedResponse<Product>> GetAllAsync(int page = 1, int pageSize = 50,
+        DateTime? minCreatedAt = null, long? minimumBillBeeArticleId = null, long? maximumBillBeeArticleId = null)
+    {
+        var queryParams = new QueryParameterBuilder();
+        queryParams.Add("page", page);
+        queryParams.Add("pageSize", pageSize);
+        queryParams.AddDate("minCreatedAt", minCreatedAt);
+        queryParams.Add("minimumBillBeeArticleId", minimumBillBeeArticleId);
+        queryParams.Add("maximumBillBeeArticleId", maximumBillBeeArticleId);
+
+        return await _apiClient.GetPagedAsync<Product>(_endpointPath, queryParams.Build());
     }
 
     /// <summary>
@@ -128,38 +139,6 @@ public class ProductEndpoint : IApiEndpoint<Product>
     {
         if (updateStockCodeModel == null) throw new ArgumentNullException(nameof(updateStockCodeModel));
         await _apiClient.PutAsync($"{_endpointPath}/updatestockcode", updateStockCodeModel);
-    }
-
-    /// <summary>
-    ///     Retrieves all products asynchronously with pagination.
-    /// </summary>
-    /// <param name="page">The page number to retrieve.</param>
-    /// <param name="pageSize">The number of products per page.</param>
-    /// <param name="minCreatedAt">The minimum creation date filter.</param>
-    /// <returns>A task representing the asynchronous operation. The task result contains a paged response with the products.</returns>
-    public async Task<PagedResponse<Product>> GetAllAsync(int page = 0, int pageSize = 50,
-        DateTime? minCreatedAt = null)
-    {
-        var queryParams = new QueryParameterBuilder();
-        queryParams.Add("page", page);
-        queryParams.Add("pageSize", pageSize);
-        queryParams.AddDate("minCreatedAt", minCreatedAt);
-        return await _apiClient.GetPagedAsync<Product>(_endpointPath, queryParams.Build());
-    }
-
-    /// <summary>
-    ///     Retrieves a specific product by ID asynchronously with a specified lookup type.
-    /// </summary>
-    /// <param name="id">The ID of the product.</param>
-    /// <param name="type">The type of the product ID (default is ProductIdType.id).</param>
-    /// <returns>A task representing the asynchronous operation. The task result contains the requested product.</returns>
-    public async Task<Product> GetAsync(long id, ProductIdType type = ProductIdType.id)
-    {
-        if (!Enum.IsDefined(typeof(ProductIdType), type))
-            throw new InvalidEnumArgumentException(nameof(type), (int) type, typeof(ProductIdType));
-        var queryParams = new QueryParameterBuilder();
-        queryParams.Add("lookupBy", type.ToString());
-        return await _apiClient.GetAsync<Product>($"{_endpointPath}/{id}", queryParams.Build());
     }
 
     /// <summary>
