@@ -31,6 +31,16 @@ public static class ServiceCollectionExtensions
         var endpointsNamespace = "Billbee.Net.Endpoints";
         var userAgent = $"Billbee.Net/{typeof(BillbeeClient).Assembly.GetName().Version}";
 
+        // Register the ApiClient as a singleton service
+        services.AddSingleton<BillbeeClient>();
+
+        // Dynamically register all endpoint classes in the specified namespace
+        var endpointTypes = Assembly.GetExecutingAssembly()
+            .GetTypes()
+            .Where(t => t.IsClass && t.Namespace == endpointsNamespace && t.Name.EndsWith("Endpoint"));
+
+        foreach (var endpointType in endpointTypes) services.AddTransient(endpointType);
+
         // Define the rate limiter policy
         var rateLimiterPolicy = Policy.RateLimitAsync<HttpResponseMessage>(2, TimeSpan.FromSeconds(1));
 
@@ -82,15 +92,6 @@ public static class ServiceCollectionExtensions
                     ResourceBuilder.CreateDefault().AddService("ResilientHttpClientApp")));
         });
 
-        // Register the ApiClient as a singleton service
-        services.AddSingleton<BillbeeClient>();
-
-        // Dynamically register all endpoint classes in the specified namespace
-        var endpointTypes = Assembly.GetExecutingAssembly()
-            .GetTypes()
-            .Where(t => t.IsClass && t.Namespace == endpointsNamespace && t.Name.EndsWith("Endpoint"));
-
-        foreach (var endpointType in endpointTypes) services.AddTransient(endpointType);
 
         return services;
     }
