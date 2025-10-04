@@ -5,7 +5,7 @@ namespace Billbee.Net.Endpoints
 {
     public interface IExtendedEndpoint<T>
     {
-        Task<T> AddAsync(T t, Dictionary<string, string> param = null);
+        Task<T> AddAsync(T t, Dictionary<string, string>? param = null);
 
         Task<T> GetAsync(long id);
 
@@ -20,7 +20,7 @@ namespace Billbee.Net.Endpoints
         {
         }
 
-        public async Task<T> AddAsync(T t, Dictionary<string, string> param = null)
+        public async Task<T> AddAsync(T t, Dictionary<string, string>? param = null)
         {
             if (param == null)
                 param = new Dictionary<string, string>();

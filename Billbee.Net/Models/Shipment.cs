@@ -56,7 +56,7 @@ namespace Billbee.Net.Models
             public decimal OrderSum { get; set; }
 
             /// <summary>
-            ///     Currency code, of the currency, the order was made in. <<see cref="OrderSum" />
+            ///     Currency code, of the currency, the order was made in. <see cref="OrderSum" />
             /// </summary>
             public string OrderCurrencyCode { get; set; }
 

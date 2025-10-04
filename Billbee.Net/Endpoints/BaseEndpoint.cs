@@ -14,6 +14,6 @@
             this.billbeeClient = billbeeClient;
         }
 
-        protected string EndPoint { get; set; }
+        protected string EndPoint { get; set; } = string.Empty;
     }
 }

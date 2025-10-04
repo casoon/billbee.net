@@ -28,7 +28,7 @@ namespace Billbee.Net.Models
         public DateTime? DeliveryNoteDate { get; set; }
 
         /// <summary>
-        ///     Url to donwload the delivery note, when not self contained inside <<see cref="PDFData" />
+        ///     Url to download the delivery note, when not self contained inside <see cref="PDFData" />
         /// </summary>
         public string PdfDownloadUrl { get; set; }
     }

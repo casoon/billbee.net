@@ -8,7 +8,7 @@
         /// <summary>
         ///     The name of the category
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         ///     The internal id of the category

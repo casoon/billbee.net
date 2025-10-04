@@ -10,9 +10,9 @@ namespace Billbee.Net.Responses
 
         public string? ErrorMessage { get; set; }
 
-        public List<T> Data { get; set; }
+        public List<T> Data { get; set; } = new();
 
-        public PagingInformation Paging { get; set; }
+        public PagingInformation Paging { get; set; } = new();
     }
 
     public class PagingInformation

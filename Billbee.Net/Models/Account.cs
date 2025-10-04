@@ -10,19 +10,19 @@ namespace Billbee.Net.Models
         /// <summary>
         ///     The Email address of the user to create
         /// </summary>
-        public string EMail { get; set; }
+        public string EMail { get; set; } = string.Empty;
 
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
         /// <summary>
-        ///     Set to true, if the user has accepted the Billbee terms & conditions
+        ///     Set to true, if the user has accepted the Billbee terms and conditions
         /// </summary>
         public bool AcceptTerms { get; set; }
 
         /// <summary>
         ///     Gets or sets the invoice address of the Billbee user
         /// </summary>
-        public UserAddress Address { get; set; }
+        public UserAddress Address { get; set; } = new();
 
         /// <summary>
         ///     Gets or sets if the user is interested in the Billbee newsletter
@@ -32,7 +32,7 @@ namespace Billbee.Net.Models
         /// <summary>
         ///     Specifies an billbee affiliate code to attach to the user
         /// </summary>
-        public string AffiliateCouponCode { get; set; }
+        public string AffiliateCouponCode { get; set; } = string.Empty;
 
         /// <summary>
         ///     Optionally specify the vat1 (normal) rate of the user
@@ -53,7 +53,7 @@ namespace Billbee.Net.Models
         /// <summary>
         ///     Optionally specify the default currency of the user
         /// </summary>
-        public string DefaultCurrrency { get; set; }
+        public string DefaultCurrrency { get; set; } = string.Empty;
 
         /// <summary>
         ///     Optionally specify the default vat index of the user
@@ -71,19 +71,19 @@ namespace Billbee.Net.Models
         /// </summary>
         public class UserAddress
         {
-            public string Company { get; set; }
-            public string Name { get; set; }
-            public string Address1 { get; set; }
-            public string Address2 { get; set; }
-            public string Zip { get; set; }
-            public string City { get; set; }
+            public string Company { get; set; } = string.Empty;
+            public string Name { get; set; } = string.Empty;
+            public string Address1 { get; set; } = string.Empty;
+            public string Address2 { get; set; } = string.Empty;
+            public string Zip { get; set; } = string.Empty;
+            public string City { get; set; } = string.Empty;
 
             /// <summary>
             ///     The ISO2 country code of the users country
             /// </summary>
-            public string Country { get; set; }
+            public string Country { get; set; } = string.Empty;
 
-            public string VatId { get; set; }
+            public string VatId { get; set; } = string.Empty;
         }
     }
 }

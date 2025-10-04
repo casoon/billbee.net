@@ -1,21 +1,35 @@
-﻿using Billbee.Net.Endpoints;
+using Billbee.Net.Configuration;
+using Billbee.Net.Endpoints;
 using Billbee.Net.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Billbee.Net
 {
+    /// <summary>
+    /// Extension methods for registering Billbee services
+    /// </summary>
     public static class ServiceRegistration
     {
-        internal static IConfiguration Configuration;
-
+        /// <summary>
+        /// Registers all Billbee services with the dependency injection container
+        /// </summary>
+        /// <param name="serviceCollection">The service collection</param>
+        /// <param name="configuration">Configuration containing Billbee settings</param>
+        /// <returns>The service collection for chaining</returns>
         public static IServiceCollection RegisterBillbee(this IServiceCollection serviceCollection,
             IConfiguration configuration)
         {
-            Configuration = configuration;
+            // Configure options
+            var configSection = configuration.GetSection(BillbeeOptions.SectionName);
+            serviceCollection.Configure<BillbeeOptions>(configSection);
+            
+            // Validate options on startup
+            serviceCollection.AddSingleton<IValidateOptions<BillbeeOptions>, ValidateBillbeeOptions>();
 
-            serviceCollection.AddTransient<ILogger>(s => s.GetService<ILogger<BillbeeClient>>());
+            // Register logging services
             serviceCollection.AddScoped<IFlurlTelemetryLogger, FlurlTelemetryLogger>();
             serviceCollection.AddScoped<IBillbeeClient, BillbeeClient>();
             serviceCollection.AddScoped<IAutomaticProvisionEndpoint, AutomaticProvisionEndpoint>();

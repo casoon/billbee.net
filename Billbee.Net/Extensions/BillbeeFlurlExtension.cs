@@ -40,8 +40,8 @@ namespace Billbee.Net.Extensions
                 .WithBasicAuth(clientId, clientSecret);
             result = await req.GetJsonAsync<Response<T>>();
 
-            if (result.ErrorCode != 0 || result.Data == null)
-                throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
+            if (result == null || result.ErrorCode != 0 || result.Data == null)
+                throw new ApiException($"{result?.ErrorMessage ?? "Unknown error"} (ErrCode: {result?.ErrorCode ?? -1})");
             try
             {
                 return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
@@ -50,8 +50,6 @@ namespace Billbee.Net.Extensions
             {
                 throw e;
             }
-
-            throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
         }
 
 
@@ -87,8 +85,8 @@ namespace Billbee.Net.Extensions
             result = await req.PostJsonAsync(t).ReceiveJson<Response<T>>();
 
 
-            if (result.ErrorCode != 0 || result.Data == null)
-                throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
+            if (result == null || result.ErrorCode != 0 || result.Data == null)
+                throw new ApiException($"{result?.ErrorMessage ?? "Unknown error"} (ErrCode: {result?.ErrorCode ?? -1})");
             try
             {
                 return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(result.Data));
@@ -97,8 +95,6 @@ namespace Billbee.Net.Extensions
             {
                 throw e;
             }
-
-            throw new ApiException($"{result.ErrorMessage} (ErrCode: {result.ErrorCode})");
         }
 
 

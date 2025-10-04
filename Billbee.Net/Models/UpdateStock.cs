@@ -5,7 +5,7 @@
         /// <summary>
         ///     The SKU of the product to update
         /// </summary>
-        public string Sku { get; set; }
+        public string Sku { get; set; } = string.Empty;
 
         /// <summary>
         ///     Optional the stock id if the feature multi stock is activated
@@ -15,7 +15,7 @@
         /// <summary>
         ///     Optional a reason text for the stock update
         /// </summary>
-        public string Reason { get; set; }
+        public string Reason { get; set; } = string.Empty;
 
         /// <summary>
         ///     This parameter is currently ignored

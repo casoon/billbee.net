@@ -7,9 +7,9 @@ namespace Billbee.Net.Logging
 {
     public class FlurlTelemetryLogger : IFlurlTelemetryLogger
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<FlurlTelemetryLogger> _logger;
 
-        public FlurlTelemetryLogger(ILogger logger)
+        public FlurlTelemetryLogger(ILogger<FlurlTelemetryLogger> logger)
         {
             _logger = logger;
         }

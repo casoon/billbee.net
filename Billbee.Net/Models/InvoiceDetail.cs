@@ -90,7 +90,7 @@ namespace Billbee.Net.Models
         public string ShopName { get; set; }
 
         /// <summary>
-        ///     All positions, that belong to this invoice <<see cref="InvoicePosition" />
+        ///     All positions, that belong to this invoice <see cref="InvoicePosition" />
         /// </summary>
         public List<InvoicePosition> Positions { get; set; }
 

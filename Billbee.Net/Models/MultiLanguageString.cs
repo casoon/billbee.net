@@ -11,7 +11,7 @@
         public string Text { get; set; }
 
         /// <summary>
-        ///     ISO language code, that defines the language, the content in <<see cref="Text" /> written in.
+        ///     ISO language code, that defines the language, the content in <see cref="Text" /> written in.
         /// </summary>
         public string LanguageCode { get; set; }
     }

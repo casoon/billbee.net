@@ -79,7 +79,7 @@ namespace Billbee.Net.Models
 
         /// <summary>
         ///     Auto generated number, to build the invoice number.
-        ///     <<see cref="InvoiceNumberPrefix" /><<see cref="InvoiceNumber" /><<see cref="InvoiceNumberPostfix" />
+        ///     <see cref="InvoiceNumberPrefix" /><see cref="InvoiceNumber" /><see cref="InvoiceNumberPostfix" />
         /// </summary>
         public int? InvoiceNumber { get; set; }
 

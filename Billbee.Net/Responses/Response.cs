@@ -4,10 +4,10 @@
     {
         public int ErrorCode { get; set; }
 
-        public string ErrorDescription { get; set; }
+        public string ErrorDescription { get; set; } = string.Empty;
 
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage { get; set; } = string.Empty;
 
-        public T Data { get; set; }
+        public T Data { get; set; } = default!;
     }
 }

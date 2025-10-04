@@ -1,19 +1,34 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
-        <ReleaseVersion>0.4.4</ReleaseVersion>
-        <version>0.4.4</version>
-        <title>Billbee Client .NET8</title>
-        <authors>Jörn Seidel</authors>
-        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <TargetFrameworks>net8.0;netstandard2.1</TargetFrameworks>
+        <Version>1.0.0</Version>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+        <Title>Billbee.Net - Modern Async .NET Client</Title>
+        <Authors>Jörn Seidel</Authors>
+        <Company>Casoon</Company>
+        <Product>Billbee.Net</Product>
+        <Copyright>© 2024 Jörn Seidel</Copyright>
+        <Description>A modern, asynchronous .NET client library for the Billbee API. Built with Flurl.Http and Polly for robust HTTP communication with automatic retry policies and circuit breaker patterns.</Description>
+        <PackageTags>billbee;api;client;ecommerce;order-management;dotnet;async;http</PackageTags>
+        <PackageProjectUrl>https://github.com/casoon/billbee.net</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/casoon/billbee.net</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <description>Client for Billbee API</description>
-        <releaseNotes>This is a prerelease version of Billbee.Net</releaseNotes>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <RepositoryBranch>main</RepositoryBranch>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <Nullable>enable</Nullable>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <WarningsNotAsErrors>CS8625;CS8600;CS8601;CS8602;CS8603;CS8604;CS8618;CS8619;CS8620</WarningsNotAsErrors>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
     <ItemGroup>
         <None Remove="Flurl.Http"/>
@@ -32,16 +47,24 @@
         <None Remove="Logging\"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Flurl.Http" Version="4.0.0"/>
-        <PackageReference Include="Flurl" Version="4.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
-        <PackageReference Include="Polly" Version="8.2.0"/>
+        <PackageReference Include="Flurl.Http" Version="4.0.2" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+        <PackageReference Include="Polly" Version="8.4.2" />
+        <PackageReference Include="System.Text.Json" Version="8.0.5" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Models\"/>

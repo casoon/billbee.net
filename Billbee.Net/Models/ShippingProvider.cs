@@ -12,11 +12,11 @@ namespace Billbee.Net.Models
         /// <summary>
         ///     Name of this provider
         /// </summary>
-        public string name { get; set; }
+        public string name { get; set; } = string.Empty;
 
         /// <summary>
         ///     Available products
         /// </summary>
-        public List<ShippingProduct> products { get; set; }
+        public List<ShippingProduct> products { get; set; } = new();
     }
 }

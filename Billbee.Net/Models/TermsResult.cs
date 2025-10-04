@@ -2,9 +2,9 @@
 {
     public class TermsResult
     {
-        public string LinkToTermsWebPage { get; set; }
-        public string LinkToPrivacyWebPage { get; set; }
-        public string LinkToTermsHtmlContent { get; set; }
-        public string LinkToPrivacyHtmlContent { get; set; }
+        public string LinkToTermsWebPage { get; set; } = string.Empty;
+        public string LinkToPrivacyWebPage { get; set; } = string.Empty;
+        public string LinkToTermsHtmlContent { get; set; } = string.Empty;
+        public string LinkToPrivacyHtmlContent { get; set; } = string.Empty;
     }
 }

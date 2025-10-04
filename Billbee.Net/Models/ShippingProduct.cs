@@ -10,11 +10,11 @@
         /// <summary>
         ///     Human readable name of this shippingproduct
         /// </summary>
-        public string displayName { get; set; }
+        public string displayName { get; set; } = string.Empty;
 
         /// <summary>
         ///     Provider specific product name
         /// </summary>
-        public string productName { get; set; }
+        public string productName { get; set; } = string.Empty;
     }
 }
