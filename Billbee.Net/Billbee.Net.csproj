@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0;netstandard2.1</TargetFrameworks>
+        <TargetFramework>net10.0</TargetFramework>
         <Version>1.0.0</Version>
         <AssemblyVersion>1.0.0.0</AssemblyVersion>
         <FileVersion>1.0.0.0</FileVersion>
@@ -30,50 +30,32 @@
         <WarningsNotAsErrors>CS8625;CS8600;CS8601;CS8602;CS8603;CS8604;CS8618;CS8619;CS8620</WarningsNotAsErrors>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
-    <ItemGroup>
-        <None Remove="Flurl.Http"/>
-        <None Remove="Flurl"/>
-        <None Remove="Microsoft.Extensions.DependencyInjection"/>
-        <None Remove="Microsoft.Extensions.Configuration"/>
-        <None Remove="Microsoft.Extensions.Configuration.Json"/>
-        <None Remove="Models\"/>
-        <None Remove="Enums\"/>
-        <None Remove="Extensions\"/>
-        <None Remove="Responses\"/>
-        <None Remove="Endpoints\"/>
-        <None Remove="Exceptions\"/>
-        <None Remove="Microsoft.Extensions.Logging"/>
-        <None Remove="Polly"/>
-        <None Remove="Logging\"/>
-    </ItemGroup>
+
     <ItemGroup>
         <PackageReference Include="Flurl.Http" Version="4.0.2" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
-        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
-        <PackageReference Include="Polly" Version="8.4.2" />
-        <PackageReference Include="System.Text.Json" Version="8.0.5" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-        <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.8" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.8" />
+        <PackageReference Include="Polly" Version="8.6.6" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
     </ItemGroup>
+
     <ItemGroup>
-        <Folder Include="Models\"/>
-        <Folder Include="Enums\"/>
-        <Folder Include="Extensions\"/>
-        <Folder Include="Responses\"/>
-        <Folder Include="Endpoints\"/>
-        <Folder Include="Exceptions\"/>
-        <Folder Include="Logging\"/>
-        <None Include="README.md" Pack="true" PackagePath="\"/>
+        <Folder Include="Models\" />
+        <Folder Include="Enums\" />
+        <Folder Include="Extensions\" />
+        <Folder Include="Responses\" />
+        <Folder Include="Endpoints\" />
+        <Folder Include="Exceptions\" />
+        <Folder Include="Logging\" />
+        <None Include="README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
+
 </Project>

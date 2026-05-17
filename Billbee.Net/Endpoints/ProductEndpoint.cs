@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Billbee.Net.Enums;
 using Billbee.Net.Models;
@@ -25,13 +26,13 @@ namespace Billbee.Net.Endpoints
 
         public async Task<dynamic> UpdateStockMultipleAsync(long orderId, List<UpdateStock> updateStockList)
         {
-            var result = await billbeeClient.UpdateAsync<dynamic>(EndPoint + "/updatestockmultiple", updateStockList);
+            var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/updatestockmultiple", updateStockList);
             return result;
         }
 
         public async Task<dynamic> UpdateStockAsync(long orderId, UpdateStock updateStockModel)
         {
-            var result = await billbeeClient.UpdateAsync<dynamic>(EndPoint + "/updatestock", updateStockModel);
+            var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/updatestock", updateStockModel);
             return result;
         }
 
@@ -63,7 +64,7 @@ namespace Billbee.Net.Endpoints
             queryParams.Add("page", page.ToString());
             queryParams.Add("pageSize", pageSize.ToString());
 
-            if (minCreatedAt != null) queryParams.Add("minCreatedAt", minCreatedAt.Value.ToString("yyyy-MM-dd"));
+            if (minCreatedAt != null) queryParams.Add("minCreatedAt", minCreatedAt.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
 
             var result = await billbeeClient.GetAllAsync<Product>(EndPoint, queryParams);
             return result;
@@ -97,7 +98,7 @@ namespace Billbee.Net.Endpoints
             return result;
         }
 
-        public async Task<List<string>> GetPatchableProductFieldsAsync(long id)
+        public async Task<List<string>> GetPatchableProductFieldsAsync()
         {
             var result = await billbeeClient.GetAllAsync<string>(EndPoint + "/PatchableFields");
             return result;
@@ -140,7 +141,7 @@ namespace Billbee.Net.Endpoints
 
         public async Task<ArticleImage> UpdateProductImageAsync(ArticleImage image)
         {
-            if (image.Id != 0) throw new Exception("To update a new image, only 0 as Id is allowed.");
+            if (image.Id == 0) throw new Exception("To update an image, a non-zero Id is required.");
 
             var result =
                 await billbeeClient.UpdateAsync(EndPoint + "/" + image.ArticleId + "/images/" + image.Id, image);

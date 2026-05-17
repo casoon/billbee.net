@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Billbee.Net.Configuration;
-using Billbee.Net.Exceptions;
 using Billbee.Net.Extensions;
 using Billbee.Net.Logging;
 using Flurl;
@@ -35,13 +34,11 @@ namespace Billbee.Net
             _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-            // Validate configuration
             if (!_options.IsValid())
             {
                 throw new ArgumentException("Invalid Billbee configuration. Please ensure Url, ApiKey, Username, and Password are provided.", nameof(options));
             }
 
-            // Configure retry policies using options
             var retryPolicy = Policy
                 .Handle<FlurlHttpTimeoutException>()
                 .WaitAndRetryAsync(
@@ -49,7 +46,7 @@ namespace Billbee.Net
                     retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                     (exception, timeSpan, retryCount, context) =>
                     {
-                        _logger.LogWarning("HTTP timeout on attempt {RetryCount}. Retrying in {Delay}ms. Exception: {Exception}", 
+                        _logger.LogWarning("HTTP timeout on attempt {RetryCount}. Retrying in {Delay}ms. Exception: {Exception}",
                             retryCount, timeSpan.TotalMilliseconds, exception?.Message);
                     }
                 );
@@ -62,26 +59,36 @@ namespace Billbee.Net
                     retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                     (exception, timeSpan, retryCount, context) =>
                     {
-                        _logger.LogWarning("Rate limit exceeded on attempt {RetryCount}. Retrying in {Delay}ms. Exception: {Exception}", 
+                        _logger.LogWarning("Rate limit exceeded on attempt {RetryCount}. Retrying in {Delay}ms. Exception: {Exception}",
                             retryCount, timeSpan.TotalMilliseconds, exception?.Message);
                     }
                 );
 
+            var circuitBreakerPolicy = Policy
+                .Handle<Exception>()
+                .CircuitBreakerAsync(
+                    _options.CircuitBreakerExceptionCount,
+                    TimeSpan.FromSeconds(_options.CircuitBreakerDurationSeconds),
+                    onBreak: (exception, duration) =>
+                    {
+                        _logger.LogWarning("Circuit breaker opened for {Duration}s. Exception: {Message}",
+                            duration.TotalSeconds, exception?.Message);
+                    },
+                    onReset: () => _logger.LogInformation("Circuit breaker reset.")
+                );
 
-            _policyWrap = Policy.WrapAsync(retryPolicy, throttlePolicy);
+            _policyWrap = Policy.WrapAsync(retryPolicy, throttlePolicy, circuitBreakerPolicy);
 
-            // Configure Flurl HTTP client
-            if (_options.Logging)
+            // Issue #1: HTTP behavior is configured regardless of logging to avoid environment-dependent differences
+            FlurlHttp.Clients.WithDefaults(builder =>
             {
-                FlurlHttp.Clients.WithDefaults(builder =>
-                    builder.AfterCall(call => flurlTelemetryLogger.Log(call))
-                        .AllowAnyHttpStatus()
-                        .WithTimeout(TimeSpan.FromSeconds(_options.TimeoutSeconds))
-                        .WithHeaders(new
-                        {
-                            Accept = "application/json"
-                        }));
-            }
+                builder
+                    .AllowAnyHttpStatus()
+                    .WithTimeout(TimeSpan.FromSeconds(_options.TimeoutSeconds))
+                    .WithHeaders(new { Accept = "application/json" });
+                if (_options.Logging)
+                    builder.AfterCall(call => flurlTelemetryLogger.Log(call));
+            });
         }
 
         public async Task<T> GetAsync<T>(string endPoint, Dictionary<string, string>? param = null)
@@ -89,17 +96,10 @@ namespace Billbee.Net
             if (param == null)
                 param = new Dictionary<string, string>();
 
-            try
-            {
-                return await _policyWrap.ExecuteAsync(() => _options.Url
-                    .AppendPathSegments(endPoint)
-                    .SetQueryParams(param)
-                    .Get<T>(_options.ApiKey, _options.Username, _options.Password));
-            }
-            catch (ApiException ex)
-            {
-                throw ex;
-            }
+            return await _policyWrap.ExecuteAsync(() => _options.Url
+                .AppendPathSegments(endPoint)
+                .SetQueryParams(param)
+                .Get<T>(_options.ApiKey, _options.Username, _options.Password));
         }
 
         public async Task<List<T>> GetAllAsync<T>(string endPoint, Dictionary<string, string>? param = null)
@@ -107,17 +107,10 @@ namespace Billbee.Net
             if (param == null)
                 param = new Dictionary<string, string>();
 
-            try
-            {
-                return await _policyWrap.ExecuteAsync(() => _options.Url
-                    .AppendPathSegments(endPoint)
-                    .SetQueryParams(param)
-                    .GetAll<T>(_options.ApiKey, _options.Username, _options.Password));
-            }
-            catch (ApiException ex)
-            {
-                throw ex;
-            }
+            return await _policyWrap.ExecuteAsync(() => _options.Url
+                .AppendPathSegments(endPoint)
+                .SetQueryParams(param)
+                .GetAll<T>(_options.ApiKey, _options.Username, _options.Password));
         }
 
         public async Task<T> AddAsync<T>(string endPoint, T t, Dictionary<string, string>? param = null)
@@ -125,17 +118,10 @@ namespace Billbee.Net
             if (param == null)
                 param = new Dictionary<string, string>();
 
-            try
-            {
-                return await _policyWrap.ExecuteAsync(() => _options.Url
-                    .AppendPathSegments(endPoint)
-                    .SetQueryParams(param)
-                    .Post(_options.ApiKey, _options.Username, _options.Password, t));
-            }
-            catch (ApiException ex)
-            {
-                throw ex;
-            }
+            return await _policyWrap.ExecuteAsync(() => _options.Url
+                .AppendPathSegments(endPoint)
+                .SetQueryParams(param)
+                .Post(_options.ApiKey, _options.Username, _options.Password, t));
         }
 
         public async Task<T> UpdateAsync<T>(string endPoint, T t, Dictionary<string, string>? param = null)
@@ -143,65 +129,37 @@ namespace Billbee.Net
             if (param == null)
                 param = new Dictionary<string, string>();
 
-            try
-            {
-                return await _policyWrap.ExecuteAsync(() => _options.Url
-                    .AppendPathSegments(endPoint)
-                    .SetQueryParams(param)
-                    .Put(_options.ApiKey, _options.Username, _options.Password, t));
-            }
-            catch (ApiException ex)
-            {
-                throw ex;
-            }
+            return await _policyWrap.ExecuteAsync(() => _options.Url
+                .AppendPathSegments(endPoint)
+                .SetQueryParams(param)
+                .Put(_options.ApiKey, _options.Username, _options.Password, t));
         }
 
         public async Task<T> PatchAsync<T>(string endPoint, Dictionary<string, object> param)
         {
-            try
-            {
-                return await _policyWrap.ExecuteAsync(() => _options.Url
-                    .AppendPathSegments(endPoint)
-                    .Patch<T>(_options.ApiKey, _options.Username, _options.Password, param));
-            }
-            catch (ApiException ex)
-            {
-                throw ex;
-            }
+            return await _policyWrap.ExecuteAsync(() => _options.Url
+                .AppendPathSegments(endPoint)
+                .Patch<T>(_options.ApiKey, _options.Username, _options.Password, param));
         }
 
         public async Task DeleteAsync<T>(string endPoint)
         {
-            try
+            await _policyWrap.ExecuteAsync(async () =>
             {
-                await _policyWrap.ExecuteAsync(async () =>
-                {
-                    await _options.Url
-                        .AppendPathSegments(endPoint)
-                        .Delete<T>(_options.ApiKey, _options.Username, _options.Password);
-                });
-            }
-            catch (ApiException ex)
-            {
-                throw ex;
-            }
+                await _options.Url
+                    .AppendPathSegments(endPoint)
+                    .Delete<T>(_options.ApiKey, _options.Username, _options.Password);
+            });
         }
 
         public async Task DeleteAsync<T>(string endPoint, T t)
         {
-            try
+            await _policyWrap.ExecuteAsync(async () =>
             {
-                await _policyWrap.ExecuteAsync(async () =>
-                {
-                    await _options.Url
-                        .AppendPathSegments(endPoint)
-                        .Post(_options.ApiKey, _options.Username, _options.Password, t);
-                });
-            }
-            catch (ApiException ex)
-            {
-                throw ex;
-            }
+                await _options.Url
+                    .AppendPathSegments(endPoint)
+                    .Post(_options.ApiKey, _options.Username, _options.Password, t);
+            });
         }
     }
 }

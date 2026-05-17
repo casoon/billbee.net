@@ -2,59 +2,35 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using WireMock.Server;
-using WireMock.Settings;
 
 namespace Billbee.Net.Tests;
 
-/// <summary>
-/// Base class for all tests providing common setup and utilities
-/// </summary>
 public abstract class TestBase : IDisposable
 {
     protected IServiceProvider ServiceProvider { get; private set; }
     protected WireMockServer MockServer { get; private set; }
-    protected IConfiguration Configuration { get; private set; }
 
     protected TestBase()
     {
-        SetupMockServer();
-        SetupServices();
-    }
+        MockServer = WireMockServer.Start(); // random free port
 
-    private void SetupMockServer()
-    {
-        MockServer = WireMockServer.Start(new WireMockServerSettings
-        {
-            Port = 8080,
-            StartAdminInterface = true
-        });
-    }
-
-    private void SetupServices()
-    {
-        var services = new ServiceCollection();
-        
-        Configuration = new ConfigurationBuilder()
+        var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.test.json")
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Billbee:Url"] = $"http://localhost:{MockServer.Port}/api/v1"
+            })
             .Build();
 
-        services.AddSingleton(Configuration);
-        services.AddLogging(builder => 
-        {
-            builder.AddConfiguration(Configuration.GetSection("Logging"));
-            builder.AddConsole();
-        });
-
-        // Register Billbee services
-        services.RegisterBillbee(Configuration);
+        var services = new ServiceCollection();
+        services.AddLogging(b => b.AddConfiguration(configuration.GetSection("Logging")));
+        services.RegisterBillbee(configuration);
 
         ServiceProvider = services.BuildServiceProvider();
     }
 
-    protected T GetService<T>() where T : notnull
-    {
-        return ServiceProvider.GetRequiredService<T>();
-    }
+    protected T GetService<T>() where T : notnull =>
+        ServiceProvider.GetRequiredService<T>();
 
     protected virtual void Dispose(bool disposing)
     {
@@ -62,10 +38,7 @@ public abstract class TestBase : IDisposable
         {
             MockServer?.Stop();
             MockServer?.Dispose();
-            if (ServiceProvider is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
+            if (ServiceProvider is IDisposable d) d.Dispose();
         }
     }
 

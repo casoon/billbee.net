@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Billbee.Net.Enums;
-using Billbee.Net.Exceptions;
 using Billbee.Net.Models;
 
 namespace Billbee.Net.Endpoints
@@ -19,9 +19,9 @@ namespace Billbee.Net.Endpoints
             int pageSize = 50,
             DateTime? minOrderDate = null,
             DateTime? maxOrderDate = null,
-            List<long> shopId = null,
-            List<OrderStateEnum> orderStateId = null,
-            List<string> tag = null,
+            List<long>? shopId = null,
+            List<OrderStateEnum>? orderStateId = null,
+            List<string>? tag = null,
             long? minimumBillBeeOrderId = null,
             DateTime? modifiedAtMin = null,
             DateTime? modifiedAtMax = null,
@@ -33,9 +33,9 @@ namespace Billbee.Net.Endpoints
             int pageSize = 50,
             DateTime? minInvoiceDate = null,
             DateTime? maxInvoiceDate = null,
-            List<long> shopId = null,
-            List<int> orderStateId = null,
-            List<string> tag = null,
+            List<long>? shopId = null,
+            List<int>? orderStateId = null,
+            List<string>? tag = null,
             DateTime? minPayDate = null,
             DateTime? maxPayDate = null,
             bool includePositions = false,
@@ -93,9 +93,9 @@ namespace Billbee.Net.Endpoints
             int pageSize = 50,
             DateTime? minOrderDate = null,
             DateTime? maxOrderDate = null,
-            List<long> shopId = null,
-            List<OrderStateEnum> orderStateId = null,
-            List<string> tag = null,
+            List<long>? shopId = null,
+            List<OrderStateEnum>? orderStateId = null,
+            List<string>? tag = null,
             long? minimumBillBeeOrderId = null,
             DateTime? modifiedAtMin = null,
             DateTime? modifiedAtMax = null,
@@ -107,15 +107,15 @@ namespace Billbee.Net.Endpoints
             queryParams.Add("pageSize", pageSize.ToString());
             queryParams.Add("excludeTags", excludeTags.ToString());
 
-            if (minOrderDate != null) queryParams.Add("minOrderDate", minOrderDate.Value.ToString("yyyy-MM-dd HH:mm"));
+            if (minOrderDate != null) queryParams.Add("minOrderDate", minOrderDate.Value.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture));
 
-            if (maxOrderDate != null) queryParams.Add("maxOrderDate", maxOrderDate.Value.ToString("yyyy-MM-dd HH:mm"));
+            if (maxOrderDate != null) queryParams.Add("maxOrderDate", maxOrderDate.Value.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture));
 
             if (modifiedAtMin != null)
-                queryParams.Add("modifiedAtMin", modifiedAtMin.Value.ToString("yyyy-MM-dd HH:mm"));
+                queryParams.Add("modifiedAtMin", modifiedAtMin.Value.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture));
 
             if (modifiedAtMax != null)
-                queryParams.Add("modifiedAtMax", modifiedAtMax.Value.ToString("yyyy-MM-dd HH:mm"));
+                queryParams.Add("modifiedAtMax", modifiedAtMax.Value.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture));
 
             if (minimumBillBeeOrderId != null)
                 queryParams.Add("minimumBillBeeOrderId", minimumBillBeeOrderId.ToString());
@@ -147,9 +147,9 @@ namespace Billbee.Net.Endpoints
             int pageSize = 50,
             DateTime? minInvoiceDate = null,
             DateTime? maxInvoiceDate = null,
-            List<long> shopId = null,
-            List<int> orderStateId = null,
-            List<string> tag = null,
+            List<long>? shopId = null,
+            List<int>? orderStateId = null,
+            List<string>? tag = null,
             DateTime? minPayDate = null,
             DateTime? maxPayDate = null,
             bool includePositions = false,
@@ -163,14 +163,14 @@ namespace Billbee.Net.Endpoints
             queryParams.Add("excludeTags", excludeTags.ToString());
 
             if (minInvoiceDate != null)
-                queryParams.Add("minInvoiceDate", minInvoiceDate.Value.ToString("yyyy-MM-dd HH:mm"));
+                queryParams.Add("minInvoiceDate", minInvoiceDate.Value.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture));
 
             if (maxInvoiceDate != null)
-                queryParams.Add("maxInvoiceDate", maxInvoiceDate.Value.ToString("yyyy-MM-dd HH:mm"));
+                queryParams.Add("maxInvoiceDate", maxInvoiceDate.Value.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture));
 
-            if (minPayDate != null) queryParams.Add("minPayDate", minPayDate.Value.ToString("yyyy-MM-dd HH:mm"));
+            if (minPayDate != null) queryParams.Add("minPayDate", minPayDate.Value.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture));
 
-            if (maxPayDate != null) queryParams.Add("maxPayDate", maxPayDate.Value.ToString("yyyy-MM-dd HH:mm"));
+            if (maxPayDate != null) queryParams.Add("maxPayDate", maxPayDate.Value.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture));
 
             if (shopId != null)
             {
@@ -208,21 +208,8 @@ namespace Billbee.Net.Endpoints
 
         public async Task<dynamic> AddTagsAsync(long orderId, List<string> tags)
         {
-            try
-            {
-                var result =
-                    await billbeeClient.AddAsync<dynamic>(EndPoint + "/" + orderId + "/tags", new {Tags = tags});
-                return result;
-            }
-            catch (ApiException)
-            {
-                throw;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                throw;
-            }
+            var result = await billbeeClient.AddAsync<dynamic>(EndPoint + "/" + orderId + "/tags", new {Tags = tags});
+            return result;
         }
 
         public async Task<dynamic> UpdateTagsAsync(long orderId, List<string> tags)
@@ -244,7 +231,7 @@ namespace Billbee.Net.Endpoints
             var queryParams = new Dictionary<string, string>();
             queryParams.Add("includePdf", includePdf.ToString());
 
-            var result = await billbeeClient.AddAsync(EndPoint + "/CreateDeliveryNote/" + orderId + "/shipment",
+            var result = await billbeeClient.AddAsync(EndPoint + "/CreateDeliveryNote/" + orderId,
                 new DeliveryNote(), queryParams);
             return result;
         }
