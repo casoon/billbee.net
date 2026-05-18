@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using Billbee.Net.Configuration;
+using Billbee.Net.Exceptions;
 using Billbee.Net.Extensions;
 using Billbee.Net.Logging;
 using Flurl;
@@ -52,8 +52,7 @@ namespace Billbee.Net
                 );
 
             var throttlePolicy = Policy
-                .Handle<FlurlParsingException>(a =>
-                    a.StatusCode != null && a.StatusCode == (int)HttpStatusCode.TooManyRequests)
+                .Handle<RateLimitException>()
                 .WaitAndRetryAsync(
                     _options.MaxRetryAttempts,
                     retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),

@@ -72,6 +72,39 @@ public class BillbeeClientTests : TestBase
     }
 
     [Fact]
+    public async Task GetAsync_Should_RetryAndSucceed_After429()
+    {
+        var successResponse = new Response<object>
+        {
+            ErrorCode = 0,
+            ErrorMessage = "",
+            Data = new { Id = 1 }
+        };
+
+        MockServer
+            .Given(Request.Create().WithPath("/api/v1/orders/1").UsingGet())
+            .InScenario("rate-limit")
+            .WillSetStateTo("first-request-done")
+            .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.TooManyRequests));
+
+        MockServer
+            .Given(Request.Create().WithPath("/api/v1/orders/1").UsingGet())
+            .InScenario("rate-limit")
+            .WhenStateIs("first-request-done")
+            .RespondWith(Response.Create()
+                .WithStatusCode(HttpStatusCode.OK)
+                .WithHeader("Content-Type", "application/json")
+                .WithBodyAsJson(successResponse));
+
+        var client = GetService<IBillbeeClient>();
+
+        var result = await client.GetAsync<object>("orders/1");
+
+        result.Should().NotBeNull();
+        MockServer.LogEntries.Should().HaveCountGreaterThanOrEqualTo(2);
+    }
+
+    [Fact]
     public async Task GetAsync_Should_HandleErrorResponse_Properly()
     {
         // Arrange

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Billbee.Net.Exceptions;
 using Billbee.Net.Responses;
@@ -36,7 +37,10 @@ namespace Billbee.Net.Extensions
                 .WithHeader("X-Billbee-Api-Key", apiKey)
                 .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
-            var result = await req.GetJsonAsync<Response<T>>();
+            var httpResponse = await req.GetAsync();
+            if (httpResponse.StatusCode == (int)HttpStatusCode.TooManyRequests)
+                throw new RateLimitException();
+            var result = await httpResponse.GetJsonAsync<Response<T>>();
 
             if (result == null || result.ErrorCode != 0 || result.Data == null)
                 throw new ApiException($"{result?.ErrorMessage ?? "Unknown error"} (ErrCode: {result?.ErrorCode ?? -1})");
@@ -68,7 +72,10 @@ namespace Billbee.Net.Extensions
                 .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
 
-            var result = await req.PostJsonAsync(t).ReceiveJson<Response<T>>();
+            var httpResponse = await req.PostJsonAsync(t);
+            if (httpResponse.StatusCode == (int)HttpStatusCode.TooManyRequests)
+                throw new RateLimitException();
+            var result = await httpResponse.GetJsonAsync<Response<T>>();
 
             if (result == null || result.ErrorCode != 0 || result.Data == null)
                 throw new ApiException($"{result?.ErrorMessage ?? "Unknown error"} (ErrCode: {result?.ErrorCode ?? -1})");
@@ -99,7 +106,10 @@ namespace Billbee.Net.Extensions
                 .WithHeader("X-Billbee-Api-Key", apiKey)
                 .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
-            var result = await req.PutJsonAsync(t).ReceiveJson<Response<T>>();
+            var httpResponse = await req.PutJsonAsync(t);
+            if (httpResponse.StatusCode == (int)HttpStatusCode.TooManyRequests)
+                throw new RateLimitException();
+            var result = await httpResponse.GetJsonAsync<Response<T>>();
 
             if (result == null || result.ErrorCode != 0 || result.Data == null)
                 throw new ApiException($"{result?.ErrorMessage ?? "Unknown error"} (ErrCode: {result?.ErrorCode ?? -1})");
@@ -138,7 +148,10 @@ namespace Billbee.Net.Extensions
                 .WithHeader("X-Billbee-Api-Key", apiKey)
                 .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
-            var result = await req.PatchJsonAsync(json).ReceiveJson<Response<T>>();
+            var httpResponse = await req.PatchJsonAsync(json);
+            if (httpResponse.StatusCode == (int)HttpStatusCode.TooManyRequests)
+                throw new RateLimitException();
+            var result = await httpResponse.GetJsonAsync<Response<T>>();
 
             if (result == null || result.ErrorCode != 0 || result.Data == null)
                 throw new ApiException($"{result?.ErrorMessage ?? "Unknown error"} (ErrCode: {result?.ErrorCode ?? -1})");
@@ -170,7 +183,10 @@ namespace Billbee.Net.Extensions
                 .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
 
-            var result = await req.GetJsonAsync<PagedResponse<T>>();
+            var httpResponse = await req.GetAsync();
+            if (httpResponse.StatusCode == (int)HttpStatusCode.TooManyRequests)
+                throw new RateLimitException();
+            var result = await httpResponse.GetJsonAsync<PagedResponse<T>>();
 
             if (result.ErrorCode != 0 || result.Data == null)
                 throw new ApiException($"{result?.ErrorMessage ?? "Unknown error"} (ErrCode: {result?.ErrorCode ?? -1})");
@@ -199,7 +215,9 @@ namespace Billbee.Net.Extensions
                 .WithHeader("X-Billbee-Api-Key", apiKey)
                 .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
-            await req.DeleteAsync();
+            var httpResponse = await req.DeleteAsync();
+            if (httpResponse.StatusCode == (int)HttpStatusCode.TooManyRequests)
+                throw new RateLimitException();
         }
     }
 }

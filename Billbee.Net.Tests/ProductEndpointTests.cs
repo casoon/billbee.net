@@ -12,7 +12,7 @@ namespace Billbee.Net.Tests;
 
 public class ProductEndpointTests : TestBase
 {
-    private ProductEndpoint Endpoint => (ProductEndpoint)GetService<IProductEndpoint>();
+    private IProductEndpoint Endpoint => GetService<IProductEndpoint>();
 
     [Fact]
     public async Task GetAllAsync_Should_UseGet()

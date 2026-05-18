@@ -9,6 +9,26 @@ namespace Billbee.Net.Endpoints
 {
     public interface IProductEndpoint : IExtendedEndpoint<Product>
     {
+        Task<List<Stock>> GetStocksAsync(long orderId, List<UpdateStock> updateStockList);
+        Task<dynamic> UpdateStockMultipleAsync(long orderId, List<UpdateStock> updateStockList);
+        Task<dynamic> UpdateStockAsync(long orderId, UpdateStock updateStockModel);
+        Task<GetReservedAmountResult> GetReservedAmountAsync(string idOrSku, string lookupBy = "id", long? stockId = null);
+        Task<object> UpdateStockCodeAsync(UpdateStockCode updateStockCodeModel);
+        Task<List<Product>> GetAllAsync(int page = 0, int pageSize = 50, DateTime? minCreatedAt = null);
+        Task<Product> GetAsync(long id, ProductIdType type = ProductIdType.id);
+        Task<List<ArticleCustomFieldDefinition>> GetCustomFieldsAsync(int page = 0, int pageSize = 50);
+        Task<ArticleCustomFieldDefinition> GetCustomFieldAsync(long id);
+        Task<List<string>> GetPatchableProductFieldsAsync();
+        Task<Product> PatchAsync(long id, Dictionary<string, object> fields);
+        Task<List<ArticleImage>> GetProductImagesAsync(long id);
+        Task<ArticleImage> GetProductImageAsync(long productId, long imageId);
+        Task<ArticleImage> GetProductImageAsync(long imageId);
+        Task<ArticleImage> AddProductImageAsync(ArticleImage image);
+        Task<ArticleImage> UpdateProductImageAsync(ArticleImage image);
+        Task<List<ArticleImage>> AddMultipleProductImageAsync(long productId, List<ArticleImage> images, bool replace = false);
+        Task DeleteProductImageAsync(long productId, long imageId);
+        Task DeleteProductImageAsync(long imageId);
+        Task DeleteMultipleProductImageAsync(List<long> imageIds);
     }
 
     public class ProductEndpoint : ExtendedEndpoint<Product>, IProductEndpoint
