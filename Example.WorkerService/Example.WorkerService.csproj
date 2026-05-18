@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>dotnet-Example.WorkerService-10DFAF88-9315-4ABA-AF8B-E9D9BA314D58</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,9 +18,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
       <Content Update="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
