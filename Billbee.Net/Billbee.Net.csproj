@@ -12,7 +12,7 @@
         <Copyright>© 2024 Jörn Seidel</Copyright>
         <Description>A modern, asynchronous .NET client library for the Billbee API. Built with Flurl.Http and Polly for robust HTTP communication with automatic retry policies and circuit breaker patterns.</Description>
         <PackageTags>billbee;api;client;ecommerce;order-management;dotnet;async;http</PackageTags>
-        <PackageProjectUrl>https://github.com/casoon/billbee.net</PackageProjectUrl>
+        <PackageProjectUrl>https://www.casoon.de</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/casoon/billbee.net</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
