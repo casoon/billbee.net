@@ -119,8 +119,6 @@ namespace Billbee.Net.Models
         public List<OrderItem> OrderItems { get; set; }
 
         public string Currency { get; set; }
-        public bool IsCanceled { get; set; }
-        public string RestfulPath { get; set; }
         public OrderUser Seller { get; set; }
         public OrderUser Buyer { get; set; }
         public DateTime? UpdatedAt { get; set; }
@@ -237,5 +235,20 @@ namespace Billbee.Net.Models
         public string AdjustmentReason { get; set; }
 
         public decimal RebateDifference { get; set; }
+
+        public DateTime? ArchivedAt { get; set; }
+
+        public DateTime? RestoredAt { get; set; }
+
+        public List<HistoryEntry> History { get; set; }
+    }
+
+    public class HistoryEntry
+    {
+        public DateTime Created { get; set; }
+        public string EventTypeName { get; set; }
+        public string Text { get; set; }
+        public string EmployeeName { get; set; }
+        public int? TypeId { get; set; }
     }
 }

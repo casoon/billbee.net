@@ -121,6 +121,19 @@
         MollieApplePay = 122,
         MollieEPS = 123,
         CrefoPayPrepaid = 124,
-        MollieBancontact = 125
+        MollieBancontact = 125,
+        MolliePrzelewy24 = 126,
+        MollieKlarnaRatenkauf = 127,
+        MollieKlarnaSliceit = 128,
+        GooglePay = 129,
+        MollieKlarnaPayNow = 130,
+        MultiSafepay = 131,
+        Ratepay_Rechnung = 132,
+        HoodPay = 133,
+        Quickpay = 134,
+        PayPal_PayLater = 135,
+        Kaufland = 136,
+        MollieBankUeberweisung = 137,
+        Lena = 138
     }
 }
