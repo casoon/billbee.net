@@ -38,8 +38,7 @@ namespace Billbee.Net.Extensions
                 .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
             var httpResponse = await req.GetAsync();
-            if (httpResponse.StatusCode == (int)HttpStatusCode.TooManyRequests)
-                throw new RateLimitException();
+            ThrowIfTransient(httpResponse.StatusCode);
             var result = await httpResponse.GetJsonAsync<Response<T>>();
 
             if (result == null || result.ErrorCode != 0 || result.Data == null)
@@ -73,8 +72,7 @@ namespace Billbee.Net.Extensions
                 .WithBasicAuth(clientId, clientSecret);
 
             var httpResponse = await req.PostJsonAsync(t);
-            if (httpResponse.StatusCode == (int)HttpStatusCode.TooManyRequests)
-                throw new RateLimitException();
+            ThrowIfTransient(httpResponse.StatusCode);
             var result = await httpResponse.GetJsonAsync<Response<T>>();
 
             if (result == null || result.ErrorCode != 0 || result.Data == null)
@@ -107,8 +105,7 @@ namespace Billbee.Net.Extensions
                 .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
             var httpResponse = await req.PutJsonAsync(t);
-            if (httpResponse.StatusCode == (int)HttpStatusCode.TooManyRequests)
-                throw new RateLimitException();
+            ThrowIfTransient(httpResponse.StatusCode);
             var result = await httpResponse.GetJsonAsync<Response<T>>();
 
             if (result == null || result.ErrorCode != 0 || result.Data == null)
@@ -149,8 +146,7 @@ namespace Billbee.Net.Extensions
                 .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
             var httpResponse = await req.PatchJsonAsync(json);
-            if (httpResponse.StatusCode == (int)HttpStatusCode.TooManyRequests)
-                throw new RateLimitException();
+            ThrowIfTransient(httpResponse.StatusCode);
             var result = await httpResponse.GetJsonAsync<Response<T>>();
 
             if (result == null || result.ErrorCode != 0 || result.Data == null)
@@ -184,40 +180,46 @@ namespace Billbee.Net.Extensions
                 .WithBasicAuth(clientId, clientSecret);
 
             var httpResponse = await req.GetAsync();
-            if (httpResponse.StatusCode == (int)HttpStatusCode.TooManyRequests)
-                throw new RateLimitException();
+            ThrowIfTransient(httpResponse.StatusCode);
             var result = await httpResponse.GetJsonAsync<PagedResponse<T>>();
 
-            if (result.ErrorCode != 0 || result.Data == null)
+            if (result == null || result.ErrorCode != 0 || result.Data == null)
                 throw new ApiException($"{result?.ErrorMessage ?? "Unknown error"} (ErrCode: {result?.ErrorCode ?? -1})");
 
             return result.Data;
         }
 
-        public static Task Delete<T>(this Url url, string apiKey, string clientId, string clientSecret)
+        public static Task Delete(this Url url, string apiKey, string clientId, string clientSecret)
         {
-            return new FlurlRequest(url).Delete<T>(apiKey, clientId, clientSecret);
+            return new FlurlRequest(url).Delete(apiKey, clientId, clientSecret);
         }
 
-        public static Task Delete<T>(this Uri uri, string apiKey, string clientId, string clientSecret)
+        public static Task Delete(this Uri uri, string apiKey, string clientId, string clientSecret)
         {
-            return new FlurlRequest(uri).Delete<T>(apiKey, clientId, clientSecret);
+            return new FlurlRequest(uri).Delete(apiKey, clientId, clientSecret);
         }
 
-        public static Task Delete<T>(this string url, string apiKey, string clientId, string clientSecret)
+        public static Task Delete(this string url, string apiKey, string clientId, string clientSecret)
         {
-            return new FlurlRequest(url).Delete<T>(apiKey, clientId, clientSecret);
+            return new FlurlRequest(url).Delete(apiKey, clientId, clientSecret);
         }
 
-        public static async Task Delete<T>(this IFlurlRequest req, string apiKey, string clientId, string clientSecret)
+        public static async Task Delete(this IFlurlRequest req, string apiKey, string clientId, string clientSecret)
         {
             req
                 .WithHeader("X-Billbee-Api-Key", apiKey)
                 .WithHeader("User-Agent", UserAgent)
                 .WithBasicAuth(clientId, clientSecret);
             var httpResponse = await req.DeleteAsync();
-            if (httpResponse.StatusCode == (int)HttpStatusCode.TooManyRequests)
+            ThrowIfTransient(httpResponse.StatusCode);
+        }
+
+        private static void ThrowIfTransient(int statusCode)
+        {
+            if (statusCode == (int)HttpStatusCode.TooManyRequests)
                 throw new RateLimitException();
+            if (statusCode >= 500)
+                throw new ServerErrorException(statusCode);
         }
     }
 }

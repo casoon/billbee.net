@@ -30,20 +30,20 @@ namespace Billbee.Net
             serviceCollection.AddSingleton<IValidateOptions<BillbeeOptions>, ValidateBillbeeOptions>();
 
             // Register logging services
-            serviceCollection.AddScoped<IFlurlTelemetryLogger, FlurlTelemetryLogger>();
-            serviceCollection.AddScoped<IBillbeeClient, BillbeeClient>();
-            serviceCollection.AddScoped<IAutomaticProvisionEndpoint, AutomaticProvisionEndpoint>();
-            serviceCollection.AddScoped<ICloudStorageEndpoint, CloudStorageEndpoint>();
-            serviceCollection.AddScoped<ICustomerAddressEndpoint, CustomerAddressEndpoint>();
-            serviceCollection.AddScoped<ICustomerEndpoint, CustomerEndpoint>();
-            serviceCollection.AddScoped<IDeliveryNoteEndpoint, DeliveryNoteEndpoint>();
-            serviceCollection.AddScoped<IEnumApiEndpoint, EnumApiEndpoint>();
-            serviceCollection.AddScoped<IEventEndpoint, EventEndpoint>();
-            serviceCollection.AddScoped<IInvoiceEndpoint, InvoiceEndpoint>();
-            serviceCollection.AddScoped<IOrderEndpoint, OrderEndpoint>();
-            serviceCollection.AddScoped<IProductEndpoint, ProductEndpoint>();
-            serviceCollection.AddScoped<IShipmentEndpoint, ShipmentEndpoint>();
-            serviceCollection.AddScoped<IWebhookEndpoint, WebhookEndpoint>();
+            serviceCollection.AddSingleton<IFlurlTelemetryLogger, FlurlTelemetryLogger>();
+            serviceCollection.AddSingleton<IBillbeeClient, BillbeeClient>();
+            serviceCollection.AddSingleton<IAutomaticProvisionEndpoint, AutomaticProvisionEndpoint>();
+            serviceCollection.AddSingleton<ICloudStorageEndpoint, CloudStorageEndpoint>();
+            serviceCollection.AddSingleton<ICustomerAddressEndpoint, CustomerAddressEndpoint>();
+            serviceCollection.AddSingleton<ICustomerEndpoint, CustomerEndpoint>();
+            serviceCollection.AddSingleton<IDeliveryNoteEndpoint, DeliveryNoteEndpoint>();
+            serviceCollection.AddSingleton<IEnumApiEndpoint, EnumApiEndpoint>();
+            serviceCollection.AddSingleton<IEventEndpoint, EventEndpoint>();
+            serviceCollection.AddSingleton<IInvoiceEndpoint, InvoiceEndpoint>();
+            serviceCollection.AddSingleton<IOrderEndpoint, OrderEndpoint>();
+            serviceCollection.AddSingleton<IProductEndpoint, ProductEndpoint>();
+            serviceCollection.AddSingleton<IShipmentEndpoint, ShipmentEndpoint>();
+            serviceCollection.AddSingleton<IWebhookEndpoint, WebhookEndpoint>();
 
             return serviceCollection;
         }

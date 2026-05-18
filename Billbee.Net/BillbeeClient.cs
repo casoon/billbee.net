@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Billbee.Net.Configuration;
 using Billbee.Net.Exceptions;
@@ -41,12 +42,14 @@ namespace Billbee.Net
 
             var retryPolicy = Policy
                 .Handle<FlurlHttpTimeoutException>()
+                .Or<ServerErrorException>()
+                .Or<HttpRequestException>()
                 .WaitAndRetryAsync(
                     _options.MaxRetryAttempts,
                     retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                     (exception, timeSpan, retryCount, context) =>
                     {
-                        _logger.LogWarning("HTTP timeout on attempt {RetryCount}. Retrying in {Delay}ms. Exception: {Exception}",
+                        _logger.LogWarning("Transient error on attempt {RetryCount}. Retrying in {Delay}ms. Exception: {Exception}",
                             retryCount, timeSpan.TotalMilliseconds, exception?.Message);
                     }
                 );
@@ -64,7 +67,9 @@ namespace Billbee.Net
                 );
 
             var circuitBreakerPolicy = Policy
-                .Handle<Exception>()
+                .Handle<FlurlHttpTimeoutException>()
+                .Or<ServerErrorException>()
+                .Or<HttpRequestException>()
                 .CircuitBreakerAsync(
                     _options.CircuitBreakerExceptionCount,
                     TimeSpan.FromSeconds(_options.CircuitBreakerDurationSeconds),
@@ -78,7 +83,6 @@ namespace Billbee.Net
 
             _policyWrap = Policy.WrapAsync(retryPolicy, throttlePolicy, circuitBreakerPolicy);
 
-            // Issue #1: HTTP behavior is configured regardless of logging to avoid environment-dependent differences
             FlurlHttp.Clients.WithDefaults(builder =>
             {
                 builder
@@ -141,13 +145,13 @@ namespace Billbee.Net
                 .Patch<T>(_options.ApiKey, _options.Username, _options.Password, param));
         }
 
-        public async Task DeleteAsync<T>(string endPoint)
+        public async Task DeleteAsync(string endPoint)
         {
             await _policyWrap.ExecuteAsync(async () =>
             {
                 await _options.Url
                     .AppendPathSegments(endPoint)
-                    .Delete<T>(_options.ApiKey, _options.Username, _options.Password);
+                    .Delete(_options.ApiKey, _options.Username, _options.Password);
             });
         }
 

@@ -16,12 +16,13 @@ namespace Billbee.Net.Logging
 
         public async Task Log(FlurlCall call)
         {
+            var statusCode = call.Response?.StatusCode ?? 0;
             var flurlTelemetry = new HttpTelemetry
             {
                 Endpoint = call.ToString(),
                 Succeeded = call.Succeeded,
                 RequestBody = call.RequestBody,
-                HttpStatusCode = call.Response.StatusCode
+                HttpStatusCode = statusCode
             };
 
             if (call.Response != null &&
@@ -33,7 +34,7 @@ namespace Billbee.Net.Logging
                     flurlTelemetry.ResponseBody = await call.Response.ResponseMessage.Content.ReadAsStringAsync();
             }
 
-            if (call.Response.StatusCode < 300)
+            if (statusCode < 300)
                 _logger.LogInformation("{@FlurlTelemetry}", JsonConvert.SerializeObject(flurlTelemetry));
             else
                 _logger.LogError("{@FlurlTelemetry}", JsonConvert.SerializeObject(flurlTelemetry));

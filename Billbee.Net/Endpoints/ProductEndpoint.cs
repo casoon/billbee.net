@@ -182,19 +182,19 @@ namespace Billbee.Net.Endpoints
 
         public async Task DeleteProductImageAsync(long productId, long imageId)
         {
-            await billbeeClient.DeleteAsync<dynamic>(EndPoint + "/" + productId + "/images/" + imageId);
+            await billbeeClient.DeleteAsync(EndPoint + "/" + productId + "/images/" + imageId);
         }
 
 
         public async Task DeleteProductImageAsync(long imageId)
         {
-            await billbeeClient.DeleteAsync<dynamic>(EndPoint + "/images/" + imageId);
+            await billbeeClient.DeleteAsync(EndPoint + "/images/" + imageId);
         }
 
 
         public async Task DeleteMultipleProductImageAsync(List<long> imageIds)
         {
-            await billbeeClient.DeleteAsync<dynamic>(EndPoint + "/images/delete", imageIds);
+            await billbeeClient.DeleteAsync(EndPoint + "/images/delete", imageIds);
         }
     }
 }
