@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Billbee.Net.Configuration;
 using Billbee.Net.Exceptions;
@@ -20,6 +21,8 @@ namespace Billbee.Net
     /// </summary>
     public class BillbeeClient : IBillbeeClient
     {
+        private static int _flurlConfigured = 0;
+
         private readonly BillbeeOptions _options;
         private readonly AsyncPolicyWrap _policyWrap;
         private readonly ILogger _logger;
@@ -83,15 +86,18 @@ namespace Billbee.Net
 
             _policyWrap = Policy.WrapAsync(retryPolicy, throttlePolicy, circuitBreakerPolicy);
 
-            FlurlHttp.Clients.WithDefaults(builder =>
+            if (Interlocked.CompareExchange(ref _flurlConfigured, 1, 0) == 0)
             {
-                builder
-                    .AllowAnyHttpStatus()
-                    .WithTimeout(TimeSpan.FromSeconds(_options.TimeoutSeconds))
-                    .WithHeaders(new { Accept = "application/json" });
-                if (_options.Logging)
-                    builder.AfterCall(call => flurlTelemetryLogger.Log(call));
-            });
+                FlurlHttp.Clients.WithDefaults(builder =>
+                {
+                    builder
+                        .AllowAnyHttpStatus()
+                        .WithTimeout(TimeSpan.FromSeconds(_options.TimeoutSeconds))
+                        .WithHeaders(new { Accept = "application/json" });
+                    if (_options.Logging)
+                        builder.AfterCall(call => flurlTelemetryLogger.Log(call));
+                });
+            }
         }
 
         public async Task<T> GetAsync<T>(string endPoint, Dictionary<string, string>? param = null)
