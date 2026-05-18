@@ -2,9 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
-        <Version>1.0.2</Version>
-        <AssemblyVersion>1.0.2.0</AssemblyVersion>
-        <FileVersion>1.0.2.0</FileVersion>
+        <Version>2.0.0</Version>
+        <AssemblyVersion>2.0.0.0</AssemblyVersion>
+        <FileVersion>2.0.0.0</FileVersion>
         <Title>Billbee.Net - Modern Async .NET Client</Title>
         <Authors>Jörn Seidel</Authors>
         <Company>Casoon</Company>
@@ -18,7 +18,15 @@
         <RepositoryType>git</RepositoryType>
         <RepositoryBranch>main</RepositoryBranch>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageReleaseNotes>1.0.2: Best-practice hardening — reliable 5xx/network retry, circuit breaker scope narrowed, singleton DI lifetime, null-safe telemetry logger, non-generic DeleteAsync, consistent status-code checks across all HTTP verbs.</PackageReleaseNotes>
+        <PackageReleaseNotes>2.0.0 (BREAKING CHANGES):
+- Address: Id renamed to BillbeeId; Line3 and Comment properties removed
+- Order: IsCanceled and RestfulPath removed; ArchivedAt, RestoredAt, History added
+- DeletedImages: List&lt;int&gt; changed to List&lt;long&gt;
+- Product: ExportDescription marked [Obsolete], use ExportDescriptionMultiLanguage; new properties BillOfMaterial, Condition, Width/Length/HeightCm, IsLowStock
+- PaymentTypeEnum: values 126-138 added
+- DI lifetime changed from Scoped to Singleton
+- HTTP 429/5xx handling via typed exceptions (RateLimitException, ServerErrorException)
+- DeleteAsync no longer requires a generic type parameter</PackageReleaseNotes>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <IncludeSymbols>true</IncludeSymbols>
