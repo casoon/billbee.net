@@ -98,3 +98,5 @@ MIT — see [LICENSE](LICENSE) for details.
 ## Author
 
 **Jörn Seidel** · [casoon.de](https://casoon.de) · info@casoon.de
+
+Background on the library is described in an article on Insights (in German): [Billbee.Net: Eine .NET-Bibliothek für E-Commerce-Integration](https://insights.casoon.de/artikel/billbee-net-bibliothek-ecommerce-integration/).
